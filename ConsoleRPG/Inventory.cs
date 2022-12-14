@@ -114,6 +114,25 @@ namespace ConsoleRPG
 
         }
 
+        public List<Item> SortInventoryForEquip(params ItemType[] Type)
+        {
+            List<Item> SortedInventory = new List<Item> { };
+
+            foreach (var item in ListInventory)
+            {
+                foreach (var type in Type)
+                {
+                    if (item.Type == type && !item.IsEquiped)
+                    {
+                        SortedInventory.Add(item);
+                    }
+                }
+            }
+
+            return SortedInventory;
+
+        }
+
         public void AddItem(Item Item)
         {
             if (Item.IsStacable)

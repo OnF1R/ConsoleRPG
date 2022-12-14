@@ -89,7 +89,7 @@ namespace ConsoleRPG
         public void ChangeEquipment(Inventory inv, EquipmentSlot SlotName, params ItemType[] ItemType)
         {
             List<Item> EquipableItems = new List<Item> { };
-            EquipableItems = inv.SortInventoryForType(ItemType);
+            EquipableItems = inv.SortInventoryForEquip(ItemType);
             if (EquipableItems.Count > 0)
             {
                 int number = 0;
@@ -136,11 +136,11 @@ namespace ConsoleRPG
             {
                 case "1":
                     ChangeEquipment(inv, EquipmentSlot.LeftHand, 
-                        ItemType.Sword, ItemType.TwoHandedSword, ItemType.Axe, ItemType.TwoHandedAxe, ItemType.Bow, ItemType.Staff, ItemType.TwoHandenStaff, ItemType.Shield);
+                        ItemType.Sword, ItemType.TwoHandedSword, ItemType.Axe, ItemType.TwoHandedAxe, ItemType.Bow, ItemType.Staff, ItemType.TwoHandenStaff, ItemType.Shield, ItemType.Dagger);
                     break;
                 case "2":
                     ChangeEquipment(inv, EquipmentSlot.RightHand,
-                        ItemType.Sword, ItemType.TwoHandedSword, ItemType.Axe, ItemType.TwoHandedAxe, ItemType.Bow, ItemType.Staff, ItemType.TwoHandenStaff, ItemType.Shield);
+                        ItemType.Sword, ItemType.TwoHandedSword, ItemType.Axe, ItemType.TwoHandedAxe, ItemType.Bow, ItemType.Staff, ItemType.TwoHandenStaff, ItemType.Shield, ItemType.Dagger);
                     break;
                 case "3":
                     ChangeEquipment(inv, EquipmentSlot.Helmet, ItemType.Helmet);
