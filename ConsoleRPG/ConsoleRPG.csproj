@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Colorful.Console" Version="1.2.15" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+    <PackageReference Include="Spectre.Console" Version="0.45.0" />
+    <PackageReference Include="Spectre.Console.ImageSharp" Version="0.45.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Items\Armors\Chestsplates\" />
+    <Folder Include="Items\Armors\Gloves\" />
+    <Folder Include="Items\Armors\Leggs\" />
+    <Folder Include="Items\Armors\Boots\" />
+    <Folder Include="Items\Armors\Trinkets\" />
+    <Folder Include="Items\Armors\Capes\" />
+  </ItemGroup>
+
+</Project>
