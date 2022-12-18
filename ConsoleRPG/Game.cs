@@ -15,7 +15,6 @@ namespace ConsoleRPG
 {
     internal class Game
     {
-
         public Enemy GetRandomEnemy()
         {
             Enemy[] enemies = new Enemy[] { new FireMage(), new Elemental(), new Ghoul(), new SteelKnight(), new ExplosiveBug() };
@@ -41,13 +40,13 @@ namespace ConsoleRPG
                 }
 
                 AnsiConsole.MarkupLine("[bold]Что будете делать?[/]");
-                Console.WriteLine("1. Отравиться в приключение.");
-                Console.WriteLine("2. Посетить торговца. НЕ РАБОТАЕТ!");
-                Console.WriteLine("3. Инвентарь.");
-                Console.WriteLine("4. Экипировка.");
-                Console.WriteLine("5. Характеристики. НЕ РАБОТАЕТ!");
-                Console.WriteLine("6. Крафт. НЕ РАБОТАЕТ!");
-                Console.Write("Выберите действие: ");
+                AnsiConsole.MarkupLine("1. Отравиться в приключение.");
+                AnsiConsole.MarkupLine("2. Посетить торговца. [blue]БЕТА[/]");
+                AnsiConsole.MarkupLine("3. Инвентарь.");
+                AnsiConsole.MarkupLine("4. Экипировка.");
+                AnsiConsole.MarkupLine("5. Характеристики. НЕ РАБОТАЕТ!");
+                AnsiConsole.MarkupLine("6. Крафт. НЕ РАБОТАЕТ!");
+                AnsiConsole.Markup("Выберите действие: ");
 
                 switch (Convert.ToString(Console.ReadLine()))
                 {
@@ -56,6 +55,8 @@ namespace ConsoleRPG
                         break;
                     case "2":
                         //Loop = false;
+                        Merchant merchant = new Merchant();
+                        merchant.SellingItems(Player);
                         break;
                     case "3":
                         Player.Inventory.ShowInventory();

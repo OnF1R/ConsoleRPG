@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Console = Colorful.Console;
 using Spectre.Console;
+using ConsoleRPG.Items.ItemsComponents;
 
 namespace ConsoleRPG
 {
@@ -30,33 +31,36 @@ namespace ConsoleRPG
                     int Number = i + 1;
                     if (ListInventory[i].IsStacable)
                     {
-                        AnsiConsole.MarkupLine("{0}. {1} ([{2}]{3}[/]) x{4}",
+                        AnsiConsole.MarkupLine("{0}. {1} ([{2}]{3}[/]) x{4} ([gold1]{5} золота[/])",
                             Number,
                             ListInventory[i].Name,
                             ListInventory[i].RarityColor,
                             ListInventory[i].Rarity,
-                            ListInventory[i].Count
+                            ListInventory[i].Count,
+                            ListInventory[i].GetComponent<Valuable>().Cost * ListInventory[i].Count
                             );
                         continue;
                     }
 
                     if (ListInventory[i].IsEquiped)
                     {
-                        AnsiConsole.Markup("{0}. {1} ([{2}]{3}[/]) [bold]Экипировано[/]: ",
+                        AnsiConsole.Markup("{0}. {1} ([{2}]{3}[/]) ([gold1]{4} золота[/]) [bold]Экипировано[/]: ",
                             Number,
                             ListInventory[i].Name,
                             ListInventory[i].RarityColor,
-                            ListInventory[i].Rarity
+                            ListInventory[i].Rarity,
+                            ListInventory[i].GetComponent<Valuable>().Cost
                             );
                         ListInventory[i].ItemInfo(ListInventory[i]);
                         continue;
                     }
 
-                    AnsiConsole.Markup("{0}. {1} ([{2}]{3}[/]): ",
+                    AnsiConsole.Markup("{0}. {1} ([{2}]{3}[/]) ([gold1]{4} золота[/]): ",
                             Number,
                             ListInventory[i].Name,
                             ListInventory[i].RarityColor,
-                            ListInventory[i].Rarity
+                            ListInventory[i].Rarity,
+                            ListInventory[i].GetComponent<Valuable>().Cost
                             );
                     ListInventory[i].ItemInfo(ListInventory[i]);
                 }

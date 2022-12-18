@@ -57,8 +57,9 @@ namespace ConsoleRPG.Enemies
         {
             if (Energy >= 3)
             {
-                AnsiConsole.MarkupLine("Блок щитом!");
+                AnsiConsole.MarkupLine("{0} использовал Блок щитом!", Name);
                 CurrentFight.TakeDamage(this, Player, TakedDamage / 2, PlayerWeapon);
+                Energy = 0;
             }
             else
             {
