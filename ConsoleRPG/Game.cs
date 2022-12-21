@@ -29,7 +29,14 @@ namespace ConsoleRPG
             return CreatePlayer(Console.ReadLine());
         }
 
-        public void Adventure(Player Player)
+        public void StartGame()
+        {
+            Player player = CreateHero();
+            Merchant merchant = new Merchant();
+            MainMenu(player, merchant);
+        }
+
+        public void MainMenu(Player Player, Merchant merchant)
         {
             bool Loop = true;
             while (Loop)
@@ -41,7 +48,7 @@ namespace ConsoleRPG
 
                 AnsiConsole.MarkupLine("[bold]Что будете делать?[/]");
                 AnsiConsole.MarkupLine("1. Отравиться в приключение.");
-                AnsiConsole.MarkupLine("2. Посетить торговца. [blue]БЕТА[/]");
+                AnsiConsole.MarkupLine("2. Посетить торговца. [blue]ТЕСТ[/]");
                 AnsiConsole.MarkupLine("3. Инвентарь.");
                 AnsiConsole.MarkupLine("4. Экипировка.");
                 AnsiConsole.MarkupLine("5. Характеристики. НЕ РАБОТАЕТ!");
@@ -54,9 +61,8 @@ namespace ConsoleRPG
                         new Fight().StartFight(Player, GetRandomEnemy());
                         break;
                     case "2":
-                        //Loop = false;
-                        Merchant merchant = new Merchant();
-                        merchant.SellingItems(Player);
+                        //Merchant merchant = new Merchant();
+                        merchant.SellingMenu(Player);
                         break;
                     case "3":
                         Player.Inventory.ShowInventory();
@@ -65,7 +71,6 @@ namespace ConsoleRPG
                         EquipmentMenu(Player);
                         break;
                     case "5":
-                        //Player.GetAllResistance();
                         break;
                     case "6":
                         break;
@@ -74,6 +79,11 @@ namespace ConsoleRPG
                         break;
                 }
             }
+        }
+
+        public void Adventure(Player Player)
+        {
+            
         }
 
         public void EquipmentMenu(Player Player)

@@ -20,6 +20,59 @@ namespace ConsoleRPG
             ListInventory = new List<Item>();
         }
 
+        public bool IsEnoughCurrency(int Cost)
+        {
+            List<Item> CurrenciesList = new List<Item>();
+            foreach (Item item in ListInventory)
+            {
+                if (item.Type == ItemType.Currency)
+                {
+                    CurrenciesList.Add(item);
+                }
+            }
+
+            if (GetItemsCost(CurrenciesList.ToArray()) == Cost)
+            {
+                foreach (Item item in CurrenciesList.ToArray())
+                {
+                    RemoveItem(item);
+                }
+
+                return true;
+            }
+
+            if (GetItemsCost(CurrenciesList.ToArray()) > Cost)
+            {
+                foreach (Item item in CurrenciesList.ToArray())
+                {
+                    RemoveItem(item, Cost);
+                }
+
+                return true;
+            }
+
+            return false;
+
+        }
+
+        public int GetItemsCost(params Item[] items)
+        {
+            int SumCost = 0;
+            foreach (Item item in items)
+            {
+                if (item.IsStacable)
+                {
+                    SumCost += item.GetComponent<Valuable>().Cost * item.Count;
+                }
+                else
+                {
+                    SumCost += item.GetComponent<Valuable>().Cost;
+                } 
+            }
+
+            return SumCost;
+        }
+
         public void ShowInventory()
         {
             ListInventory = SortInventory();
@@ -135,6 +188,31 @@ namespace ConsoleRPG
 
             return SortedInventory;
 
+        }
+
+        public void RemoveItem(Item item)
+        {
+            ListInventory.Remove(item);
+        }
+
+        public void RemoveItem(Item item, int count)
+        {
+            try
+            {
+                if ((item.Count - count) <= 0)
+                {
+                    RemoveItem(item);
+                }
+                else
+                {
+                    item.Count -= count;
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Предмет не стакающийся!!!");
+                throw;
+            }
         }
 
         public void AddItem(Item Item)
