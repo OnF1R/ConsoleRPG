@@ -8,6 +8,7 @@ using System.Drawing;
 using Console = Colorful.Console;
 using Spectre.Console;
 using ConsoleRPG.Items.ItemsComponents;
+using ConsoleRPG.Items.Currencies;
 
 namespace ConsoleRPG
 {
@@ -20,7 +21,49 @@ namespace ConsoleRPG
             ListInventory = new List<Item>();
         }
 
-        public bool IsEnoughCurrency(int Cost)
+        public List<string> GetNamesWithCost(bool IsStacable)
+        {
+            List<string> namesWithCost = new List<string>();
+            if (IsStacable)
+            {
+                foreach (Item item in ListInventory)
+                {
+                    if (!item.IsEquiped)
+                    {
+                        namesWithCost.Add(item.Name + " [gold1]" + item.GetComponent<Valuable>().Cost + " золота[/]");
+                    }
+                }
+            }
+            else
+            {
+                foreach (Item item in ListInventory)
+                {
+                    if (!item.IsStacable && !item.IsEquiped)
+                    {
+                        namesWithCost.Add(item.Name + " [gold1]" + item.GetComponent<Valuable>().Cost + " золота[/]");
+                    }
+                }
+            }
+
+            return namesWithCost;
+        }
+
+        public void GetItemsAndCost(out List<string> namesWithCost, out List<Item> items)
+        {
+            Dictionary<Item, string> namesAndCost = new Dictionary<Item, string>();
+            namesWithCost = GetNamesWithCost(false);
+            items = new List<Item>();
+
+            for (int i = 0; i < ListInventory.Count; i++)
+            {
+                if (!ListInventory[i].IsStacable && !ListInventory[i].IsEquiped)
+                    items.Add(ListInventory[i]);
+            }
+                
+                    
+        } 
+
+        public List<Item> GetCurrencies()
         {
             List<Item> CurrenciesList = new List<Item>();
             foreach (Item item in ListInventory)
@@ -31,14 +74,25 @@ namespace ConsoleRPG
                 }
             }
 
+            return CurrenciesList;
+        }
+
+        public bool IsEnoughCurrency(int Cost)
+        {
+            return GetItemsCost(GetCurrencies().ToArray()) >= Cost;
+        }
+
+        public void BuyItem(int Cost, Item BoughtItem)
+        {
+            List<Item> CurrenciesList = GetCurrencies();
+
+
             if (GetItemsCost(CurrenciesList.ToArray()) == Cost)
             {
                 foreach (Item item in CurrenciesList.ToArray())
                 {
                     RemoveItem(item);
                 }
-
-                return true;
             }
 
             if (GetItemsCost(CurrenciesList.ToArray()) > Cost)
@@ -47,12 +101,18 @@ namespace ConsoleRPG
                 {
                     RemoveItem(item, Cost);
                 }
-
-                return true;
             }
 
-            return false;
+            AddItem(BoughtItem);
+        }
 
+        public void SellItem(Item item)
+        {
+            RemoveItem(item);
+            Item gold = new Gold();
+            gold.Count = 1;
+            gold.Count *= item.GetComponent<Valuable>().Cost;
+            AddItem(gold);
         }
 
         public int GetItemsCost(params Item[] items)

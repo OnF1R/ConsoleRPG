@@ -13,8 +13,27 @@ using ConsoleRPG.Enemies;
 
 namespace ConsoleRPG
 {
-    internal class Game
+    class Game
     {
+        private static Dictionary<int, string> MenuChoises = new Dictionary<int, string>();
+
+        public Game()
+        {
+            MenuChoises = GenerateMenuChoises();
+        }
+
+        private static Dictionary<int, string> GenerateMenuChoises()
+        {
+            MenuChoises.Add(1, "Отправиться в приключение");
+            MenuChoises.Add(2, "Торговец");
+            MenuChoises.Add(3, "Инвентарь");
+            MenuChoises.Add(4, "Экипировка");
+            MenuChoises.Add(5, "Характеристики");
+            MenuChoises.Add(6, "Крафт");
+
+            return MenuChoises;
+        }
+
         public Enemy GetRandomEnemy()
         {
             Enemy[] enemies = new Enemy[] { new FireMage(), new Elemental(), new Ghoul(), new SteelKnight(), new ExplosiveBug() };
@@ -46,33 +65,33 @@ namespace ConsoleRPG
                     Player.Resurrection();
                 }
 
-                AnsiConsole.MarkupLine("[bold]Что будете делать?[/]");
-                AnsiConsole.MarkupLine("1. Отравиться в приключение.");
-                AnsiConsole.MarkupLine("2. Посетить торговца. [blue]ТЕСТ[/]");
-                AnsiConsole.MarkupLine("3. Инвентарь.");
-                AnsiConsole.MarkupLine("4. Экипировка.");
-                AnsiConsole.MarkupLine("5. Характеристики. НЕ РАБОТАЕТ!");
-                AnsiConsole.MarkupLine("6. Крафт. НЕ РАБОТАЕТ!");
-                AnsiConsole.Markup("Выберите действие: ");
+                var choise = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("[bold]Что будете делать?[/]")
+                        .PageSize(10)
+                        .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
+                        .AddChoices(MenuChoises.Values));
 
-                switch (Convert.ToString(Console.ReadLine()))
+
+                Console.Clear();
+
+                switch (MenuChoises.FirstOrDefault(x => x.Value == choise).Key)
                 {
-                    case "1":
+                    case 1:
                         new Fight().StartFight(Player, GetRandomEnemy());
                         break;
-                    case "2":
-                        //Merchant merchant = new Merchant();
+                    case 2:
                         merchant.SellingMenu(Player);
                         break;
-                    case "3":
+                    case 3:
                         Player.Inventory.ShowInventory();
                         break;
-                    case "4":
+                    case 4:
                         EquipmentMenu(Player);
                         break;
-                    case "5":
+                    case 5:
                         break;
-                    case "6":
+                    case 6:
                         break;
                     default:
                         Console.WriteLine("Выберите существующий вариант.");

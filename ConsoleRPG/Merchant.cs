@@ -20,14 +20,28 @@ namespace ConsoleRPG
 
         private Timer _timer = null;
 
+        private static Dictionary<int, string> MenuChoises = new Dictionary<int, string>();
+
         public Merchant()
         {
             _timer = new Timer(TimerCallback, null, 0, 1800000);
+
+            MenuChoises = GenerateMenuChoises();
 
             sellingItems.Add(new FireSword(), 1);
             sellingItems.Add(new SteelAxe(), 55);
             sellingItems.Add(new SteelDagger(), 654);
             sellingItems.Add(new SteelSword(), 22);
+        }
+
+        private static Dictionary<int, string> GenerateMenuChoises()
+        {
+            MenuChoises.Add(1, "Посмотреть товары");
+            MenuChoises.Add(2, "Купить товары");
+            MenuChoises.Add(3, "Провать предметы");
+            MenuChoises.Add(4, "Выйти");
+
+            return MenuChoises;
         }
 
         private static void TimerCallback(Object o)
@@ -39,7 +53,7 @@ namespace ConsoleRPG
         {
 
         }
-        
+
         public void ShowSellingItems()
         {
             foreach (string name in GetItemsAndNames().Values)
@@ -52,28 +66,36 @@ namespace ConsoleRPG
 
         public void SellingMenu(Player player)
         {
+
             bool loop = true;
             while (loop)
             {
-                AnsiConsole.MarkupLine("[bold]Что будете делать?[/]");
-                AnsiConsole.MarkupLine("1. Посмотреть товары.");
-                AnsiConsole.MarkupLine("2. Купить товары.");
-                AnsiConsole.MarkupLine("3. Выйти.");
-                AnsiConsole.Markup("Выберите действие: ");
+                var choise = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("[bold]Что будете делать?[/]")
+                        .PageSize(10)
+                        .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
+                        .AddChoices(MenuChoises.Values));
 
-                switch (Convert.ToString(Console.ReadLine()))
+
+                Console.Clear();
+
+                switch (MenuChoises.FirstOrDefault(x => x.Value == choise).Key)
                 {
-                    case "1":
+                    case 1:
                         ShowSellingItems();
                         break;
-                    case "2":
-                        //Merchant merchant = new Merchant();
+                    case 2:
                         SellingItems(player);
+                        break;
+                    case 3:
+                        BoughtItems(player);
                         break;
                     default:
                         loop = false;
                         break;
                 }
+
             }
         }
 
@@ -117,16 +139,87 @@ namespace ConsoleRPG
 
         public void BuyItem(Player player, Item BoughtItem)
         {
-            int cost = sellingItems.FirstOrDefault(x => x.Key == BoughtItem).Value;
+            int _cost = sellingItems.FirstOrDefault(x => x.Key == BoughtItem).Value;
 
-            if (player.Inventory.IsEnoughCurrency(cost))
+            if (player.Inventory.IsEnoughCurrency(_cost))
             {
-                player.Inventory.AddItem(BoughtItem);
-                AnsiConsole.MarkupLine($"Вы купили {GetItemsAndNames().FirstOrDefault(x => x.Key == BoughtItem).Value} , спасибо за покупку!");
+
+                if (ConfirmBuy(BoughtItem))
+                {
+                    player.Inventory.BuyItem(_cost, BoughtItem);
+                    AnsiConsole.MarkupLine($"Вы купили {GetItemsAndNames().FirstOrDefault(x => x.Key == BoughtItem).Value} , спасибо за покупку!");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[red bold]Вы отказались от покупки[/]");
+                }
+
             }
             else
             {
                 AnsiConsole.MarkupLine("[bold red]Не достаточно золота![/]");
+            }
+        }
+
+        public void SellItem(Player player, params Item[] sellingItem)
+        {
+            int _cost = 0;
+
+            foreach (Item item in sellingItem)
+            {
+                _cost += item.GetComponent<Valuable>().Cost;
+            }
+
+            if (ConfirmSell(sellingItem))
+            {
+                foreach (Item item in sellingItem)
+                {
+                    player.Inventory.SellItem(item);
+                    AnsiConsole.MarkupLine("Вы продали {0} за [gold1]{1} золота[/]", item.Name, item.GetComponent<Valuable>().Cost);
+                }
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red bold]Вы отказались от продажи[/]");
+            }
+        }
+
+        public bool ConfirmBuy(Item item)
+        {
+            AnsiConsole.MarkupLine("Вы точно хотите приобрести {0} со следующими характеристиками: ", item.Name);
+            item.ItemInfo(item);
+            var confirm = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[bold]Вы хотите приобрести этот предмет?[/]")
+                    .AddChoices("Да", "Нет"));
+
+            switch (confirm)
+            {
+                case "Да":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public bool ConfirmSell(params Item[] sellingItem)
+        {
+            AnsiConsole.MarkupLine("Вы точно хотите продать следующие предметы:");
+            foreach (Item item in sellingItem)
+            {
+                AnsiConsole.MarkupLine(item.Name);
+            }
+            var confirm = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[bold]Вы точно хотите их продать[/]")
+                    .AddChoices("Да", "Нет"));
+
+            switch (confirm)
+            {
+                case "Да":
+                    return true;
+                default:
+                    return false;
             }
         }
 
@@ -138,9 +231,40 @@ namespace ConsoleRPG
                     .MoreChoicesText("[bold]Пролистайте ниже чтобы увидеть все предложения![/]")
                     .AddChoices(GetItemsAndNames().Values));
 
-            // Echo the fruit back to the terminal
+
             BuyItem(player, GetItemsAndNames().FirstOrDefault(x => x.Value == bought).Key);
-            
+        }
+
+        public void BoughtItems(Player player)
+        {
+            List<string> itemsNames = new List<string>();
+            List<Item> items = new List<Item>();
+
+            player.Inventory.GetItemsAndCost(out itemsNames, out items);
+
+
+            if (items.Count > 0)
+            {
+                var bought = AnsiConsole.Prompt(
+                    new MultiSelectionPrompt<string>()
+                        .Title("[bold]Скупка предметов![/]")
+                        .MoreChoicesText("[bold]Пролистайте ниже чтобы увидеть все предложения![/]")
+                        .InstructionsText(
+                        "[bold](Нажмите [blue]<Пробел>[/] чтобы выбрать предмет, " +
+                        "[green]<Enter>[/] чтобы продать выбранное)[/]")
+                        .AddChoices(itemsNames));
+
+                foreach (string item in bought)
+                {
+                    SellItem(player, items[itemsNames.IndexOf(item)]);
+                }
+
+
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red bold]Вам нечего продать[/]");
+            }
         }
     }
 }
