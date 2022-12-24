@@ -8,7 +8,7 @@ namespace ConsoleRPG
         static void Main(string[] args)
         {
             Game Game = new Game();
-            Game.StartGame();
+            Game.MainMenu();
         }
     }
 }   

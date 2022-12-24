@@ -10,16 +10,22 @@ using ConsoleRPG.Items.Weapons;
 using ConsoleRPG.Items.Currencies;
 using System.Reflection.Metadata.Ecma335;
 using ConsoleRPG.Enemies;
+using Color = Spectre.Console.Color;
 
 namespace ConsoleRPG
 {
     class Game
     {
-        private static Dictionary<int, string> MenuChoises = new Dictionary<int, string>();
+
+        private static Dictionary<int, string> MenuChoises;
+        private static Dictionary<int, string> MainMenuChoises;
 
         public Game()
         {
+            MenuChoises = new Dictionary<int, string>();
             MenuChoises = GenerateMenuChoises();
+            MainMenuChoises = new Dictionary<int, string>();
+            MainMenuChoises = GenerateMainMenuChoises();
         }
 
         private static Dictionary<int, string> GenerateMenuChoises()
@@ -34,6 +40,41 @@ namespace ConsoleRPG
             return MenuChoises;
         }
 
+        private static Dictionary<int, string> GenerateMainMenuChoises()
+        {
+            MainMenuChoises.Add(1, "Новая игра");
+            MainMenuChoises.Add(2, "Загрузить");
+            MainMenuChoises.Add(3, "Выйти");
+
+            return MainMenuChoises;
+        }
+
+        public void MainMenu()
+        {
+            AnsiConsole.Write(
+            new FigletText("Astral Game")
+                .Centered()
+                .Color(Color.DeepSkyBlue1));
+            
+            var choise = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .PageSize(3)
+                    //.MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
+                    .AddChoices(MainMenuChoises.Values));
+            //Console.Clear();
+
+            switch (MainMenuChoises.FirstOrDefault(x => x.Value == choise).Key)
+            {
+                case 1:
+                    StartGame();
+                    break;
+                case 2:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public Enemy GetRandomEnemy()
         {
             Enemy[] enemies = new Enemy[] { new FireMage(), new Elemental(), new Ghoul(), new SteelKnight(), new ExplosiveBug() };
@@ -44,18 +85,21 @@ namespace ConsoleRPG
 
         public Player CreateHero()
         {
-            Console.Write("Создание персонажа, введите имя: ");
-            return CreatePlayer(Console.ReadLine());
+            var playerName = AnsiConsole.Prompt(
+                new TextPrompt<string>("[bold]Введите имя персонажа:[/]")
+                    .PromptStyle("bold"));
+
+            return CreatePlayer(playerName);
         }
 
         public void StartGame()
         {
             Player player = CreateHero();
             Merchant merchant = new Merchant();
-            MainMenu(player, merchant);
+            GameMenu(player, merchant);
         }
 
-        public void MainMenu(Player Player, Merchant merchant)
+        public void GameMenu(Player Player, Merchant merchant)
         {
             bool Loop = true;
             while (Loop)
@@ -69,7 +113,7 @@ namespace ConsoleRPG
                     new SelectionPrompt<string>()
                         .Title("[bold]Что будете делать?[/]")
                         .PageSize(10)
-                        .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
+                        .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
                         .AddChoices(MenuChoises.Values));
 
 
@@ -87,7 +131,7 @@ namespace ConsoleRPG
                         Player.Inventory.ShowInventory();
                         break;
                     case 4:
-                        EquipmentMenu(Player);
+                        Player.Equipment.EquipmentMenu(Player);
                         break;
                     case 5:
                         break;
@@ -102,51 +146,8 @@ namespace ConsoleRPG
 
         public void Adventure(Player Player)
         {
-            
-        }
 
-        public void EquipmentMenu(Player Player)
-        {
-            bool Loop = true;
-            while (Loop)
-            {
-                Console.WriteLine("1.Посмотреть экипировку\n2.Изменить экипировку\n3.Выйти");
-                Console.Write("Выберите действие: ");
-                switch (Convert.ToString(Console.ReadLine()))
-                {
-                    case "1":
-                        Player.Equipment.ShowWearEquipment();
-                        break;
-                    case "2":
-                        Player.Equipment.ChangeEquipmentMenu(Player.Inventory);
-                        break;
-                    default:
-                        Loop = false;
-                        break;
-                }
-            }
         }
-
-        //public void Fight(Player Player, Enemy Enemy)
-        //{
-        //    AnsiConsole.MarkupLine("[red]На вас напал[/] [bold]{0}[/] (Уровень: {1})", Enemy.Name, Enemy.Level);
-        //    while (!Player.IsDead && !Enemy.IsDead)
-        //    {
-        //        AnsiConsole.MarkupLine("1. Атаковать\n2. Сбежать");
-        //        AnsiConsole.Markup("Выберите действие: ");
-        //        switch(Convert.ToString(Console.ReadLine()))
-        //        {
-        //            case "1":
-        //                Player.BasicAttack(Enemy);
-        //                break;
-        //            case "2":
-        //                break;
-        //            default:
-        //                AnsiConsole.MarkupLine("Выберите существующие действие.");
-        //                break;
-        //        }
-        //    }
-        //}
 
         public Player CreatePlayer(string Name)
         {

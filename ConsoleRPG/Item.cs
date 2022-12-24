@@ -560,5 +560,361 @@ namespace ConsoleRPG
 
             Console.WriteLine();
         }
+
+        public string ItemInfoString(Item item)
+        {
+            string itemInfo = "";
+            Dictionary<DamageTypes, string> names = new DamageTypesNames().Names;
+
+            DamageTypes DamageType = DamageTypes.Abyss;
+
+            if (item.GetComponent<DamageType>() != null)
+            {
+                DamageType = item.GetComponent<DamageType>().Type;
+            }
+
+            if (
+                DamageType == DamageTypes.Fire
+                || DamageType == DamageTypes.Overcharge
+                || DamageType == DamageTypes.Flame
+                || DamageType == DamageTypes.Melting
+                || DamageType == DamageTypes.Fume
+                || DamageType == DamageTypes.Meteor
+                || DamageType == DamageTypes.Fireblast
+                || DamageType == DamageTypes.Burst)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Fire},  урона ({names[DamageTypes.Fire]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Electric
+                || DamageType == DamageTypes.Overcharge
+                || DamageType == DamageTypes.Load
+                || DamageType == DamageTypes.Icecharge
+                || DamageType == DamageTypes.Shock
+                || DamageType == DamageTypes.Stream
+                || DamageType == DamageTypes.Storm)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Electric},  урона ({names[DamageTypes.Electric]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Nature
+                || DamageType == DamageTypes.Flame
+                || DamageType == DamageTypes.Load)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Nature},  урона ({names[DamageTypes.Nature]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Frost
+                || DamageType == DamageTypes.Melting
+                || DamageType == DamageTypes.Icecharge)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Frost},  урона ({names[DamageTypes.Frost]} ");
+            }
+
+            if (
+                DamageType == DamageTypes.Water
+                || DamageType == DamageTypes.Fume
+                || DamageType == DamageTypes.Shock)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Water},  урона ({names[DamageTypes.Water]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Earth
+                || DamageType == DamageTypes.Meteor
+                || DamageType == DamageTypes.Stream)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Earth},  урона ({names[DamageTypes.Earth]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Wind
+                || DamageType == DamageTypes.Fireblast
+                || DamageType == DamageTypes.Storm)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Wind},  урона ({names[DamageTypes.Wind]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Dark
+                || DamageType == DamageTypes.Chaos)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Dark},  урона ({names[DamageTypes.Dark]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Holy)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Holy},  урона ({names[DamageTypes.Holy]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Poison)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Poison},  урона ({names[DamageTypes.Poison]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Necrotic)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Necrotic},  урона ({names[DamageTypes.Necrotic]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Psychic)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Psychic},  урона ({names[DamageTypes.Psychic]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Arcane)
+            {
+                if (item.GetComponent<ElementalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Arcane},  урона ({names[DamageTypes.Arcane]}) ");
+            }
+
+            if (
+                DamageType == DamageTypes.Physical
+                || DamageType == DamageTypes.Burst)
+            {
+
+                if (item.GetComponent<PhysicalDamage>() != null)
+                    itemInfo.Concat($"+{item.GetComponent<PhysicalDamage>().Physical},  урона ({names[DamageTypes.Physical]}) ");
+            }
+
+            if (item.GetComponent<Defence>() != null)
+            {
+                itemInfo.Concat($"+{item.GetComponent<Defence>().ArmorPoints},  к [bold]броне[/] ");
+            }
+
+            if (item.GetComponent<ElementalResistance>() != null)
+            {
+                if (item.GetComponent<ElementalResistance>().Fire != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Fire > 0)
+                    {
+                        {
+                            itemInfo.Concat($"+{item.GetComponent<ElementalResistance>().Fire}% сопротивления к ({names[DamageTypes.Fire]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Fire}% сопротивления к ({names[DamageTypes.Fire]}) ");
+                        }
+                    }
+                }
+
+                if (item.GetComponent<ElementalResistance>().Electric != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Electric > 0)
+                    {
+                        {
+                            itemInfo.Concat($"+{item.GetComponent<ElementalResistance>().Electric}% сопротивления к ({names[DamageTypes.Electric]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Electric}% сопротивления к ({names[DamageTypes.Electric]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Nature != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Nature > 0)
+                    {
+                        {
+                            itemInfo.Concat($"+{item.GetComponent<ElementalResistance>().Nature}% сопротивления к ({names[DamageTypes.Nature]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Nature}% сопротивления к ({names[DamageTypes.Nature]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Frost != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Frost > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Frost}% сопротивления к ({names[DamageTypes.Frost]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Frost}% сопротивления к ({names[DamageTypes.Frost]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Water != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Water > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Water}% сопротивления к ({names[DamageTypes.Water]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Water}% сопротивления к ({names[DamageTypes.Water]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Earth != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Earth > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Earth}% сопротивления к ({names[DamageTypes.Earth]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Earth}% сопротивления к ({names[DamageTypes.Earth]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Wind != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Wind > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Wind}% сопротивления к ({names[DamageTypes.Wind]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Wind}% сопротивления к ({names[DamageTypes.Wind]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Dark != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Dark > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Dark}% сопротивления к ({names[DamageTypes.Dark]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Dark}% сопротивления к ({names[DamageTypes.Dark]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Holy != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Holy > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Holy}% сопротивления к ({names[DamageTypes.Holy]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Holy}% сопротивления к ({names[DamageTypes.Holy]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Poison != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Poison > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Poison}% сопротивления к ({names[DamageTypes.Poison]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Poison}% сопротивления к ({names[DamageTypes.Poison]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Necrotic != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Necrotic > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Necrotic}% сопротивления к ({names[DamageTypes.Necrotic]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Necrotic}% сопротивления к ({names[DamageTypes.Necrotic]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Psychic != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Psychic > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Psychic}% сопротивления к ({names[DamageTypes.Psychic]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Psychic}% сопротивления к ({names[DamageTypes.Psychic]}) ");
+                        }
+                    }
+                }
+                if (item.GetComponent<ElementalResistance>().Arcane != 0)
+                {
+                    if (item.GetComponent<ElementalResistance>().Arcane > 0)
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Arcane}% сопротивления к ({names[DamageTypes.Arcane]}) ");
+                        }
+                    }
+                    else
+                    {
+                        {
+                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Arcane}% сопротивления к ({names[DamageTypes.Arcane]}) ");
+                        }
+                    }
+                }
+            }
+
+            if (item.GetComponent<Criticals>() != null)
+            {
+                if (item.GetComponent<Criticals>().CritChance > 0)
+                {
+                    itemInfo.Concat($"+{item.GetComponent<Criticals>().CritChance} к шансу крит.удара ");
+                }
+                if (item.GetComponent<Criticals>().CritDamage > 0)
+                {
+                    itemInfo.Concat($"+{item.GetComponent<Criticals>().CritDamage} к множителю крит.удара ");
+                }
+            }
+
+            return itemInfo;
+        }
     }
 }

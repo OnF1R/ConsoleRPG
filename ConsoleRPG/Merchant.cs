@@ -28,30 +28,33 @@ namespace ConsoleRPG
 
             MenuChoises = GenerateMenuChoises();
 
-            sellingItems.Add(new FireSword(), 1);
-            sellingItems.Add(new SteelAxe(), 55);
-            sellingItems.Add(new SteelDagger(), 654);
-            sellingItems.Add(new SteelSword(), 22);
+            
         }
 
         private static Dictionary<int, string> GenerateMenuChoises()
         {
             MenuChoises.Add(1, "Посмотреть товары");
             MenuChoises.Add(2, "Купить товары");
-            MenuChoises.Add(3, "Провать предметы");
+            MenuChoises.Add(3, "Продать предметы");
             MenuChoises.Add(4, "Выйти");
 
             return MenuChoises;
         }
 
-        private static void TimerCallback(Object o)
+        private void TimerCallback(Object o)
         {
             AnsiConsole.MarkupLine("[bold]Магазин торговца обновился![/] " + DateTime.Now);
+            UpdateItems();
         }
 
         public void UpdateItems()
         {
+            List<Item> randomItems = new List<Item>() { new FireSword(), new SteelAxe(), new SteelDagger(), new SteelSword() };
 
+            foreach (Item item in randomItems)
+            {
+                sellingItems.Add(item, item.GetComponent<Valuable>().Cost * new Random().Next(3, 8));
+            }
         }
 
         public void ShowSellingItems()
@@ -74,7 +77,7 @@ namespace ConsoleRPG
                     new SelectionPrompt<string>()
                         .Title("[bold]Что будете делать?[/]")
                         .PageSize(10)
-                        .MoreChoicesText("[grey](Move up and down to reveal more fruits)[/]")
+                        .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
                         .AddChoices(MenuChoises.Values));
 
 
@@ -148,6 +151,7 @@ namespace ConsoleRPG
                 {
                     player.Inventory.BuyItem(_cost, BoughtItem);
                     AnsiConsole.MarkupLine($"Вы купили {GetItemsAndNames().FirstOrDefault(x => x.Key == BoughtItem).Value} , спасибо за покупку!");
+                    sellingItems.Remove(BoughtItem);
                 }
                 else
                 {
@@ -225,14 +229,21 @@ namespace ConsoleRPG
 
         public void SellingItems(Player player)
         {
-            var bought = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("[bold]Только лучшие товары![/]")
-                    .MoreChoicesText("[bold]Пролистайте ниже чтобы увидеть все предложения![/]")
-                    .AddChoices(GetItemsAndNames().Values));
+            if (GetItemsAndNames().Count == 0)
+            {
+                AnsiConsole.MarkupLine("[bold]Ты уже все купил, жди пополнения![/]");
+            }
+            else
+            {
+                var bought = AnsiConsole.Prompt(
+                                new SelectionPrompt<string>()
+                                    .Title("[bold]Только лучшие товары![/]")
+                                    .MoreChoicesText("[bold]Пролистайте ниже, чтобы увидеть все доступные варианты[/]")
+                                    .AddChoices(GetItemsAndNames().Values));
 
 
-            BuyItem(player, GetItemsAndNames().FirstOrDefault(x => x.Value == bought).Key);
+                BuyItem(player, GetItemsAndNames().FirstOrDefault(x => x.Value == bought).Key);
+            }
         }
 
         public void BoughtItems(Player player)
@@ -248,7 +259,7 @@ namespace ConsoleRPG
                 var bought = AnsiConsole.Prompt(
                     new MultiSelectionPrompt<string>()
                         .Title("[bold]Скупка предметов![/]")
-                        .MoreChoicesText("[bold]Пролистайте ниже чтобы увидеть все предложения![/]")
+                        .MoreChoicesText("[bold]Пролистайте ниже, чтобы увидеть все доступные варианты[/]")
                         .InstructionsText(
                         "[bold](Нажмите [blue]<Пробел>[/] чтобы выбрать предмет, " +
                         "[green]<Enter>[/] чтобы продать выбранное)[/]")
