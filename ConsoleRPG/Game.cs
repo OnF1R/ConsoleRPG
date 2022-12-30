@@ -11,6 +11,7 @@ using ConsoleRPG.Items.Currencies;
 using System.Reflection.Metadata.Ecma335;
 using ConsoleRPG.Enemies;
 using Color = Spectre.Console.Color;
+using ConsoleRPG.Races;
 
 namespace ConsoleRPG
 {
@@ -19,6 +20,7 @@ namespace ConsoleRPG
 
         private static Dictionary<int, string> MenuChoises;
         private static Dictionary<int, string> MainMenuChoises;
+        private static Dictionary<Race, string> RacesNames = new RacesNames().racesNames;
 
         public Game()
         {
@@ -55,7 +57,7 @@ namespace ConsoleRPG
             new FigletText("Astral Game")
                 .Centered()
                 .Color(Color.DeepSkyBlue1));
-            
+
             var choise = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .PageSize(3)
@@ -85,11 +87,44 @@ namespace ConsoleRPG
 
         public Player CreateHero()
         {
+            return CreatePlayer(EnterName(), ChooseRace());
+        }
+
+        public string EnterName()
+        {
             var playerName = AnsiConsole.Prompt(
                 new TextPrompt<string>("[bold]Введите имя персонажа:[/]")
                     .PromptStyle("bold"));
 
-            return CreatePlayer(playerName);
+            return playerName;
+        }
+
+        public Race ChooseRace()
+        {
+            var raceChoise = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[bold]Выберите расу: [/]")
+                .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
+                .AddChoices(RacesNames.Values));
+
+            AnsiConsole.MarkupLine(RacesNames.FirstOrDefault(x => x.Value == raceChoise).Key.RaceInfo());
+
+            var confirm = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[bold]Вы точно хотите выбрать эту расу? [/]")
+                .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
+                .AddChoices("Да", "Нет"));
+
+            switch (confirm)
+            {
+                case "Да":
+                    Console.Clear();
+                    return RacesNames.FirstOrDefault(x => x.Value == raceChoise).Key;
+                default:
+                    Console.Clear();
+                    return ChooseRace();
+            }
+
         }
 
         public void StartGame()
@@ -134,6 +169,7 @@ namespace ConsoleRPG
                         Player.Equipment.EquipmentMenu(Player);
                         break;
                     case 5:
+                        Player.ShowCharacteristics();
                         break;
                     case 6:
                         break;
@@ -149,9 +185,9 @@ namespace ConsoleRPG
 
         }
 
-        public Player CreatePlayer(string Name)
+        public Player CreatePlayer(string Name, Race race)
         {
-            Player Player = new Player();
+            Player Player = new();
             Player.Name = Name;
             Player.Level = 1;
             Player.Damage = 3;
@@ -160,7 +196,8 @@ namespace ConsoleRPG
             Player.CurrentExp = 0;
             Player.NextLevelExp = 100;
             Player.IsDead = false;
-            Player.Luck = 0;
+            //Player.Luck = 0;
+            Player.Race = race;
             return Player;
         }
     }

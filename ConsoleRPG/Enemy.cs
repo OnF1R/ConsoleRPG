@@ -26,6 +26,8 @@ namespace ConsoleRPG
 
         public Item[] DropList { get; set; }
 
+        public Race Race;
+
         public Equipment Equipment = new Equipment();
 
         public Enemy()
