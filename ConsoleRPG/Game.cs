@@ -190,7 +190,6 @@ namespace ConsoleRPG
             Player Player = new();
             Player.Name = Name;
             Player.Level = 1;
-            Player.Damage = 3;
             Player.MaxHealth = 100;
             Player.CurrentHealth = Player.MaxHealth;
             Player.CurrentExp = 0;

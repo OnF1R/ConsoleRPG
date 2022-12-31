@@ -10,6 +10,7 @@ namespace ConsoleRPG
 
     class Stat_Strength : Characteristics
     {
+        public int HealthPerSTR = 20;
         public double PerLevel { get; set; }
         public double RealSTR { get; set; }
         public int STR { get; set; }
@@ -17,6 +18,7 @@ namespace ConsoleRPG
 
     class Stat_Agility : Characteristics
     {
+        public int DamagePerAGI = 1;
         public double PerLevel { get; set; }
         public double RealAGI { get; set; }
         public int AGI { get; set; }
@@ -24,9 +26,16 @@ namespace ConsoleRPG
 
     class Stat_Intelligence : Characteristics
     {
+        public double MagicAmplificationPerINT = 1;
         public double PerLevel { get; set; }
         public double RealINT { get; set; }
         public int INT { get; set; }
+    }
+
+    class Stat_MagicAmplification : Characteristics
+    {
+        public double PerLevel { get; set; }
+        public double Amplification { get; set; }
     }
 
     class Stat_Damage : Characteristics

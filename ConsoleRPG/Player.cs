@@ -15,28 +15,16 @@ namespace ConsoleRPG
     internal class Player
     {
         public string Name { get; set; }
-        public int Damage { get; set; }
+
         public int Level { get; set; }
+
         public int MaxHealth { get; set; }
         public int CurrentHealth { get; set; }
+
         public int CurrentExp { get; set; }
         public int NextLevelExp { get; set; }
 
         public bool IsDead { get; set; }
-
-
-        //public Player AddComponent(Characteristics component)
-        //{
-        //    _components.Add(component);
-        //    return this;
-        //}
-
-        //public T GetComponent<T>()
-        //{
-        //    return (T)_components.OfType<T>().FirstOrDefault();
-        //}
-
-        //private List<Characteristics> _components = new List<Characteristics>();
 
         public Race Race;
 
@@ -69,6 +57,7 @@ namespace ConsoleRPG
             AddComponent(new Stat_Evasion { CHANCE = 0 });
             AddComponent(new Stat_MissChance { CHANCE = 0 });
             AddComponent(new Stat_Luck { RealLCK = 0, LCK = 0 });
+            AddComponent(new Stat_MagicAmplification { Amplification = 0 });
         }
 
         public void Resurrection()
@@ -93,20 +82,57 @@ namespace ConsoleRPG
 
         public void UpgradeStats()
         {
-            GetComponent<Stat_Strength>().RealSTR += Race.GetComponent<Stat_Strength>().PerLevel;
-            GetComponent<Stat_Strength>().STR = (int)GetComponent<Stat_Strength>().RealSTR;
-            GetComponent<Stat_Agility>().RealAGI += Race.GetComponent<Stat_Agility>().PerLevel;
-            GetComponent<Stat_Agility>().AGI = (int)GetComponent<Stat_Agility>().RealAGI;
-            GetComponent<Stat_Intelligence>().RealINT += Race.GetComponent<Stat_Intelligence>().PerLevel;
-            GetComponent<Stat_Intelligence>().INT = (int)GetComponent<Stat_Intelligence>().RealINT;
+            BaseStatsUpgrade();
+            RaceUpgradeStats();
+        }
 
+        public void StrengthUpgrade()
+        {
+            GetComponent<Stat_Strength>().RealSTR += Race.GetComponent<Stat_Strength>().PerLevel;
+            int tempRealSTR = (int)GetComponent<Stat_Strength>().RealSTR;
+            int tempSTR = GetComponent<Stat_Strength>().STR;
+            int subtracts = tempRealSTR - tempSTR;
+            MaxHealth += subtracts * GetComponent<Stat_Strength>().HealthPerSTR;
+            GetComponent<Stat_Strength>().STR = tempRealSTR;
+        }
+
+        public void AgilityUpgrade()
+        {
+            GetComponent<Stat_Agility>().RealAGI += Race.GetComponent<Stat_Agility>().PerLevel;
+            int tempRealAGI = (int)GetComponent<Stat_Agility>().RealAGI;
+            int tempAGI = GetComponent<Stat_Agility>().AGI;
+            int subtracts = tempRealAGI - tempAGI;
+            GetComponent<Stat_Damage>().DMG += subtracts * GetComponent<Stat_Agility>().DamagePerAGI;
+            GetComponent<Stat_Agility>().AGI = tempRealAGI;
+        }
+
+        public void IntelligenceUpdage()
+        {
+            GetComponent<Stat_Intelligence>().RealINT += Race.GetComponent<Stat_Intelligence>().PerLevel;
+            int tempRealINT = (int)GetComponent<Stat_Intelligence>().RealINT;
+            int tempINT = GetComponent<Stat_Intelligence>().INT;
+            int subtracts = tempRealINT - tempINT;
+            GetComponent<Stat_MagicAmplification>().Amplification +=
+                subtracts * GetComponent<Stat_Intelligence>().MagicAmplificationPerINT;
+            GetComponent<Stat_Intelligence>().INT = tempRealINT;
+        }
+
+        public void BaseStatsUpgrade()
+        {
+            StrengthUpgrade();
+            AgilityUpgrade();
+            IntelligenceUpdage();
+        }
+
+        public void RaceUpgradeStats()
+        {
             if (Race.GetComponent<Stat_Armor>() != null)
             {
                 GetComponent<Stat_Armor>().RealARM += Race.GetComponent<Stat_Armor>().PerLevel;
                 GetComponent<Stat_Armor>().ARM = (int)GetComponent<Stat_Armor>().RealARM;
             }
-            if (Race.GetComponent<Stat_Damage>() != null) 
-            { 
+            if (Race.GetComponent<Stat_Damage>() != null)
+            {
                 GetComponent<Stat_Damage>().RealDMG += Race.GetComponent<Stat_Damage>().PerLevel;
                 GetComponent<Stat_Damage>().DMG = (int)GetComponent<Stat_Damage>().RealDMG;
             }
@@ -115,29 +141,36 @@ namespace ConsoleRPG
                 GetComponent<Stat_Luck>().RealLCK += Race.GetComponent<Stat_Luck>().PerLevel;
                 GetComponent<Stat_Luck>().LCK = (int)GetComponent<Stat_Luck>().RealLCK;
             }
-            if (Race.GetComponent<Stat_MissChance>() != null) 
-            { 
+            if (Race.GetComponent<Stat_MissChance>() != null)
+            {
                 GetComponent<Stat_MissChance>().CHANCE += Race.GetComponent<Stat_MissChance>().PerLevel;
             }
-            if (Race.GetComponent<Stat_Evasion>() != null) 
-            { 
+            if (Race.GetComponent<Stat_Evasion>() != null)
+            {
                 GetComponent<Stat_Evasion>().CHANCE += Race.GetComponent<Stat_Evasion>().PerLevel;
-            }            
-            if (Race.GetComponent<Stat_CritDamage>() != null) 
-            { 
+            }
+            if (Race.GetComponent<Stat_CritDamage>() != null)
+            {
                 GetComponent<Stat_CritDamage>().DMG += Race.GetComponent<Stat_CritDamage>().PerLevel;
             }
-            if (Race.GetComponent<Stat_CritChance>() != null) 
-            { 
+            if (Race.GetComponent<Stat_CritChance>() != null)
+            {
                 GetComponent<Stat_CritChance>().CHANCE += Race.GetComponent<Stat_CritChance>().PerLevel;
+            }
+            if (Race.GetComponent<Stat_MagicAmplification>() != null)
+            {
+                GetComponent<Stat_MagicAmplification>().Amplification += Race.GetComponent<Stat_MagicAmplification>().PerLevel;
             }
         }
 
         public void ShowCharacteristics()
         {
             var table = new Table();
-            table.AddColumn(new TableColumn("[bold]Характеристики[/]"));
+            table.AddColumn(new TableColumn($"[bold]Характеристики {Name}[/]"));
             //table.AddColumn(new TableColumn("[bold]Характеристики[/]").Centered());
+            table.AddRow($"Уровень: { Level }");
+            table.AddRow($"Опыт: {CurrentExp}/{NextLevelExp}");
+            table.AddRow($"Здоровье: {CurrentHealth}/{MaxHealth}");
             if (GetComponent<Stat_Strength>() != null) { table.AddRow($"Сила: {GetComponent<Stat_Strength>().STR}"); }
             if (GetComponent<Stat_Agility>() != null) { table.AddRow($"Ловкость: {GetComponent<Stat_Agility>().AGI}"); }
             if (GetComponent<Stat_Intelligence>() != null) { table.AddRow($"Интеллект: {GetComponent<Stat_Intelligence>().INT}"); }
@@ -148,6 +181,10 @@ namespace ConsoleRPG
             if (GetComponent<Stat_Luck>() != null) { table.AddRow($"Удача: {GetComponent<Stat_Luck>().LCK}"); }
             if (GetComponent<Stat_CritDamage>() != null) { table.AddRow($"Крит. урон: {GetComponent<Stat_CritDamage>().DMG}%"); }
             if (GetComponent<Stat_CritChance>() != null) { table.AddRow($"Крит. шанс: {GetComponent<Stat_CritChance>().CHANCE}%"); }
+            if (GetComponent<Stat_MagicAmplification>() != null) 
+            { 
+                table.AddRow($"Усиление магии: {GetComponent<Stat_MagicAmplification>().Amplification}%"); 
+            }
             AnsiConsole.Write(table);
 
             //if (GetComponent<Stat_Strength>() != null) { AnsiConsole.MarkupLine("Сила: {0}", GetComponent<Stat_Strength>().STR); }

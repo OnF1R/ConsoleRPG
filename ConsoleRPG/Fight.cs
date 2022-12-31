@@ -106,7 +106,7 @@ namespace ConsoleRPG
 
         public int GetDamage(Player Player, Item Weapon)
         {
-            int Damage = Player.Damage;
+            int Damage = Player.GetComponent<Stat_Damage>().DMG;
 
             Damage += Player.Equipment.GetTypeDamage(Weapon);
 
