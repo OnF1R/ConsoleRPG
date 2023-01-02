@@ -13,19 +13,19 @@ namespace ConsoleRPG.Races
             Name = "Темный эльф";
             RaceType = RacesType.DarkElf;
 
-            AddComponent(new Stat_Strength { PerLevel = 1.6 });
-            AddComponent(new Stat_Agility { PerLevel = 1.5 });
-            AddComponent(new Stat_Intelligence { PerLevel = 2.8 });
-            AddComponent(new Stat_Luck { PerLevel = 0.6 });
+            AddComponent(new StrengthCharacteristic { StrengthPerLevel = 1.6 });
+            AddComponent(new AgilityCharacteristic { AgilityPerLevel = 1.5 });
+            AddComponent(new IntelligenceCharacteristic { IntelligencePerLevel = 2.8 });
+            AddComponent(new LuckCharacteristic { LuckPerLevel = 0.6 });
         }
 
         public override string RaceInfo()
         {
-            return $"Прирост характеристик Человека за уровень: " +
-                $"Сила + {this.GetComponent<Stat_Strength>().PerLevel}" +
-                $", Ловкость {this.GetComponent<Stat_Agility>().PerLevel}" +
-                $", Интеллект {this.GetComponent<Stat_Intelligence>().PerLevel}" +
-                $", Удача + {this.GetComponent<Stat_Luck>().PerLevel}";
+            return $"Прирост характеристик Темного Эльфа за уровень: " +
+                $"Сила + {this.GetComponent<StrengthCharacteristic>().StrengthPerLevel}" +
+                $", Ловкость {this.GetComponent<AgilityCharacteristic>().AgilityPerLevel}" +
+                $", Интеллект {this.GetComponent<IntelligenceCharacteristic>().IntelligencePerLevel}" +
+                $", Удача + {this.GetComponent<LuckCharacteristic>().LuckPerLevel}";
         }
     }
 }

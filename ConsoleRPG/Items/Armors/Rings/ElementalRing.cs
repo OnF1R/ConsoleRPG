@@ -1,6 +1,4 @@
-﻿using ConsoleRPG.Items.ItemsComponents;
-using ConsoleRPG.Spells.SpellsComponents;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,14 +21,14 @@ namespace ConsoleRPG.Items.Armors.Rings
             {
                 string QualityName = Quality.GetBadQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 3 });
+                AddComponent(new ValueCharacteristic { Cost = 3 });
                 AddRandomElementalResist(this, rand.Next(1, 3));
                 RarityId = 0;
                 Level = 1;
             }
             else if (Chance <= 85)
             {
-                AddComponent(new Valuable { Cost = 7 });
+                AddComponent(new ValueCharacteristic { Cost = 7 });
                 AddRandomElementalResist(this, rand.Next(3, 6));
                 RarityId = 1;
                 Level = 1;
@@ -39,7 +37,7 @@ namespace ConsoleRPG.Items.Armors.Rings
             {
                 string QualityName = Quality.GetGoodQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 9 });
+                AddComponent(new ValueCharacteristic { Cost = 9 });
                 AddRandomElementalResist(this, rand.Next(6, 11));
                 RarityId = 1;
                 Level = 2;
@@ -48,7 +46,7 @@ namespace ConsoleRPG.Items.Armors.Rings
             {
                 string QualityName = Quality.GetBestQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 14 });
+                AddComponent(new ValueCharacteristic { Cost = 14 });
                 AddRandomElementalResist(this, rand.Next(11, 16));
                 RarityId = 2;
                 Level = 2;

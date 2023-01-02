@@ -1,4 +1,4 @@
-﻿using ConsoleRPG.Items.ItemsComponents;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +20,17 @@ namespace ConsoleRPG.Items.Armors.Helmets
             {
                 string QualityName = Quality.GetBadQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 1 });
+                AddComponent(new ValueCharacteristic { Cost = 1 });
                 int resist = rand.Next(1, 4);
-                AddComponent(new Defence { ArmorPoints = resist });
+                AddComponent(new ArmorCharacteristic { Armor = resist });
                 RarityId = 0;
                 Level = 1;
             }
             else if (Chance <= 85)
             {
                 int resist = rand.Next(4, 7);
-                AddComponent(new Valuable { Cost = 2 });
-                AddComponent(new Defence { ArmorPoints = resist });
+                AddComponent(new ValueCharacteristic { Cost = 2 });
+                AddComponent(new ArmorCharacteristic { Armor = resist });
                 RarityId = 1;
                 Level = 1;
             }
@@ -38,9 +38,9 @@ namespace ConsoleRPG.Items.Armors.Helmets
             {
                 string QualityName = Quality.GetGoodQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 5 });
+                AddComponent(new ValueCharacteristic { Cost = 5 });
                 int resist = rand.Next(6, 9);
-                AddComponent(new Defence { ArmorPoints = resist });
+                AddComponent(new ArmorCharacteristic { Armor = resist });
                 RarityId = 1;
                 Level = 2;
             }
@@ -48,9 +48,9 @@ namespace ConsoleRPG.Items.Armors.Helmets
             {
                 string QualityName = Quality.GetBestQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 7 });
+                AddComponent(new ValueCharacteristic { Cost = 7 });
                 int resist = rand.Next(8, 12);
-                if (resist != 0) AddComponent(new Defence { ArmorPoints = resist });
+                AddComponent(new ArmorCharacteristic { Armor = resist });
                 RarityId = 3;
                 Level = 2;
             }

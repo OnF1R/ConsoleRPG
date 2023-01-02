@@ -15,19 +15,19 @@ namespace ConsoleRPG.Races
             Name = "Гоблин";
             RaceType = RacesType.Goblin;
 
-            AddComponent(new Stat_Strength { PerLevel = 1.1 });
-            AddComponent(new Stat_Agility { PerLevel = 1.7 });
-            AddComponent(new Stat_Intelligence { PerLevel = 2.7 });
-            AddComponent(new Stat_Evasion { PerLevel = 0.125 });
+            AddComponent(new StrengthCharacteristic { StrengthPerLevel = 1.1 });
+            AddComponent(new AgilityCharacteristic { AgilityPerLevel = 1.7 });
+            AddComponent(new IntelligenceCharacteristic { IntelligencePerLevel = 2.7 });
+            AddComponent(new EvasionCharacteristic { EvasionPerLevel = 0.125 });
         }
 
         public override string RaceInfo()
         {
             return $"Прирост характеристик Гоблина за уровень: " +
-                $"Сила + {this.GetComponent<Stat_Strength>().PerLevel}" +
-                $", Ловкость {this.GetComponent<Stat_Agility>().PerLevel}" +
-                $", Интеллект {this.GetComponent<Stat_Intelligence>().PerLevel}" +
-                $", Уклонение + {this.GetComponent<Stat_Evasion>().PerLevel}%";
+                $"Сила + {this.GetComponent<StrengthCharacteristic>().StrengthPerLevel}" +
+                $", Ловкость {this.GetComponent<AgilityCharacteristic>().AgilityPerLevel}" +
+                $", Интеллект {this.GetComponent<IntelligenceCharacteristic>().IntelligencePerLevel}" +
+                $", Уклонение + {this.GetComponent<EvasionCharacteristic>().EvasionPerLevel}%";
         }
     }
 }

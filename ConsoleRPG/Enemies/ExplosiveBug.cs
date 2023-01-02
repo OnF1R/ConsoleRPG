@@ -26,7 +26,7 @@ namespace ConsoleRPG.Enemies
             Level = random.Next(1, 6);
             MaxHealth = random.Next(4, 11) * Level;
             CurrentHealth = MaxHealth;
-            Damage = random.Next(2, 4);
+            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2, 4);
 
             //Экипировка
             Equipment.WearEquip(new ProtectionRing(), EquipmentSlot.FirstRing);
@@ -39,52 +39,49 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Fight CurrentFight, Player Player, Item PlayerWeapon, int TakedDamage)
+        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
         {
-            CurrentFight.TakeDamage(this, Player, TakedDamage, PlayerWeapon);
+            foreach (DamageTypes type in TakedDamage.Keys)
+            {
+                TakeDamage(TakedDamage[type], type);
+            }
 
             if (!IsDead)
             {
                 if (Energy >= 4)
                 {
-                    NecroticExplosion(CurrentFight, Player);
+                    NecroticExplosion(Player);
                     Energy = 0;
                 } 
                 else
                 {
-                    Spit(CurrentFight, Player);
+                    Spit(Player);
                     Energy++;
                 }
             }
+            else
+            {
+                DeathDropLoot(Player);
+            }
         }
 
-        public void Spit(Fight CurrentFight, Player Player)
+        public void Spit(Player Player)
         {
             Spell Spell = new PoisonSpit();
-            int Damage = CurrentFight.GetDamage(this, Spell);
-            if (CurrentFight.IsCrit(Equipment.GetCriticalChance()))
+            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+            foreach (DamageTypes type in elemDamage.Keys)
             {
-                Damage = CurrentFight.CalcCritDamage(CurrentFight.GetDamage(this, Spell), Equipment.GetCriticalDamage());
-                CurrentFight.TakeCritDamage(Player, Damage, Spell);
-            }
-            else
-            {
-                CurrentFight.TakeDamage(Player, Damage, Spell);
+                Player.TakeDamage(elemDamage[type], type);
             }
         }
 
-        public void NecroticExplosion(Fight CurrentFight, Player Player)
+        public void NecroticExplosion(Player Player)
         {
             Spell Spell = new NecroticExplosion();
-            int Damage = CurrentFight.GetDamage(this, Spell);
-            if (CurrentFight.IsCrit(Equipment.GetCriticalChance()))
+            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+            foreach (DamageTypes type in elemDamage.Keys)
             {
-                Damage = CurrentFight.CalcCritDamage(CurrentFight.GetDamage(this, Spell), Equipment.GetCriticalDamage());
-                CurrentFight.TakeCritDamage(Player, Damage, Spell);
-            }
-            else
-            {
-                CurrentFight.TakeDamage(Player, Damage, Spell);
+                Player.TakeDamage(elemDamage[type], type);
             }
         }
     }

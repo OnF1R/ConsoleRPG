@@ -13,19 +13,19 @@ namespace ConsoleRPG.Races
             Name = "Гном";
             RaceType = RacesType.Gnome;
 
-            AddComponent(new Stat_Strength { PerLevel = 2.6 });
-            AddComponent(new Stat_Agility { PerLevel = 1.4 });
-            AddComponent(new Stat_Intelligence { PerLevel = 2.2 });
-            AddComponent(new Stat_Armor { PerLevel = 0.25 });
+            AddComponent(new StrengthCharacteristic { StrengthPerLevel = 2.6 });
+            AddComponent(new AgilityCharacteristic { AgilityPerLevel = 1.4 });
+            AddComponent(new IntelligenceCharacteristic { IntelligencePerLevel = 2.2 });
+            AddComponent(new ArmorCharacteristic { ArmorPerLevel = 0.25 });
         }
 
         public override string RaceInfo()
         {
             return $"Прирост характеристик Гнома за уровень: " +
-                $"Сила + {this.GetComponent<Stat_Strength>().PerLevel}" +
-                $", Ловкость {this.GetComponent<Stat_Agility>().PerLevel}" +
-                $", Интеллект {this.GetComponent<Stat_Intelligence>().PerLevel}" +
-                $", Броня + {this.GetComponent<Stat_Armor>().PerLevel}";
+                $"Сила + {this.GetComponent<StrengthCharacteristic>().StrengthPerLevel}" +
+                $", Ловкость {this.GetComponent<AgilityCharacteristic>().AgilityPerLevel}" +
+                $", Интеллект {this.GetComponent<IntelligenceCharacteristic>().IntelligencePerLevel}" +
+                $", Броня + {this.GetComponent<ArmorCharacteristic>().ArmorPerLevel}";
         }
     }
 }

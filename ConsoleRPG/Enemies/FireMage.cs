@@ -2,7 +2,6 @@
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.Weapons;
 using ConsoleRPG.Spells.DamageSpells;
-using ConsoleRPG.Spells.SpellsComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace ConsoleRPG.Enemies
             Level = random.Next(1, 4);
             MaxHealth = random.Next(7, 11) * Level;
             CurrentHealth = MaxHealth;
-            Damage = random.Next(3, 6);
+            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(3, 6);
 
             //Экипировка
             Equipment.WearEquip(new EnchantedHat(), EquipmentSlot.Helmet);
@@ -30,74 +29,58 @@ namespace ConsoleRPG.Enemies
             DropList = new Item[] {new Gold(), Equipment.Equip[EquipmentSlot.LeftHand], Equipment.Equip[EquipmentSlot.Helmet] };
         }
 
-        public override void FightLogic(Fight CurrentFight, Player Player, Item PlayerWeapon , int TakedDamage)
+        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
         {
-            CurrentFight.TakeDamage(this, Player, TakedDamage, PlayerWeapon);
+            foreach (DamageTypes type in TakedDamage.Keys)
+            {
+                TakeDamage(TakedDamage[type], type);
+            }
 
-            if(!IsDead)
+            if (!IsDead)
             {
                 if(Energy >= 3)
                 {
-                    Pyroblast(CurrentFight, Player);
+                    Pyroblast(Player);
                     Energy = 0;
                 }
                 else
                 {
                     if (new Random().Next(0,2) == 0)
                     {
-                        FireBall(CurrentFight, Player);
+                        FireBall(Player);
                     } else
                     {
-                        Attack(CurrentFight, Player);
+                        Attack(Player);
                     }
                     
                 }
+
                 Energy++;
             }
-        }
-
-        public void Attack(Fight CurrentFight, Player Player)
-        {
-            int Damage = CurrentFight.GetDamage(this, Equipment.Equip[EquipmentSlot.LeftHand]);
-            if (CurrentFight.IsCrit(Equipment.GetCriticalChance()))
-            {
-                Damage = CurrentFight.CalcCritDamage(CurrentFight.GetDamage(this, Equipment.Equip[EquipmentSlot.LeftHand]), Equipment.GetCriticalDamage());
-                CurrentFight.TakeCritDamage(Player, Damage, Equipment.Equip[EquipmentSlot.LeftHand]);
-            }
             else
             {
-                CurrentFight.TakeDamage(Player, Damage, Equipment.Equip[EquipmentSlot.LeftHand]);
+                DeathDropLoot(Player);
             }
         }
 
-        public void FireBall(Fight CurrentFight, Player Player)
+        public void FireBall(Player Player)
         {
             Spell Spell = new FireBall();
-            int Damage = CurrentFight.GetDamage(this, Spell);
-            if (CurrentFight.IsCrit(Equipment.GetCriticalChance()))
+            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+            foreach (DamageTypes type in elemDamage.Keys)
             {
-                Damage = CurrentFight.CalcCritDamage(CurrentFight.GetDamage(this, Spell),Equipment.GetCriticalDamage());
-                CurrentFight.TakeCritDamage(Player, Damage, Spell);
+                Player.TakeDamage(elemDamage[type], type);
             }
-            else
-            {
-                CurrentFight.TakeDamage(Player,Damage, Spell);
-            }
-            
+
         }
 
-        public void Pyroblast(Fight CurrentFight, Player Player)
+        public void Pyroblast(Player Player)
         {
             Spell Spell = new Pyroblast();
-            int Damage = CurrentFight.GetDamage(this, Spell);
-            if (CurrentFight.IsCrit(Equipment.GetCriticalChance()))
+            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+            foreach (DamageTypes type in elemDamage.Keys)
             {
-                Damage = CurrentFight.CalcCritDamage(CurrentFight.GetDamage(this, Spell), Equipment.GetCriticalDamage());
-                CurrentFight.TakeCritDamage(Player, Damage, Spell);
-            }
-            else
-            {
-                CurrentFight.TakeDamage(Player, Damage, Spell);
+                Player.TakeDamage(elemDamage[type], type);
             }
         }
     }

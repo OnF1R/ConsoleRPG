@@ -1,5 +1,4 @@
-﻿using ConsoleRPG.Spells.SpellsComponents;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +11,10 @@ namespace ConsoleRPG.Spells.DamageSpells
         public NecroticExplosion()
         {
             Name = "[yellow4]ВЗРЫВ[/]";
-            AddComponent(new SpellElementalDamage { Necrotic = 999 });
-            AddComponent(new SpellDamageType { Type = DamageTypes.Necrotic });
+            AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
+            {
+                { DamageTypes.Necrotic, 999 },
+            }));
         }
     }
 }

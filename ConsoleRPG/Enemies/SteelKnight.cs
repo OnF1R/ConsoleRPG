@@ -24,7 +24,7 @@ namespace ConsoleRPG.Enemies
             Level = random.Next(1, 6);
             MaxHealth = random.Next(4, 11) * Level;
             CurrentHealth = MaxHealth;
-            Damage = random.Next(2, 4);
+            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2, 4);
 
             //Экипировка
 
@@ -53,37 +53,36 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Fight CurrentFight, Player Player, Item PlayerWeapon, int TakedDamage)
+        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
         {
+
+            
+
             if (Energy >= 3)
             {
                 AnsiConsole.MarkupLine("{0} использовал Блок щитом!", Name);
-                CurrentFight.TakeDamage(this, Player, TakedDamage / 2, PlayerWeapon);
+                foreach (DamageTypes type in TakedDamage.Keys)
+                {
+                    TakeDamage(TakedDamage[type]/2, type);
+                }
                 Energy = 0;
             }
             else
             {
-                CurrentFight.TakeDamage(this, Player, TakedDamage, PlayerWeapon);
+                foreach (DamageTypes type in TakedDamage.Keys)
+                {
+                    TakeDamage(TakedDamage[type], type);
+                }
             }
 
             if (!IsDead)
             {
-                Attack(CurrentFight, Player);
+                Attack(Player);
                 Energy++;
-            }
-        }
-
-        public void Attack(Fight CurrentFight, Player Player)
-        {
-            int Damage = CurrentFight.GetDamage(this, Equipment.Equip[EquipmentSlot.LeftHand]);
-            if (CurrentFight.IsCrit(Equipment.GetCriticalChance()))
-            {
-                Damage = CurrentFight.CalcCritDamage(CurrentFight.GetDamage(this, Equipment.Equip[EquipmentSlot.LeftHand]), Equipment.GetCriticalDamage());
-                CurrentFight.TakeCritDamage(Player, Damage, Equipment.Equip[EquipmentSlot.LeftHand]);
             }
             else
             {
-                CurrentFight.TakeDamage(Player, Damage, Equipment.Equip[EquipmentSlot.LeftHand]);
+                DeathDropLoot(Player);
             }
         }
     }

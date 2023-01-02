@@ -16,8 +16,7 @@ using ConsoleRPG.Races;
 namespace ConsoleRPG
 {
     class Game
-    {
-
+    { 
         private static Dictionary<int, string> MenuChoises;
         private static Dictionary<int, string> MainMenuChoises;
         private static Dictionary<Race, string> RacesNames = new RacesNames().racesNames;

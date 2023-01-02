@@ -1,5 +1,4 @@
-﻿using ConsoleRPG.Spells.SpellsComponents;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +12,10 @@ namespace ConsoleRPG.Spells.DamageSpells
         public Pyroblast()
         {
             Name = "[orangered1]Огненная[/] глыба";
-            AddComponent(new SpellElementalDamage { Fire = new Random().Next(12, 21) });
-            AddComponent(new SpellDamageType { Type = DamageTypes.Fire });
+            AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
+            {
+                { DamageTypes.Fire, new Random().Next(12, 21) },
+            }));
         }
     }
 }

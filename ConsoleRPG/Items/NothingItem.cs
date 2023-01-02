@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleRPG.Items.ItemsComponents;
+
 
 namespace ConsoleRPG.Items
 {
@@ -14,8 +14,6 @@ namespace ConsoleRPG.Items
             Name = "";
             Rarity = "Пустой слот";
             RarityColor = "white";
-            AddComponent(new DamageType { Type = DamageTypes.Physical });
-            AddComponent(new DamageColor { Color = "white" });
         }
     }
 }

@@ -13,19 +13,19 @@ namespace ConsoleRPG.Races
             Name = "Тролль";
             RaceType = RacesType.Troll;
 
-            AddComponent(new Stat_Strength { PerLevel = 1.3 });
-            AddComponent(new Stat_Agility { PerLevel = 2.3 });
-            AddComponent(new Stat_Intelligence { PerLevel = 0.2 });
-            AddComponent(new Stat_Damage { PerLevel = 1 });
+            AddComponent(new StrengthCharacteristic { StrengthPerLevel = 1.3 });
+            AddComponent(new AgilityCharacteristic { AgilityPerLevel = 2.3 });
+            AddComponent(new IntelligenceCharacteristic { IntelligencePerLevel = 0.2 });
+            AddComponent(new PhysicalDamageCharacteristic { PhysicalDamagePerLevel = 1 });
         }
 
         public override string RaceInfo()
         {
-            return $"Прирост характеристик Человека за уровень: " +
-                $"Сила + {this.GetComponent<Stat_Strength>().PerLevel}" +
-                $", Ловкость {this.GetComponent<Stat_Agility>().PerLevel}" +
-                $", Интеллект {this.GetComponent<Stat_Intelligence>().PerLevel}" +
-                $", Урон + {this.GetComponent<Stat_Damage>().PerLevel}";
+            return $"Прирост характеристик Тролля за уровень: " +
+                $"Сила + {this.GetComponent<StrengthCharacteristic>().StrengthPerLevel}" +
+                $", Ловкость {this.GetComponent<AgilityCharacteristic>().AgilityPerLevel}" +
+                $", Интеллект {this.GetComponent<IntelligenceCharacteristic>().IntelligencePerLevel}" +
+                $", Урон + {this.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamagePerLevel}";
         }
     }
 }

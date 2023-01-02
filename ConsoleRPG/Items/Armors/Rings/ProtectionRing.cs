@@ -1,4 +1,4 @@
-﻿using ConsoleRPG.Items.ItemsComponents;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,15 +20,15 @@ namespace ConsoleRPG.Items.Armors.Rings
             {
                 string QualityName = Quality.GetBadQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 3 });
-                AddComponent(new Defence { ArmorPoints = rand.Next(1, 3) });
+                AddComponent(new ValueCharacteristic { Cost = 3 });
+                AddComponent(new ArmorCharacteristic { Armor = rand.Next(1, 3) });
                 RarityId = 0;
                 Level = 1;
             }
             else if (Chance <= 85)
             {
-                AddComponent(new Valuable { Cost = 7 });
-                AddComponent(new Defence { ArmorPoints = rand.Next(2, 6) });
+                AddComponent(new ValueCharacteristic { Cost = 7 });
+                AddComponent(new ArmorCharacteristic { Armor = rand.Next(2, 6) });
                 RarityId = 1;
                 Level = 1;
             }
@@ -36,8 +36,8 @@ namespace ConsoleRPG.Items.Armors.Rings
             {
                 string QualityName = Quality.GetGoodQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 9 });
-                AddComponent(new Defence { ArmorPoints = rand.Next(5, 10) });
+                AddComponent(new ValueCharacteristic { Cost = 9 });
+                AddComponent(new ArmorCharacteristic { Armor = rand.Next(5, 10) });
                 RarityId = 1;
                 Level = 2;
             }
@@ -45,8 +45,8 @@ namespace ConsoleRPG.Items.Armors.Rings
             {
                 string QualityName = Quality.GetBestQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 14 });
-                AddComponent(new Defence { ArmorPoints = rand.Next(11, 16) });
+                AddComponent(new ValueCharacteristic { Cost = 14 });
+                AddComponent(new ArmorCharacteristic { Armor = rand.Next(11, 16) });
                 RarityId = 2;
                 Level = 2;
             }

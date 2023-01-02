@@ -1,4 +1,4 @@
-﻿using ConsoleRPG.Items.ItemsComponents;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +23,9 @@ namespace ConsoleRPG.Items.Armors.Helmets
                 string QualityName = Quality.GetBadQuality();
                 Name = QualityName + " " + Name;
                 int resist = rand.Next(-5, 5);
-                if (resist == 0) if (rand.Next(0,2) == 1) { resist++; } else { resist--; }
+                if (resist == 0) if (rand.Next(0, 2) == 1) { resist++; } else { resist--; }
                 AddRandomElementalResist(this, resist);
-                AddComponent(new Valuable { Cost = 1 });
+                AddComponent(new ValueCharacteristic { Cost = 1 });
                 RarityId = 0;
                 Level = 1;
             }
@@ -34,7 +34,8 @@ namespace ConsoleRPG.Items.Armors.Helmets
                 int resist = rand.Next(-2, 8);
                 if (resist == 0) if (rand.Next(0, 2) == 1) { resist++; } else { resist--; }
                 AddRandomElementalResist(this, resist);
-                AddComponent(new Valuable { Cost = 2 });
+                AddComponent(new ValueCharacteristic { Cost = 2 });
+                AddComponent(new ArmorCharacteristic { Armor = 50 });
                 RarityId = 1;
                 Level = 1;
             }
@@ -42,11 +43,11 @@ namespace ConsoleRPG.Items.Armors.Helmets
             {
                 string QualityName = Quality.GetGoodQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 5 });
+                AddComponent(new ValueCharacteristic { Cost = 5 });
                 int resist = rand.Next(3, 11);
                 if (resist == 0) if (rand.Next(0, 2) == 1) { resist++; } else { resist--; }
                 AddRandomElementalResist(this, resist);
-                AddComponent(new Defence { ArmorPoints = rand.Next(1, 5) });
+                AddComponent(new ArmorCharacteristic { Armor = rand.Next(1, 5) });
                 RarityId = 1;
                 Level = 2;
             }
@@ -54,11 +55,12 @@ namespace ConsoleRPG.Items.Armors.Helmets
             {
                 string QualityName = Quality.GetBestQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = 7 });
+                AddComponent(new ValueCharacteristic { Cost = 7 });
                 int resist = rand.Next(5, 16);
                 if (resist == 0) if (rand.Next(0, 2) == 1) { resist++; } else { resist--; }
                 AddRandomElementalResist(this, resist);
-                AddComponent(new Defence { ArmorPoints = rand.Next(3, 9) });
+                AddRandomElementalResist(this, resist);
+                AddComponent(new ArmorCharacteristic { Armor = rand.Next(3, 9) });
                 RarityId = 3;
                 Level = 2;
             }

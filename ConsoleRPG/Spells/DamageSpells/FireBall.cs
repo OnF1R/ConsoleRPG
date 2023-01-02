@@ -1,5 +1,4 @@
-﻿using ConsoleRPG.Spells.SpellsComponents;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +11,10 @@ namespace ConsoleRPG.Spells.DamageSpells
         public FireBall()
         {
             Name = "[orangered1]Огненный[/] шар";
-            AddComponent(new SpellElementalDamage { Fire = new Random().Next(7,12) });
-            AddComponent(new SpellDamageType { Type = DamageTypes.Fire });
+            AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
+            {
+                { DamageTypes.Fire, new Random().Next(7,12) },
+            }));
         }
     }
 }

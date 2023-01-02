@@ -1,5 +1,5 @@
 ﻿using ConsoleRPG.Items.Currencies;
-using ConsoleRPG.Items.ItemsComponents;
+
 using ConsoleRPG.Items.Weapons;
 using Spectre.Console;
 using System;
@@ -53,7 +53,7 @@ namespace ConsoleRPG
 
             foreach (Item item in randomItems)
             {
-                sellingItems.Add(item, item.GetComponent<Valuable>().Cost * new Random().Next(3, 8));
+                sellingItems.Add(item, item.GetComponent<ValueCharacteristic>().Cost * new Random().Next(3, 8));
             }
         }
 
@@ -171,7 +171,7 @@ namespace ConsoleRPG
 
             foreach (Item item in sellingItem)
             {
-                _cost += item.GetComponent<Valuable>().Cost;
+                _cost += item.GetComponent<ValueCharacteristic>().Cost;
             }
 
             if (ConfirmSell(sellingItem))
@@ -179,7 +179,7 @@ namespace ConsoleRPG
                 foreach (Item item in sellingItem)
                 {
                     player.Inventory.SellItem(item);
-                    AnsiConsole.MarkupLine("Вы продали {0} за [gold1]{1} золота[/]", item.Name, item.GetComponent<Valuable>().Cost);
+                    AnsiConsole.MarkupLine("Вы продали {0} за [gold1]{1} золота[/]", item.Name, item.GetComponent<ValueCharacteristic>().Cost);
                 }
             }
             else

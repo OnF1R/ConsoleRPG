@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Console = Colorful.Console;
 using Spectre.Console;
-using ConsoleRPG.Items.ItemsComponents;
+
 using ConsoleRPG.Items.Currencies;
 
 namespace ConsoleRPG
@@ -30,7 +30,7 @@ namespace ConsoleRPG
                 {
                     if (!item.IsEquiped)
                     {
-                        namesWithCost.Add(item.Name + " [gold1]" + item.GetComponent<Valuable>().Cost + " золота[/]");
+                        namesWithCost.Add(item.Name + " [gold1]" + item.GetComponent<ValueCharacteristic>().Cost + " золота[/]");
                     }
                 }
             }
@@ -40,7 +40,7 @@ namespace ConsoleRPG
                 {
                     if (!item.IsStacable && !item.IsEquiped)
                     {
-                        namesWithCost.Add(item.Name + " [gold1]" + item.GetComponent<Valuable>().Cost + " золота[/]");
+                        namesWithCost.Add(item.Name + " [gold1]" + item.GetComponent<ValueCharacteristic>().Cost + " золота[/]");
                     }
                 }
             }
@@ -111,7 +111,7 @@ namespace ConsoleRPG
             RemoveItem(item);
             Item gold = new Gold();
             gold.Count = 1;
-            gold.Count *= item.GetComponent<Valuable>().Cost;
+            gold.Count *= item.GetComponent<ValueCharacteristic>().Cost;
             AddItem(gold);
         }
 
@@ -122,11 +122,11 @@ namespace ConsoleRPG
             {
                 if (item.IsStacable)
                 {
-                    SumCost += item.GetComponent<Valuable>().Cost * item.Count;
+                    SumCost += item.GetComponent<ValueCharacteristic>().Cost * item.Count;
                 }
                 else
                 {
-                    SumCost += item.GetComponent<Valuable>().Cost;
+                    SumCost += item.GetComponent<ValueCharacteristic>().Cost;
                 } 
             }
 
@@ -150,7 +150,7 @@ namespace ConsoleRPG
                             ListInventory[i].RarityColor,
                             ListInventory[i].Rarity,
                             ListInventory[i].Count,
-                            ListInventory[i].GetComponent<Valuable>().Cost * ListInventory[i].Count
+                            ListInventory[i].GetComponent<ValueCharacteristic>().Cost * ListInventory[i].Count
                             );
                         continue;
                     }
@@ -162,7 +162,7 @@ namespace ConsoleRPG
                             ListInventory[i].Name,
                             ListInventory[i].RarityColor,
                             ListInventory[i].Rarity,
-                            ListInventory[i].GetComponent<Valuable>().Cost
+                            ListInventory[i].GetComponent<ValueCharacteristic>().Cost
                             );
                         ListInventory[i].ItemInfo(ListInventory[i]);
                         continue;
@@ -173,7 +173,7 @@ namespace ConsoleRPG
                             ListInventory[i].Name,
                             ListInventory[i].RarityColor,
                             ListInventory[i].Rarity,
-                            ListInventory[i].GetComponent<Valuable>().Cost
+                            ListInventory[i].GetComponent<ValueCharacteristic>().Cost
                             );
                     ListInventory[i].ItemInfo(ListInventory[i]);
                 }

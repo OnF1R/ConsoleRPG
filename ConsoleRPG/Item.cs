@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using Console = Colorful.Console;
-using ConsoleRPG.Items.ItemsComponents;
 using Spectre.Console;
-using ConsoleRPG.Spells.SpellsComponents;
 
 namespace ConsoleRPG
 {
@@ -29,7 +27,7 @@ namespace ConsoleRPG
         public int Count { get; set; }
         public int Cost { get; set; }
 
-        public Item AddComponent(ItemComponent component)
+        public Item AddComponent(Characteristics component)
         {
             _components.Add(component);
             return this;
@@ -40,19 +38,7 @@ namespace ConsoleRPG
             return (T)_components.OfType<T>().FirstOrDefault();
         }
 
-        public void _Get(Item item)
-        {
-            foreach (var component in _components)
-            {
-                Console.WriteLine(component.ToString());
-            }
-
-            foreach (DamageTypes Type in (DamageTypes[])Enum.GetValues(typeof(DamageTypes)))
-            {
-            }
-        }
-
-        private List<ItemComponent> _components = new List<ItemComponent>();
+        private List<Characteristics> _components = new List<Characteristics>();
 
         public void SetRarity(int RarityId)
         {
@@ -70,491 +56,107 @@ namespace ConsoleRPG
 
         public void AddRandomElementalResist(Item item, int resist)
         {
-            DamageTypes DamageType = new DamageTypesNames().GetRandomElementalDamageType();
+            DamageTypes damageType = new DamageTypesNames().GetRandomElementalDamageType();
 
-            if (DamageType == DamageTypes.Fire)
+            item.AddComponent(new ElementalResistanceCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                item.AddComponent(new ElementalResistance { Fire = resist });
-            }
-            else if (DamageType == DamageTypes.Electric)
-            {
-                item.AddComponent(new ElementalResistance { Electric = resist });
-            }
-            else if(DamageType == DamageTypes.Nature)
-            {
-                item.AddComponent(new ElementalResistance { Nature = resist });
-            }
-            else if(DamageType == DamageTypes.Frost)
-            {
-                item.AddComponent(new ElementalResistance { Frost = resist });
-            }
-            else if(DamageType == DamageTypes.Water)
-            {
-                item.AddComponent(new ElementalResistance { Water = resist });
-            }
-            else if(DamageType == DamageTypes.Earth)
-            {
-                item.AddComponent(new ElementalResistance { Earth = resist });
-            }
-            else if(DamageType == DamageTypes.Wind)
-            {
-                item.AddComponent(new ElementalResistance { Wind = resist });
-            }
-            else if(DamageType == DamageTypes.Dark)
-            {
-                item.AddComponent(new ElementalResistance { Holy = resist });
-            }
-            else if(DamageType == DamageTypes.Holy)
-            {
-                item.AddComponent(new ElementalResistance { Holy = resist });
-            }
-            else if(DamageType == DamageTypes.Poison)
-            {
-                item.AddComponent(new ElementalResistance { Poison = resist });
-            }
-            else if(DamageType == DamageTypes.Necrotic)
-            {
-                item.AddComponent(new ElementalResistance { Necrotic = resist });
-            }
-            else if(DamageType == DamageTypes.Psychic)
-            {
-                item.AddComponent(new ElementalResistance { Psychic = resist });
-            }
-            else if(DamageType == DamageTypes.Arcane)
-            {
-                item.AddComponent(new ElementalResistance { Arcane = resist });
-            }
+                { damageType, resist },
+            }));
         }
 
-        public void AddNeededElementalTypesDamage(Item item, int minDmg, int maxDmg)
+        public void AddNeededElementalTypesDamage(Item item, DamageTypes damageType, int minDmg, int maxDmg)
         {
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Fire)
+            item.AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                item.AddComponent(new ElementalDamage { Fire = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Electric)
-            {
-                item.AddComponent(new ElementalDamage { Electric = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Nature)
-            {
-                item.AddComponent(new ElementalDamage { Nature = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Frost)
-            {
-                item.AddComponent(new ElementalDamage { Frost = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Water)
-            {
-                item.AddComponent(new ElementalDamage { Water = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Earth)
-            {
-                item.AddComponent(new ElementalDamage { Earth = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Wind)
-            {
-                item.AddComponent(new ElementalDamage { Wind = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Dark)
-            {
-                item.AddComponent(new ElementalDamage { Dark = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Holy)
-            {
-                item.AddComponent(new ElementalDamage { Holy = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Poison)
-            {
-                item.AddComponent(new ElementalDamage { Poison = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Necrotic)
-            {
-                item.AddComponent(new ElementalDamage { Necrotic = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Psychic)
-            {
-                item.AddComponent(new ElementalDamage { Psychic = new Random().Next(minDmg, maxDmg) });
-            }
-            if (item.GetComponent<DamageType>().Type == DamageTypes.Arcane)
-            {
-                item.AddComponent(new ElementalDamage { Arcane = new Random().Next(minDmg, maxDmg) });
-            }
+                { damageType, new Random().Next(minDmg,maxDmg) },
+            }));
         }
 
         public void ItemInfo(Item item)
         {
             DamageTypes DamageType = DamageTypes.Abyss;
 
-            if (item.GetComponent<DamageType>() != null)
-            {
-                DamageType = item.GetComponent<DamageType>().Type;
-            }
+            Dictionary<DamageTypes, string> damageTypes = new DamageTypesNames().Names;
 
-            if (
-                DamageType == DamageTypes.Fire
-                || DamageType == DamageTypes.Overcharge
-                || DamageType == DamageTypes.Flame
-                || DamageType == DamageTypes.Melting
-                || DamageType == DamageTypes.Fume
-                || DamageType == DamageTypes.Meteor
-                || DamageType == DamageTypes.Fireblast
-                || DamageType == DamageTypes.Burst)
+            if (item.GetComponent<PhysicalDamageCharacteristic>() != null)
             {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Fire, new DamageTypesNames().Names[DamageTypes.Fire]);
-            }
-
-            if (
-                DamageType == DamageTypes.Electric
-                || DamageType == DamageTypes.Overcharge
-                || DamageType == DamageTypes.Load
-                || DamageType == DamageTypes.Icecharge
-                || DamageType == DamageTypes.Shock
-                || DamageType == DamageTypes.Stream
-                || DamageType == DamageTypes.Storm)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Electric, new DamageTypesNames().Names[DamageTypes.Electric]);
-            }
-
-            if (
-                DamageType == DamageTypes.Nature
-                || DamageType == DamageTypes.Flame
-                || DamageType == DamageTypes.Load)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Nature, new DamageTypesNames().Names[DamageTypes.Nature]);
-            }
-
-            if (
-                DamageType == DamageTypes.Frost
-                || DamageType == DamageTypes.Melting
-                || DamageType == DamageTypes.Icecharge)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Frost, new DamageTypesNames().Names[DamageTypes.Frost]);
-            }
-
-            if (
-                DamageType == DamageTypes.Water
-                || DamageType == DamageTypes.Fume
-                || DamageType == DamageTypes.Shock)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Water, new DamageTypesNames().Names[DamageTypes.Water]);
-            }
-
-            if (
-                DamageType == DamageTypes.Earth
-                || DamageType == DamageTypes.Meteor
-                || DamageType == DamageTypes.Stream)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Earth, new DamageTypesNames().Names[DamageTypes.Earth]);
-            }
-
-            if (
-                DamageType == DamageTypes.Wind
-                || DamageType == DamageTypes.Fireblast
-                || DamageType == DamageTypes.Storm)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Wind, new DamageTypesNames().Names[DamageTypes.Wind]);
-            }
-
-            if (
-                DamageType == DamageTypes.Dark
-                || DamageType == DamageTypes.Chaos)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Dark, new DamageTypesNames().Names[DamageTypes.Dark]);
-            }
-
-            if (
-                DamageType == DamageTypes.Holy)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Holy, new DamageTypesNames().Names[DamageTypes.Holy]);
-            }
-
-            if (
-                DamageType == DamageTypes.Poison)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Poison, new DamageTypesNames().Names[DamageTypes.Poison]);
-            }
-
-            if (
-                DamageType == DamageTypes.Necrotic)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Necrotic, new DamageTypesNames().Names[DamageTypes.Necrotic]);
-            }
-
-            if (
-                DamageType == DamageTypes.Psychic)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Psychic, new DamageTypesNames().Names[DamageTypes.Psychic]);
-            }
-
-            if (
-                DamageType == DamageTypes.Arcane)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<ElementalDamage>().Arcane, new DamageTypesNames().Names[DamageTypes.Arcane]);
-            }
-
-            if (
-                DamageType == DamageTypes.Physical
-                || DamageType == DamageTypes.Burst)
-            {
-
-                if (item.GetComponent<PhysicalDamage>() != null)
-                    AnsiConsole.Markup("+{0} урона ({1}) ", item.GetComponent<PhysicalDamage>().Physical, new DamageTypesNames().Names[DamageTypes.Physical]);
-            }
-
-            if (item.GetComponent<Defence>() != null)
-            {
-                AnsiConsole.Markup("+{0} к [bold]броне[/] ", item.GetComponent<Defence>().ArmorPoints);
-            }
-
-            if (item.GetComponent<ElementalResistance>() != null)
-            {
-                if (item.GetComponent<ElementalResistance>().Fire != 0)
+                if (item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage >= 0)
                 {
-                    if (item.GetComponent<ElementalResistance>().Fire > 0)
+                    AnsiConsole.Markup("+{0} к [bold]физическому урону[/] ", item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage);
+                }
+                else
+                {
+                    AnsiConsole.Markup("{0} к [bold]физическому урону[/] ", item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage);
+                }
+            }
+
+            if (item.GetComponent<ArmorCharacteristic>() != null)
+            {
+                if (item.GetComponent<ArmorCharacteristic>().Armor >= 0)
+                {
+                    AnsiConsole.Markup("+{0} к [bold]броне[/] ", item.GetComponent<ArmorCharacteristic>().Armor);
+                }
+                else
+                {
+                    AnsiConsole.Markup("{0} к [bold]броне[/] ", item.GetComponent<ArmorCharacteristic>().Armor);
+                }
+            }
+
+            if (item.GetComponent<ElementalDamageCharacteristic>() != null)
+            {
+                Dictionary<DamageTypes, int> elementalDamage = item.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+
+                foreach (DamageTypes type in elementalDamage.Keys)
+                {
+                    if (elementalDamage.FirstOrDefault(x => x.Key == type).Value >= 0)
                     {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ", 
-                                item.GetComponent<ElementalResistance>().Fire, new DamageTypesNames().Names[DamageTypes.Fire]);
-                        }
+                        AnsiConsole.Markup("+{0} к урону ({1}) ", elementalDamage.FirstOrDefault(x => x.Key == type).Value, damageTypes[type]);
                     }
                     else
                     {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ", 
-                                item.GetComponent<ElementalResistance>().Fire, new DamageTypesNames().Names[DamageTypes.Fire]);
-                        }
-                    }
-                }
-
-                if (item.GetComponent<ElementalResistance>().Electric != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Electric > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Electric, new DamageTypesNames().Names[DamageTypes.Electric]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Electric, new DamageTypesNames().Names[DamageTypes.Electric]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Nature != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Nature > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Nature, new DamageTypesNames().Names[DamageTypes.Nature]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Nature, new DamageTypesNames().Names[DamageTypes.Nature]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Frost != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Frost > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Frost, new DamageTypesNames().Names[DamageTypes.Frost]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Frost, new DamageTypesNames().Names[DamageTypes.Frost]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Water != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Water > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Water, new DamageTypesNames().Names[DamageTypes.Water]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Water, new DamageTypesNames().Names[DamageTypes.Water]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Earth != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Earth > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Earth, new DamageTypesNames().Names[DamageTypes.Earth]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Earth, new DamageTypesNames().Names[DamageTypes.Earth]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Wind != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Wind > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Wind, new DamageTypesNames().Names[DamageTypes.Wind]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Wind, new DamageTypesNames().Names[DamageTypes.Wind]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Dark != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Dark > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Dark, new DamageTypesNames().Names[DamageTypes.Dark]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Dark, new DamageTypesNames().Names[DamageTypes.Dark]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Holy != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Holy > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Holy, new DamageTypesNames().Names[DamageTypes.Holy]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Holy, new DamageTypesNames().Names[DamageTypes.Holy]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Poison != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Poison > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Poison, new DamageTypesNames().Names[DamageTypes.Poison]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Poison, new DamageTypesNames().Names[DamageTypes.Poison]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Necrotic != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Necrotic > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Necrotic, new DamageTypesNames().Names[DamageTypes.Necrotic]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Necrotic, new DamageTypesNames().Names[DamageTypes.Necrotic]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Psychic != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Psychic > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Psychic, new DamageTypesNames().Names[DamageTypes.Psychic]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Psychic, new DamageTypesNames().Names[DamageTypes.Psychic]);
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Arcane != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Arcane > 0)
-                    {
-                        {
-                            AnsiConsole.Markup("+{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Arcane, new DamageTypesNames().Names[DamageTypes.Arcane]);
-                        }
-                    }
-                    else
-                    {
-                        {
-                            AnsiConsole.Markup("{0}% сопротивления к ({1}) ",
-                                item.GetComponent<ElementalResistance>().Arcane, new DamageTypesNames().Names[DamageTypes.Arcane]);
-                        }
+                        AnsiConsole.Markup("{0} к урону ({1}) ", elementalDamage.FirstOrDefault(x => x.Key == type).Value, damageTypes[type]);
                     }
                 }
             }
 
-            if (item.GetComponent<Criticals>() != null)
+            if (item.GetComponent<ElementalResistanceCharacteristic>() != null)
             {
-                if (item.GetComponent<Criticals>().CritChance > 0)
+                Dictionary<DamageTypes, int> elementalResistance = item.GetComponent<ElementalResistanceCharacteristic>().ElemResistance;
+
+                foreach (DamageTypes type in elementalResistance.Keys)
                 {
-                    AnsiConsole.Markup("+{0} к шансу крит. удара", item.GetComponent<Criticals>().CritChance);
+                    if (elementalResistance.FirstOrDefault(x => x.Key == type).Value >= 0)
+                    {
+                        AnsiConsole.Markup("+{0}% сопротивления к ({1}) ", elementalResistance.FirstOrDefault(x => x.Key == type).Value, damageTypes[type]);
+                    }
+                    else
+                    {
+                        AnsiConsole.Markup("{0}% сопротивления к ({1}) ", elementalResistance.FirstOrDefault(x => x.Key == type).Value, damageTypes[type]);
+                    }
                 }
-                if (item.GetComponent<Criticals>().CritDamage > 0)
+            }
+
+            if (item.GetComponent<CriticalChanceCharacteristic>() != null)
+            {
+                if (item.GetComponent<CriticalChanceCharacteristic>().CriticalChance >= 0)
                 {
-                    AnsiConsole.Markup("+{0} к множителю крит. удара", item.GetComponent<Criticals>().CritDamage);
+                    AnsiConsole.Markup("+{0} к шансу крит. удара ", item.GetComponent<CriticalChanceCharacteristic>().CriticalChance);
+                }
+                else
+                {
+                    AnsiConsole.Markup("{0} к шансу крит. удара ", item.GetComponent<CriticalChanceCharacteristic>().CriticalChance);
+                }
+            }
+
+            if (item.GetComponent<CriticalDamageCharacteristic>() != null)
+            {
+                if (item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage > 0)
+                {
+                    AnsiConsole.Markup("+{0} к множителю крит. удара ", item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage);
+                }
+                else
+                {
+                    AnsiConsole.Markup("{0} к множителю крит. удара ", item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage);
                 }
             }
 
@@ -564,353 +166,89 @@ namespace ConsoleRPG
         public string ItemInfoString(Item item)
         {
             string itemInfo = "";
-            Dictionary<DamageTypes, string> names = new DamageTypesNames().Names;
-
             DamageTypes DamageType = DamageTypes.Abyss;
 
-            if (item.GetComponent<DamageType>() != null)
-            {
-                DamageType = item.GetComponent<DamageType>().Type;
-            }
+            Dictionary<DamageTypes, string> damageTypes = new DamageTypesNames().Names;
 
-            if (
-                DamageType == DamageTypes.Fire
-                || DamageType == DamageTypes.Overcharge
-                || DamageType == DamageTypes.Flame
-                || DamageType == DamageTypes.Melting
-                || DamageType == DamageTypes.Fume
-                || DamageType == DamageTypes.Meteor
-                || DamageType == DamageTypes.Fireblast
-                || DamageType == DamageTypes.Burst)
+            if (item.GetComponent<PhysicalDamageCharacteristic>() != null)
             {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Fire},  урона ({names[DamageTypes.Fire]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Electric
-                || DamageType == DamageTypes.Overcharge
-                || DamageType == DamageTypes.Load
-                || DamageType == DamageTypes.Icecharge
-                || DamageType == DamageTypes.Shock
-                || DamageType == DamageTypes.Stream
-                || DamageType == DamageTypes.Storm)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Electric},  урона ({names[DamageTypes.Electric]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Nature
-                || DamageType == DamageTypes.Flame
-                || DamageType == DamageTypes.Load)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Nature},  урона ({names[DamageTypes.Nature]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Frost
-                || DamageType == DamageTypes.Melting
-                || DamageType == DamageTypes.Icecharge)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Frost},  урона ({names[DamageTypes.Frost]} ");
-            }
-
-            if (
-                DamageType == DamageTypes.Water
-                || DamageType == DamageTypes.Fume
-                || DamageType == DamageTypes.Shock)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Water},  урона ({names[DamageTypes.Water]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Earth
-                || DamageType == DamageTypes.Meteor
-                || DamageType == DamageTypes.Stream)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Earth},  урона ({names[DamageTypes.Earth]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Wind
-                || DamageType == DamageTypes.Fireblast
-                || DamageType == DamageTypes.Storm)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Wind},  урона ({names[DamageTypes.Wind]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Dark
-                || DamageType == DamageTypes.Chaos)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Dark},  урона ({names[DamageTypes.Dark]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Holy)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Holy},  урона ({names[DamageTypes.Holy]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Poison)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Poison},  урона ({names[DamageTypes.Poison]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Necrotic)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Necrotic},  урона ({names[DamageTypes.Necrotic]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Psychic)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Psychic},  урона ({names[DamageTypes.Psychic]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Arcane)
-            {
-                if (item.GetComponent<ElementalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<ElementalDamage>().Arcane},  урона ({names[DamageTypes.Arcane]}) ");
-            }
-
-            if (
-                DamageType == DamageTypes.Physical
-                || DamageType == DamageTypes.Burst)
-            {
-
-                if (item.GetComponent<PhysicalDamage>() != null)
-                    itemInfo.Concat($"+{item.GetComponent<PhysicalDamage>().Physical},  урона ({names[DamageTypes.Physical]}) ");
-            }
-
-            if (item.GetComponent<Defence>() != null)
-            {
-                itemInfo.Concat($"+{item.GetComponent<Defence>().ArmorPoints},  к [bold]броне[/] ");
-            }
-
-            if (item.GetComponent<ElementalResistance>() != null)
-            {
-                if (item.GetComponent<ElementalResistance>().Fire != 0)
+                if (item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage >= 0)
                 {
-                    if (item.GetComponent<ElementalResistance>().Fire > 0)
+                    itemInfo.Concat($"+{item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage} к [bold]физическому урону[/] ");
+                }
+                else
+                {
+                    itemInfo.Concat($"{item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage} к [bold]физическому урону[/] ");
+                }
+            }
+
+            if (item.GetComponent<ArmorCharacteristic>() != null)
+            {
+                if (item.GetComponent<ArmorCharacteristic>().Armor >= 0)
+                {
+                    itemInfo.Concat($"+{item.GetComponent<ArmorCharacteristic>().Armor} к [bold]броне[/] ");
+                }
+                else
+                {
+                    itemInfo.Concat($"{item.GetComponent<ArmorCharacteristic>().Armor} к [bold]броне[/] ");
+                }
+            }
+
+            if (item.GetComponent<ElementalDamageCharacteristic>() != null)
+            {
+                Dictionary<DamageTypes, int> elementalDamage = item.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+
+                foreach (DamageTypes type in elementalDamage.Keys)
+                {
+                    if (elementalDamage.FirstOrDefault(x => x.Key == type).Value >= 0)
                     {
-                        {
-                            itemInfo.Concat($"+{item.GetComponent<ElementalResistance>().Fire}% сопротивления к ({names[DamageTypes.Fire]}) ");
-                        }
+                        itemInfo.Concat($"+{elementalDamage.FirstOrDefault(x => x.Key == type).Value} к урону ({damageTypes[type]}) ");
                     }
                     else
                     {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Fire}% сопротивления к ({names[DamageTypes.Fire]}) ");
-                        }
-                    }
-                }
-
-                if (item.GetComponent<ElementalResistance>().Electric != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Electric > 0)
-                    {
-                        {
-                            itemInfo.Concat($"+{item.GetComponent<ElementalResistance>().Electric}% сопротивления к ({names[DamageTypes.Electric]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Electric}% сопротивления к ({names[DamageTypes.Electric]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Nature != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Nature > 0)
-                    {
-                        {
-                            itemInfo.Concat($"+{item.GetComponent<ElementalResistance>().Nature}% сопротивления к ({names[DamageTypes.Nature]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Nature}% сопротивления к ({names[DamageTypes.Nature]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Frost != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Frost > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Frost}% сопротивления к ({names[DamageTypes.Frost]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Frost}% сопротивления к ({names[DamageTypes.Frost]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Water != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Water > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Water}% сопротивления к ({names[DamageTypes.Water]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Water}% сопротивления к ({names[DamageTypes.Water]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Earth != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Earth > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Earth}% сопротивления к ({names[DamageTypes.Earth]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Earth}% сопротивления к ({names[DamageTypes.Earth]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Wind != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Wind > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Wind}% сопротивления к ({names[DamageTypes.Wind]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Wind}% сопротивления к ({names[DamageTypes.Wind]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Dark != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Dark > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Dark}% сопротивления к ({names[DamageTypes.Dark]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Dark}% сопротивления к ({names[DamageTypes.Dark]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Holy != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Holy > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Holy}% сопротивления к ({names[DamageTypes.Holy]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Holy}% сопротивления к ({names[DamageTypes.Holy]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Poison != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Poison > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Poison}% сопротивления к ({names[DamageTypes.Poison]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Poison}% сопротивления к ({names[DamageTypes.Poison]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Necrotic != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Necrotic > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Necrotic}% сопротивления к ({names[DamageTypes.Necrotic]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Necrotic}% сопротивления к ({names[DamageTypes.Necrotic]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Psychic != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Psychic > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Psychic}% сопротивления к ({names[DamageTypes.Psychic]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Psychic}% сопротивления к ({names[DamageTypes.Psychic]}) ");
-                        }
-                    }
-                }
-                if (item.GetComponent<ElementalResistance>().Arcane != 0)
-                {
-                    if (item.GetComponent<ElementalResistance>().Arcane > 0)
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Arcane}% сопротивления к ({names[DamageTypes.Arcane]}) ");
-                        }
-                    }
-                    else
-                    {
-                        {
-                            itemInfo.Concat($"{item.GetComponent<ElementalResistance>().Arcane}% сопротивления к ({names[DamageTypes.Arcane]}) ");
-                        }
+                        itemInfo.Concat($"{elementalDamage.FirstOrDefault(x => x.Key == type).Value} к урону ({damageTypes[type]}) ");
                     }
                 }
             }
 
-            if (item.GetComponent<Criticals>() != null)
+            if (item.GetComponent<ElementalResistanceCharacteristic>() != null)
             {
-                if (item.GetComponent<Criticals>().CritChance > 0)
+                Dictionary<DamageTypes, int> elementalResistance = item.GetComponent<ElementalResistanceCharacteristic>().ElemResistance;
+
+                foreach (DamageTypes type in elementalResistance.Keys)
                 {
-                    itemInfo.Concat($"+{item.GetComponent<Criticals>().CritChance} к шансу крит.удара ");
+                    if (elementalResistance.FirstOrDefault(x => x.Key == type).Value >= 0)
+                    {
+                        itemInfo.Concat($"+{elementalResistance.FirstOrDefault(x => x.Key == type).Value}% сопротивления к ({damageTypes[type]}) ");
+                    }
+                    else
+                    {
+                        itemInfo.Concat($"{elementalResistance.FirstOrDefault(x => x.Key == type).Value}% сопротивления к ({damageTypes[type]}) ");
+                    }
                 }
-                if (item.GetComponent<Criticals>().CritDamage > 0)
+            }
+
+            if (item.GetComponent<CriticalChanceCharacteristic>() != null)
+            {
+                if (item.GetComponent<CriticalChanceCharacteristic>().CriticalChance >= 0)
                 {
-                    itemInfo.Concat($"+{item.GetComponent<Criticals>().CritDamage} к множителю крит.удара ");
+                    itemInfo.Concat($"+{item.GetComponent<CriticalChanceCharacteristic>().CriticalChance} к шансу крит. удара ");
+                }
+                else
+                {
+                    itemInfo.Concat($"{item.GetComponent<CriticalChanceCharacteristic>().CriticalChance} к шансу крит. удара ");
+                }
+            }
+
+            if (item.GetComponent<CriticalDamageCharacteristic>() != null)
+            {
+                if (item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage > 0)
+                {
+                    itemInfo.Concat($"+{item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage} к множителю крит. удара ");
+                }
+                else
+                {
+                    itemInfo.Concat($"{item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage} к множителю крит. удара ");
                 }
             }
 

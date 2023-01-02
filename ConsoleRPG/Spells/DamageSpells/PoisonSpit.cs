@@ -1,5 +1,4 @@
-﻿using ConsoleRPG.Spells.SpellsComponents;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +11,10 @@ namespace ConsoleRPG.Spells.DamageSpells
         public PoisonSpit()
         {
             Name = "[yellow4]Плевок[/]";
-            AddComponent(new SpellElementalDamage { Poison = new Random().Next(5, 17) });
-            AddComponent(new SpellDamageType { Type = DamageTypes.Poison });
+            AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
+            {
+                { DamageTypes.Poison, new Random().Next(5, 17) },
+            }));
         }
     }
 }

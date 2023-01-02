@@ -1,4 +1,4 @@
-﻿using ConsoleRPG.Items.ItemsComponents;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace ConsoleRPG.Items.Currencies
         {
             Name = "Золото";
             Type = ItemType.Currency;
-            AddComponent(new Valuable { Cost = 1 });
+            AddComponent(new ValueCharacteristic { Cost = 1 });
             RarityId = 9;
             Level = 1;
             DropChance = 25f;

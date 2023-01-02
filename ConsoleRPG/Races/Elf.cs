@@ -13,17 +13,17 @@ namespace ConsoleRPG.Races
             Name = "Эльф";
             RaceType = RacesType.Elf;
 
-            AddComponent(new Stat_Strength { PerLevel = 0.6 });
-            AddComponent(new Stat_Agility { PerLevel = 4.6 });
-            AddComponent(new Stat_Intelligence { PerLevel = 1.6 });
+            AddComponent(new StrengthCharacteristic { StrengthPerLevel = 0.6 });
+            AddComponent(new AgilityCharacteristic { AgilityPerLevel = 4.6 });
+            AddComponent(new IntelligenceCharacteristic { IntelligencePerLevel = 1.6 });
         }
 
         public override string RaceInfo()
         {
             return $"Прирост характеристик Эльфа за уровень: " +
-                $"Сила + {this.GetComponent<Stat_Strength>().PerLevel}" +
-                $", Ловкость {this.GetComponent<Stat_Agility>().PerLevel}" +
-                $", Интеллект {this.GetComponent<Stat_Intelligence>().PerLevel}";
+                $"Сила + {this.GetComponent<StrengthCharacteristic>().StrengthPerLevel}" +
+                $", Ловкость {this.GetComponent<AgilityCharacteristic>().AgilityPerLevel}" +
+                $", Интеллект {this.GetComponent<IntelligenceCharacteristic>().IntelligencePerLevel}";
         }
     }
 }

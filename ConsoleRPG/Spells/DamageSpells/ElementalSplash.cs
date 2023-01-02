@@ -1,5 +1,4 @@
-﻿using ConsoleRPG.Spells.SpellsComponents;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +13,11 @@ namespace ConsoleRPG.Spells.DamageSpells
             DamageTypesNames damageTypesNames = new DamageTypesNames();
             DamageTypes damageType = damageTypesNames.GetRandomElementalDamageType();
             string damageTypeColor = damageTypesNames.Color[damageType];
-            AddComponent(new SpellDamageType { Type = damageType });
+            AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
+            {
+                { damageType, new Random().Next(7,12) },
+            }));
             Name = $"[{damageTypeColor}]Элементальный[/] брызг";
-            AddNeededElementalTypesDamage(this, 7, 12);
             
         }
     }

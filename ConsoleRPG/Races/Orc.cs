@@ -15,19 +15,19 @@ namespace ConsoleRPG.Races
             Name = "Орк";
             RaceType = RacesType.Orc;
 
-            AddComponent(new Stat_Strength { PerLevel = 4.1 });
-            AddComponent(new Stat_Agility { PerLevel = 1.5 });
-            AddComponent(new Stat_Intelligence { PerLevel = 0.5 });
-            AddComponent(new Stat_CritDamage { PerLevel = 1.25 });
+            AddComponent(new StrengthCharacteristic { StrengthPerLevel = 4.1 });
+            AddComponent(new AgilityCharacteristic { AgilityPerLevel = 1.5 });
+            AddComponent(new IntelligenceCharacteristic { IntelligencePerLevel = 0.5 });
+            AddComponent(new CriticalDamageCharacteristic { CriticalDamagePerLevel = 1.25 });
         }
 
         public override string RaceInfo()
         {
             return $"Прирост характеристик Орка за уровень: " +
-                $"Сила + {this.GetComponent<Stat_Strength>().PerLevel}" +
-                $", Ловкость {this.GetComponent<Stat_Agility>().PerLevel}" +
-                $", Интеллект {this.GetComponent<Stat_Intelligence>().PerLevel}" +
-                $", Крит. урон + {this.GetComponent<Stat_CritDamage>().PerLevel}%";
+                $"Сила + {this.GetComponent<StrengthCharacteristic>().StrengthPerLevel}" +
+                $", Ловкость {this.GetComponent<AgilityCharacteristic>().AgilityPerLevel}" +
+                $", Интеллект {this.GetComponent<IntelligenceCharacteristic>().IntelligencePerLevel}" +
+                $", Крит. урон + {this.GetComponent<CriticalDamageCharacteristic>().CriticalDamagePerLevel}%";
         }
     }
 }

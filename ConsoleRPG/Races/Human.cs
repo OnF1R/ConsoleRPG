@@ -13,10 +13,10 @@ namespace ConsoleRPG.Races
             Name = "Человек";
             RaceType = RacesType.Human;
 
-            AddComponent(new Stat_Strength { PerLevel = 2.3 });
-            AddComponent(new Stat_Agility { PerLevel = 1.8 });
-            AddComponent(new Stat_Intelligence { PerLevel = 2.1 });
-            AddComponent(new Stat_Luck { PerLevel = 0.5 });
+            AddComponent(new StrengthCharacteristic { StrengthPerLevel = 2.3 });
+            AddComponent(new AgilityCharacteristic { AgilityPerLevel = 1.8 });
+            AddComponent(new IntelligenceCharacteristic { IntelligencePerLevel = 2.1 });
+            AddComponent(new LuckCharacteristic { LuckPerLevel = 0.5 });
 
 
         }
@@ -24,10 +24,10 @@ namespace ConsoleRPG.Races
         public override string RaceInfo()
         {
             return $"Прирост характеристик Человека за уровень: " +
-                $"Сила + {this.GetComponent<Stat_Strength>().PerLevel}" +
-                $", Ловкость {this.GetComponent<Stat_Agility>().PerLevel}" +
-                $", Интеллект {this.GetComponent<Stat_Intelligence>().PerLevel}" +
-                $", Удача + {this.GetComponent<Stat_Luck>().PerLevel}";
+                $"Сила + {this.GetComponent<StrengthCharacteristic>().StrengthPerLevel}" +
+                $", Ловкость {this.GetComponent<AgilityCharacteristic>().AgilityPerLevel}" +
+                $", Интеллект {this.GetComponent<IntelligenceCharacteristic>().IntelligencePerLevel}" +
+                $", Удача + {this.GetComponent<LuckCharacteristic>().LuckPerLevel}";
         }
     }
 }

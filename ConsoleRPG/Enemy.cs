@@ -1,4 +1,5 @@
 ﻿using ConsoleRPG.Items.Weapons;
+using ConsoleRPG.Races;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -8,48 +9,17 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG
 {
-    abstract internal class Enemy
+    abstract internal class Enemy : Unit
     {
-        public string Name { get; set; }
-        public int Level { get; set; }
-        public int MaxHealth { get; set; }
-        public int CurrentHealth { get; set; }
-        public int Damage { get; set; }
-        public int Energy { get; set; }
-
-        public bool IsDead { get; set; }
-
-        public int Armor { get; set; }
-        public double MissChance { get; set; }
-        public double CritChance { get; set; }
-        public double CritDamage { get; set; }
-
         public Item[] DropList { get; set; }
-
-        public Race Race;
-
-        public Equipment Equipment = new Equipment();
-
+        public int Energy { get; set; }
         public Enemy()
         {
-            this.IsDead = false;
-            this.CurrentHealth = this.MaxHealth;
+            Energy = 0;
+            Race = new Orc();
         }
 
-        abstract public void FightLogic(Fight CurrentFight, Player Player, Item PlayerWeapon, int TakedDamage);
-
-
-        //public void BasicAttack(Player Player)
-        //{
-        //    int TempDamage = this.Damage;
-
-        //    if (this.CritChance >= new Random().Next(1, 101))
-        //    {
-        //        TempDamage = this.Damage * (int)Math.Floor(this.Damage / (100 * this.CritDamage));
-        //    }
-
-        //    Player.TakeDamage(TempDamage);
-        //}
+        abstract public void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage);
 
         public List<Item> DropLoot(params Item[] DropList)
         {
@@ -61,7 +31,6 @@ namespace ConsoleRPG
                     ListInventory.Add(item);
                 }
             }
-
             return ListInventory;
         }
 
@@ -70,9 +39,25 @@ namespace ConsoleRPG
             return this.Level * new Random().Next(1, 8);
         }
 
-        public void Death(Player Player)
+        public void Attack(Player Player)
         {
-            this.IsDead = true;
+            Dictionary<DamageTypes, int> damage = GetExistableTypeDamage();
+            foreach (DamageTypes type in damage.Keys)
+            {
+                if (type == DamageTypes.Physical && IsCrit())
+                {
+                    damage[type] = CalcPhysicalCritical(damage[type]);
+                    Player.TakeCriticalDamage(damage[type], type);
+                }
+                else
+                {
+                    Player.TakeDamage(damage[type], type);
+                }
+            }
+        }
+
+        public void DeathDropLoot(Player Player)
+        {
             List<Item> DroppedLoot = DropLoot(this.DropList);
             if (DroppedLoot != null)
             {

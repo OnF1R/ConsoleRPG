@@ -1,4 +1,4 @@
-﻿using ConsoleRPG.Items.ItemsComponents;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace ConsoleRPG.Items.StacableItems
         {
             Name = "[red]Кровавый[/] камень";
             Type = ItemType.Stacable;
-            AddComponent(new Valuable { Cost = 3 });
+            AddComponent(new ValueCharacteristic { Cost = 3 });
             RarityId = 1;
             Level = 1;
             DropChance = 5f;

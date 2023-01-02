@@ -8,108 +8,113 @@ namespace ConsoleRPG
 {
     abstract class Characteristics { }
 
-    class Stat_Strength : Characteristics
+    class StrengthCharacteristic : Characteristics
     {
-        public int HealthPerSTR = 20;
-        public double PerLevel { get; set; }
-        public double RealSTR { get; set; }
-        public int STR { get; set; }
+        public int HealthPerStrength= 20;
+        public double StrengthPerLevel { get; set; }
+        public double RealStrength { get; set; }
+        public int Strength { get; set; }
     }
 
-    class Stat_Agility : Characteristics
+    class AgilityCharacteristic : Characteristics
     {
-        public int DamagePerAGI = 1;
-        public double PerLevel { get; set; }
-        public double RealAGI { get; set; }
-        public int AGI { get; set; }
+        public int DamagePerAgility = 1;
+        public double AgilityPerLevel { get; set; }
+        public double RealAgility { get; set; }
+        public int Agility { get; set; }
     }
 
-    class Stat_Intelligence : Characteristics
+    class IntelligenceCharacteristic : Characteristics
     {
-        public double MagicAmplificationPerINT = 1;
-        public double PerLevel { get; set; }
-        public double RealINT { get; set; }
-        public int INT { get; set; }
+        public double MagicAmplificationPerIntelligence = 1;
+        public double IntelligencePerLevel { get; set; }
+        public double RealIntelligence { get; set; }
+        public int Intelligence { get; set; }
     }
 
-    class Stat_MagicAmplification : Characteristics
+    class MagicAmplificationCharacteristic : Characteristics
     {
-        public double PerLevel { get; set; }
+        public double AmplificationPerLevel { get; set; }
         public double Amplification { get; set; }
     }
 
-    class Stat_Damage : Characteristics
+    class PhysicalDamageCharacteristic : Characteristics
     {
-        public double PerLevel { get; set; }
-        public double RealDMG { get; set; }
-        public int DMG { get; set; }
+        public double PhysicalDamagePerLevel { get; set; }
+        public double RealPhysicalDamage { get; set; }
+        public int PhysicalDamage { get; set; }
     }
 
-    class Stat_Luck : Characteristics
+    class LuckCharacteristic : Characteristics
     {
-        public double PerLevel { get; set; }
-        public double RealLCK { get; set; }
-        public int LCK { get; set; }
+        public double LuckPerLevel { get; set; }
+        public double RealLuck { get; set; }
+        public int Luck { get; set; }
     }
 
-    class Stat_Armor : Characteristics
+    class ArmorCharacteristic : Characteristics
     {
-        public double PerLevel { get; set; }
-        public double RealARM { get; set; }
-        public int ARM { get; set; }
+        public double ArmorPerLevel { get; set; }
+        public double RealArmor { get; set; }
+        public int Armor { get; set; }
     }
 
-    class Stat_MissChance : Characteristics
+    class EvasionCharacteristic : Characteristics
     {
-        public double PerLevel { get; set; }
-        public double CHANCE { get; set; }
+        public double EvasionPerLevel { get; set; }
+        public double EvasionChance { get; set; }
     }
 
-    class Stat_Evasion : Characteristics
+    class MissCharacteristic : Characteristics
     {
-        public double PerLevel { get; set; }
-        public double CHANCE { get; set; }
+        public double MissPerLevel { get; set; }
+        public double MissChance { get; set; }
     }
 
-    class Stat_CritChance : Characteristics
+    class CriticalChanceCharacteristic : Characteristics
     {
-        public double PerLevel { get; set; }
-        public double CHANCE { get; set; }
+        public double CriticalChancePerLevel { get; set; }
+        public double CriticalChance { get; set; }
     }
 
-    class Stat_CritDamage : Characteristics
+    class CriticalDamageCharacteristic : Characteristics
     {
-        public double PerLevel { get; set; }
-        public double DMG { get; set; }
+        public double CriticalDamagePerLevel { get; set; }
+        public double CriticalDamage { get; set; }
     }
 
-    class Stat_ElementalResistance : Characteristics
+    class ValueCharacteristic : Characteristics
     {
-        public Dictionary<DamageTypes, int> RESISTANCE = new();
+        public int Cost { get; set; }
+    }
 
-        public Stat_ElementalResistance(params Dictionary<DamageTypes, int>[] damageTypes)
+    class ElementalResistanceCharacteristic : Characteristics
+    {
+        public Dictionary<DamageTypes, int> ElemResistance = new();
+
+        public ElementalResistanceCharacteristic(params Dictionary<DamageTypes, int>[] damageTypes)
         {
             foreach (var damageType in damageTypes)
             {
                 foreach (DamageTypes type in damageType.Keys)
                 {
-                    RESISTANCE.Add(type, damageType[type]);
+                    ElemResistance.Add(type, damageType[type]);
                 }
             }
         }
     }
 
-    class Stat_ElementalDamage : Characteristics
+    class ElementalDamageCharacteristic : Characteristics
     {
-        public Dictionary<DamageTypes, int> DAMAGE = new();
+        public Dictionary<DamageTypes, int> ElemDamage = new();
 
-        public Stat_ElementalDamage(params Dictionary<DamageTypes, int>[] damageTypes)
+        public ElementalDamageCharacteristic(params Dictionary<DamageTypes, int>[] damageTypes)
         {
             foreach (var damageType in damageTypes)
             {
                 foreach (DamageTypes type in damageType.Keys)
                 {
-                    DAMAGE.Add(type, damageType[type]);
+                    ElemDamage.Add(type, damageType[type]);
                 }
             }
         }

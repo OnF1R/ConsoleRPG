@@ -1,4 +1,4 @@
-﻿using ConsoleRPG.Items.ItemsComponents;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,17 +22,15 @@ namespace ConsoleRPG.Items.Weapons
             {
                 string QualityName = Quality.GetBadQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = rand.Next(1, 5) });
-                AddComponent(new PhysicalDamage { Physical = rand.Next(1, 6) });
-                AddComponent(new DamageType { Type = DamageTypes.Physical });
+                AddComponent(new ValueCharacteristic { Cost = rand.Next(1, 5) });
+                AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(1, 6) });
                 RarityId = 0;
                 Level = 1;
             }
             else if (Chance <= 85)
             {
-                AddComponent(new Valuable { Cost = rand.Next(6, 9) });
-                AddComponent(new PhysicalDamage { Physical = rand.Next(6, 11) });
-                AddComponent(new DamageType { Type = DamageTypes.Physical });
+                AddComponent(new ValueCharacteristic { Cost = rand.Next(6, 9) });
+                AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(6, 11) });
                 RarityId = 1;
                 Level = 2;
             }
@@ -40,9 +38,8 @@ namespace ConsoleRPG.Items.Weapons
             {
                 string QualityName = Quality.GetGoodQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = rand.Next(9, 13) });
-                AddComponent(new PhysicalDamage { Physical = rand.Next(11, 16) });
-                AddComponent(new DamageType { Type = DamageTypes.Physical });
+                AddComponent(new ValueCharacteristic { Cost = rand.Next(9, 13) });
+                AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(11, 16) });
                 RarityId = 2;
                 Level = 3;
             }
@@ -50,9 +47,8 @@ namespace ConsoleRPG.Items.Weapons
             {
                 string QualityName = Quality.GetBestQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new Valuable { Cost = rand.Next(13, 22) });
-                AddComponent(new PhysicalDamage { Physical = rand.Next(14, 22) });
-                AddComponent(new DamageType { Type = DamageTypes.Physical });
+                AddComponent(new ValueCharacteristic { Cost = rand.Next(13, 22) });
+                AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(14, 22) });
                 RarityId = 3;
                 Level = 4;
             }

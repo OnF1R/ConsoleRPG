@@ -1,4 +1,4 @@
-﻿using ConsoleRPG.Items.ItemsComponents;
+﻿
 using ConsoleRPG.Races;
 using Spectre.Console;
 using System;

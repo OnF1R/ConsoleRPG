@@ -1,4 +1,4 @@
-﻿using ConsoleRPG.Items.ItemsComponents;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace ConsoleRPG.Items.StacableItems
         {
             Name = "[grey]Железный[/] слиток";
             Type = ItemType.Stacable;
-            AddComponent(new Valuable { Cost = 2 });
+            AddComponent(new ValueCharacteristic { Cost = 2 });
             RarityId = 0;
             Level = 1;
             DropChance = 0f;
