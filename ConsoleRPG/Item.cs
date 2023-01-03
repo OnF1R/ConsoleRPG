@@ -166,7 +166,6 @@ namespace ConsoleRPG
         public string ItemInfoString(Item item)
         {
             string itemInfo = "";
-            DamageTypes DamageType = DamageTypes.Abyss;
 
             Dictionary<DamageTypes, string> damageTypes = new DamageTypesNames().Names;
 
@@ -174,11 +173,11 @@ namespace ConsoleRPG
             {
                 if (item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage >= 0)
                 {
-                    itemInfo.Concat($"+{item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage} к [bold]физическому урону[/] ");
+                    itemInfo= itemInfo + ($"+{item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage} к [bold]физическому урону[/] ");
                 }
                 else
                 {
-                    itemInfo.Concat($"{item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage} к [bold]физическому урону[/] ");
+                    itemInfo = itemInfo + ($"{item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage} к [bold]физическому урону[/] ");
                 }
             }
 
@@ -186,11 +185,11 @@ namespace ConsoleRPG
             {
                 if (item.GetComponent<ArmorCharacteristic>().Armor >= 0)
                 {
-                    itemInfo.Concat($"+{item.GetComponent<ArmorCharacteristic>().Armor} к [bold]броне[/] ");
+                    itemInfo = itemInfo + ($"+{item.GetComponent<ArmorCharacteristic>().Armor} к [bold]броне[/] ");
                 }
                 else
                 {
-                    itemInfo.Concat($"{item.GetComponent<ArmorCharacteristic>().Armor} к [bold]броне[/] ");
+                    itemInfo = itemInfo + ($"{item.GetComponent<ArmorCharacteristic>().Armor} к [bold]броне[/] ");
                 }
             }
 
@@ -202,11 +201,11 @@ namespace ConsoleRPG
                 {
                     if (elementalDamage.FirstOrDefault(x => x.Key == type).Value >= 0)
                     {
-                        itemInfo.Concat($"+{elementalDamage.FirstOrDefault(x => x.Key == type).Value} к урону ({damageTypes[type]}) ");
+                        itemInfo = itemInfo + ($"+{elementalDamage.FirstOrDefault(x => x.Key == type).Value} к урону ({damageTypes[type]}) ");
                     }
                     else
                     {
-                        itemInfo.Concat($"{elementalDamage.FirstOrDefault(x => x.Key == type).Value} к урону ({damageTypes[type]}) ");
+                        itemInfo = itemInfo + ($"{elementalDamage.FirstOrDefault(x => x.Key == type).Value} к урону ({damageTypes[type]}) ");
                     }
                 }
             }
@@ -219,11 +218,11 @@ namespace ConsoleRPG
                 {
                     if (elementalResistance.FirstOrDefault(x => x.Key == type).Value >= 0)
                     {
-                        itemInfo.Concat($"+{elementalResistance.FirstOrDefault(x => x.Key == type).Value}% сопротивления к ({damageTypes[type]}) ");
+                        itemInfo = itemInfo + ($"+{elementalResistance.FirstOrDefault(x => x.Key == type).Value}% сопротивления к ({damageTypes[type]}) ");
                     }
                     else
                     {
-                        itemInfo.Concat($"{elementalResistance.FirstOrDefault(x => x.Key == type).Value}% сопротивления к ({damageTypes[type]}) ");
+                        itemInfo = itemInfo + ($"{elementalResistance.FirstOrDefault(x => x.Key == type).Value}% сопротивления к ({damageTypes[type]}) ");
                     }
                 }
             }
@@ -232,11 +231,11 @@ namespace ConsoleRPG
             {
                 if (item.GetComponent<CriticalChanceCharacteristic>().CriticalChance >= 0)
                 {
-                    itemInfo.Concat($"+{item.GetComponent<CriticalChanceCharacteristic>().CriticalChance} к шансу крит. удара ");
+                    itemInfo = itemInfo + ($"+{item.GetComponent<CriticalChanceCharacteristic>().CriticalChance} к шансу крит. удара ");
                 }
                 else
                 {
-                    itemInfo.Concat($"{item.GetComponent<CriticalChanceCharacteristic>().CriticalChance} к шансу крит. удара ");
+                    itemInfo = itemInfo + ($"{item.GetComponent<CriticalChanceCharacteristic>().CriticalChance} к шансу крит. удара ");
                 }
             }
 
@@ -244,11 +243,11 @@ namespace ConsoleRPG
             {
                 if (item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage > 0)
                 {
-                    itemInfo.Concat($"+{item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage} к множителю крит. удара ");
+                    itemInfo = itemInfo + ($"+{item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage} к множителю крит. удара ");
                 }
                 else
                 {
-                    itemInfo.Concat($"{item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage} к множителю крит. удара ");
+                    itemInfo = itemInfo + ($"{item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage} к множителю крит. удара ");
                 }
             }
 

@@ -23,8 +23,8 @@ namespace ConsoleRPG.Enemies
             GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(3, 6);
 
             //Экипировка
-            Equipment.WearEquip(new EnchantedHat(), EquipmentSlot.Helmet);
-            Equipment.WearEquip(new FireSword(), EquipmentSlot.LeftHand);
+            Equipment.WearEquip(this, new EnchantedHat(), EquipmentSlot.Helmet);
+            Equipment.WearEquip(this, new FireSword(), EquipmentSlot.LeftHand);
 
             DropList = new Item[] {new Gold(), Equipment.Equip[EquipmentSlot.LeftHand], Equipment.Equip[EquipmentSlot.Helmet] };
         }
@@ -33,7 +33,8 @@ namespace ConsoleRPG.Enemies
         {
             foreach (DamageTypes type in TakedDamage.Keys)
             {
-                TakeDamage(TakedDamage[type], type);
+                if (!IsDead)
+                    TakeDamage(TakedDamage[type], type);
             }
 
             if (!IsDead)

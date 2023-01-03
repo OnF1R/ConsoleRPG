@@ -25,8 +25,8 @@ namespace ConsoleRPG.Enemies
             CurrentHealth = MaxHealth;
             GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2, 5);
 
-            Equipment.WearEquip(new EnchantedHat(), EquipmentSlot.Helmet);
-            Equipment.WearEquip(new ElementalRing(), EquipmentSlot.FirstRing);
+            Equipment.WearEquip(this, new EnchantedHat(), EquipmentSlot.Helmet);
+            Equipment.WearEquip(this, new ElementalRing(), EquipmentSlot.FirstRing);
 
             DropList = new Item[] { new Gold(), Equipment.Equip[EquipmentSlot.Helmet], Equipment.Equip[EquipmentSlot.FirstRing] };
         }
@@ -35,7 +35,8 @@ namespace ConsoleRPG.Enemies
         {
             foreach (DamageTypes type in TakedDamage.Keys)
             {
-                TakeDamage(TakedDamage[type], type);
+                if (!IsDead)
+                    TakeDamage(TakedDamage[type], type);
             }
 
             if (!IsDead)

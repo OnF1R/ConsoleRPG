@@ -29,7 +29,7 @@ namespace ConsoleRPG.Enemies
             GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2, 4);
 
             //Экипировка
-            Equipment.WearEquip(new ProtectionRing(), EquipmentSlot.FirstRing);
+            Equipment.WearEquip(this, new ProtectionRing(), EquipmentSlot.FirstRing);
 
             DropList = new Item[]
             {
@@ -43,7 +43,8 @@ namespace ConsoleRPG.Enemies
         {
             foreach (DamageTypes type in TakedDamage.Keys)
             {
-                TakeDamage(TakedDamage[type], type);
+                if (!IsDead)
+                    TakeDamage(TakedDamage[type], type);
             }
 
             if (!IsDead)

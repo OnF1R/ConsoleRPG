@@ -69,30 +69,170 @@ namespace ConsoleRPG
             }
         }
 
-        public void WearEquip(Item Item, EquipmentSlot SlotName)
+        public void WearEquip(Unit unit, Item Item, EquipmentSlot SlotName)
         {
             if (Equip.ContainsKey(SlotName))
             {
                 Equip.TryGetValue(SlotName, out var equip);
-                if (equip != null) equip.IsEquiped = false;
+                if (equip != null) TakeOffEquip(unit, SlotName);
                 Item.IsEquiped = true;
                 Equip[SlotName] = Item;
+                UpdateStatsWhenWear(unit, Item);
             }
         }
 
-        public void TakeOffEquip(EquipmentSlot SlotName)
+        public void UpdateStatsWhenWear(Unit unit, Item item)
+        {
+            Dictionary<DamageTypes, string> damageTypes = new DamageTypesNames().Names;
+
+            if (item.GetComponent<PhysicalDamageCharacteristic>() != null)
+            {
+                unit.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
+            }
+
+            if (item.GetComponent<ArmorCharacteristic>() != null)
+            {
+
+                unit.GetComponent<ArmorCharacteristic>().Armor += item.GetComponent<ArmorCharacteristic>().Armor;
+
+            }
+
+            if (item.GetComponent<ElementalDamageCharacteristic>() != null)
+            {
+                Dictionary<DamageTypes, int> elementalDamage = item.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+
+                foreach (DamageTypes type in elementalDamage.Keys)
+                {
+                    unit.GetComponent<ElementalDamageCharacteristic>().ElemDamage[type] += elementalDamage.FirstOrDefault(x => x.Key == type).Value;
+                }
+            }
+
+            if (item.GetComponent<ElementalResistanceCharacteristic>() != null)
+            {
+                Dictionary<DamageTypes, int> elementalResistance = item.GetComponent<ElementalResistanceCharacteristic>().ElemResistance;
+
+                foreach (DamageTypes type in elementalResistance.Keys)
+                {
+
+                    unit.GetComponent<ElementalResistanceCharacteristic>().ElemResistance[type]
+                        += elementalResistance.FirstOrDefault(x => x.Key == type).Value;
+                }
+            }
+
+            if (item.GetComponent<CriticalChanceCharacteristic>() != null)
+            {
+                unit.GetComponent<CriticalChanceCharacteristic>().CriticalChance += item.GetComponent<CriticalChanceCharacteristic>().CriticalChance;
+            }
+
+            if (item.GetComponent<CriticalDamageCharacteristic>() != null)
+            {
+                unit.GetComponent<CriticalDamageCharacteristic>().CriticalDamage += item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage;
+            }
+        }
+
+        public void UpdateStatsWhenTakeOff(Unit unit, Item item)
+        {
+            Dictionary<DamageTypes, string> damageTypes = new DamageTypesNames().Names;
+
+            if (item.GetComponent<PhysicalDamageCharacteristic>() != null)
+            {
+                if (item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage >= 0)
+                {
+                    unit.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage -= item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
+                }
+                else
+                {
+                    unit.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
+                }
+            }
+
+            if (item.GetComponent<ArmorCharacteristic>() != null)
+            {
+                if (item.GetComponent<ArmorCharacteristic>().Armor >= 0)
+                {
+                    unit.GetComponent<ArmorCharacteristic>().Armor -= item.GetComponent<ArmorCharacteristic>().Armor;
+                }
+                else
+                {
+                    unit.GetComponent<ArmorCharacteristic>().Armor += item.GetComponent<ArmorCharacteristic>().Armor;
+                }
+            }
+
+            if (item.GetComponent<ElementalDamageCharacteristic>() != null)
+            {
+                Dictionary<DamageTypes, int> elementalDamage = item.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+
+                foreach (DamageTypes type in elementalDamage.Keys)
+                {
+                    if (elementalDamage.FirstOrDefault(x => x.Key == type).Value >= 0)
+                    {
+                        unit.GetComponent<ElementalDamageCharacteristic>().ElemDamage[type] -= elementalDamage.FirstOrDefault(x => x.Key == type).Value;
+                    }
+                    else
+                    {
+                        unit.GetComponent<ElementalDamageCharacteristic>().ElemDamage[type] += elementalDamage.FirstOrDefault(x => x.Key == type).Value;
+                    }
+                }
+            }
+
+            if (item.GetComponent<ElementalResistanceCharacteristic>() != null)
+            {
+                Dictionary<DamageTypes, int> elementalResistance = item.GetComponent<ElementalResistanceCharacteristic>().ElemResistance;
+
+                foreach (DamageTypes type in elementalResistance.Keys)
+                {
+                    if (elementalResistance.FirstOrDefault(x => x.Key == type).Value >= 0)
+                    {
+                        unit.GetComponent<ElementalResistanceCharacteristic>().ElemResistance[type]
+                            -= elementalResistance.FirstOrDefault(x => x.Key == type).Value;
+                    }
+                    else
+                    {
+                        unit.GetComponent<ElementalResistanceCharacteristic>().ElemResistance[type]
+                            += elementalResistance.FirstOrDefault(x => x.Key == type).Value;
+                    }
+                }
+            }
+
+            if (item.GetComponent<CriticalChanceCharacteristic>() != null)
+            {
+                if (item.GetComponent<CriticalChanceCharacteristic>().CriticalChance >= 0)
+                {
+                    unit.GetComponent<CriticalChanceCharacteristic>().CriticalChance -= item.GetComponent<CriticalChanceCharacteristic>().CriticalChance;
+                }
+                else
+                {
+                    unit.GetComponent<CriticalChanceCharacteristic>().CriticalChance += item.GetComponent<CriticalChanceCharacteristic>().CriticalChance;
+                }
+            }
+
+            if (item.GetComponent<CriticalDamageCharacteristic>() != null)
+            {
+                if (item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage > 0)
+                {
+                    unit.GetComponent<CriticalDamageCharacteristic>().CriticalDamage -= item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage;
+                }
+                else
+                {
+                    unit.GetComponent<CriticalDamageCharacteristic>().CriticalDamage += item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage;
+                }
+            }
+        }
+
+        public void TakeOffEquip(Unit unit, EquipmentSlot SlotName)
         {
             Equip[SlotName].IsEquiped = false;
+            UpdateStatsWhenTakeOff(unit, Equip[SlotName]);
             Equip[SlotName] = new NothingItem();
         }
 
-        public void TakeOffAllEquip()
+        public void TakeOffAllEquip(Unit unit)
         {
             if (Equip != null)
             {
                 foreach (EquipmentSlot Slot in (EquipmentSlot[])Enum.GetValues(typeof(EquipmentSlot)))
                 {
-                    TakeOffEquip(Slot);
+                    TakeOffEquip(unit, Slot);
                 }
             }
         }
@@ -118,7 +258,7 @@ namespace ConsoleRPG
                         ShowWearEquipment();
                         break;
                     case 2:
-                        ChangeEquipmentMenu(Player.Inventory);
+                        ChangeEquipmentMenu(Player);
                         break;
                     default:
                         Loop = false;
@@ -127,19 +267,17 @@ namespace ConsoleRPG
             }
         }
 
-        public void ChangeEquipment(Inventory inv, EquipmentSlot SlotName, params ItemType[] ItemType)
+        public void ChangeEquipment(Unit unit, EquipmentSlot SlotName, params ItemType[] ItemType)
         {
             List<Item> EquipableItems = new List<Item>();
-            EquipableItems = inv.SortInventoryForEquip(ItemType);
+            EquipableItems = unit.Inventory.SortInventoryForEquip(ItemType);
             Dictionary<int, string> itemsWithStats = new Dictionary<int, string>();
-
-
 
             if (EquipableItems.Count > 0)
             {
                 for (int i = 0; i < EquipableItems.Count; i++)
                 {
-                    itemsWithStats.Add(i+1, $"{EquipableItems[i].Name} [{EquipableItems[i].RarityColor}]{EquipableItems[i].Rarity}[/] {EquipableItems[i].ItemInfoString(EquipableItems[i])}");
+                    itemsWithStats.Add(i + 1, $"{EquipableItems[i].Name} ([{EquipableItems[i].RarityColor}]{EquipableItems[i].Rarity}[/]): {EquipableItems[i].ItemInfoString(EquipableItems[i])}");
                 }
 
                 var chosedEquipment = AnsiConsole.Prompt(
@@ -155,7 +293,7 @@ namespace ConsoleRPG
                     switch (result >= 1 && result <= EquipableItems.Count)
                     {
                         case true:
-                            WearEquip(EquipableItems[--result], SlotName);
+                            WearEquip(unit, EquipableItems[--result], SlotName);
                             break;
                         default:
                             Console.WriteLine("Не правильно выбран предмет");
@@ -175,7 +313,7 @@ namespace ConsoleRPG
 
         }
 
-        public void ChangeEquipmentMenu(Inventory inv)
+        public void ChangeEquipmentMenu(Unit unit)
         {
             ShowWearEquipment();
             var choise = AnsiConsole.Prompt(
@@ -191,39 +329,39 @@ namespace ConsoleRPG
             switch (ChangeSlotsChoises.FirstOrDefault(x => x.Value == choise).Key)
             {
                 case 1:
-                    ChangeEquipment(inv, EquipmentSlot.LeftHand,
+                    ChangeEquipment(unit, EquipmentSlot.LeftHand,
                         ItemType.Sword, ItemType.TwoHandedSword, ItemType.Axe, ItemType.TwoHandedAxe, ItemType.Bow, ItemType.Staff, ItemType.TwoHandenStaff, ItemType.Shield, ItemType.Dagger);
                     break;
                 case 2:
-                    ChangeEquipment(inv, EquipmentSlot.RightHand,
+                    ChangeEquipment(unit, EquipmentSlot.RightHand,
                         ItemType.Sword, ItemType.TwoHandedSword, ItemType.Axe, ItemType.TwoHandedAxe, ItemType.Bow, ItemType.Staff, ItemType.TwoHandenStaff, ItemType.Shield, ItemType.Dagger);
                     break;
                 case 3:
-                    ChangeEquipment(inv, EquipmentSlot.Helmet, ItemType.Helmet);
+                    ChangeEquipment(unit, EquipmentSlot.Helmet, ItemType.Helmet);
                     break;
                 case 4:
-                    ChangeEquipment(inv, EquipmentSlot.Chest, ItemType.Chest);
+                    ChangeEquipment(unit, EquipmentSlot.Chest, ItemType.Chest);
                     break;
                 case 5:
-                    ChangeEquipment(inv, EquipmentSlot.Gloves, ItemType.Gloves);
+                    ChangeEquipment(unit, EquipmentSlot.Gloves, ItemType.Gloves);
                     break;
                 case 6:
-                    ChangeEquipment(inv, EquipmentSlot.Leggs, ItemType.Leggs);
+                    ChangeEquipment(unit, EquipmentSlot.Leggs, ItemType.Leggs);
                     break;
                 case 7:
-                    ChangeEquipment(inv, EquipmentSlot.Boots, ItemType.Boots);
+                    ChangeEquipment(unit, EquipmentSlot.Boots, ItemType.Boots);
                     break;
                 case 8:
-                    ChangeEquipment(inv, EquipmentSlot.FirstRing, ItemType.Ring);
+                    ChangeEquipment(unit, EquipmentSlot.FirstRing, ItemType.Ring);
                     break;
                 case 9:
-                    ChangeEquipment(inv, EquipmentSlot.SecondRing, ItemType.Ring);
+                    ChangeEquipment(unit, EquipmentSlot.SecondRing, ItemType.Ring);
                     break;
                 case 10:
-                    ChangeEquipment(inv, EquipmentSlot.Cape, ItemType.Cape);
+                    ChangeEquipment(unit, EquipmentSlot.Cape, ItemType.Cape);
                     break;
                 case 11:
-                    ChangeEquipment(inv, EquipmentSlot.Trinket, ItemType.Trinket);
+                    ChangeEquipment(unit, EquipmentSlot.Trinket, ItemType.Trinket);
                     break;
                 default:
                     break;

@@ -52,14 +52,16 @@ namespace ConsoleRPG
             AddComponent(new MagicAmplificationCharacteristic { Amplification = 0, AmplificationPerLevel = 0 });
 
             Dictionary<DamageTypes, int> elemental = new Dictionary<DamageTypes, int>();
+            Dictionary<DamageTypes, int> elemental2 = new Dictionary<DamageTypes, int>();
 
             foreach (DamageTypes type in new DamageTypesNames().ArrayBasicElementalDamageTypes)
             {
                 elemental.Add(type, 0);
+                elemental2.Add(type, 0);
             }
 
             AddComponent(new ElementalResistanceCharacteristic { ElemResistance = elemental });
-            AddComponent(new ElementalDamageCharacteristic { ElemDamage = elemental });
+            AddComponent(new ElementalDamageCharacteristic { ElemDamage = elemental2 });
         }
 
         public void Resurrection()
@@ -81,7 +83,8 @@ namespace ConsoleRPG
             {
                 if (resistance[damageType] > 0)
                 {
-                    TakedDamage -= (int)(GetExistableTypeResistance()[damageType] / 100);
+                    double tempBlockedDamage = TakedDamage * (resistance[damageType] / (double)100);
+                    TakedDamage -= (int)tempBlockedDamage;
                 }
             }
 
@@ -107,7 +110,8 @@ namespace ConsoleRPG
             {
                 if (resistance[damageType] > 0)
                 {
-                    TakedDamage -= (int)(GetExistableTypeResistance()[damageType] / 100);
+                    double tempBlockedDamage = TakedDamage * (resistance[damageType] / (double)100);
+                    TakedDamage -= (int)tempBlockedDamage;
                 }
             }
 
@@ -123,7 +127,7 @@ namespace ConsoleRPG
             }
             else
             {
-                AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} [red]критического урона[/] ({2}), его здоровье [lime]{4}[/]",
+                AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} [red]критического урона[/] ({2}), его здоровье [lime]{3}[/]",
                 Name, TakedDamage, new DamageTypesNames().Names[damageType], CurrentHealth);
             }
         }
@@ -214,10 +218,15 @@ namespace ConsoleRPG
         public Dictionary<DamageTypes, int> GetExistableTypeDamage()
         {
             Dictionary<DamageTypes, int> result = new Dictionary<DamageTypes, int>();
-
+            Dictionary<DamageTypes, int> damageTypes = GetElementalDamage();
             result.Add(DamageTypes.Physical, GetPhysicalDamage());
 
-            result.Concat(GetElementalDamage());
+            
+
+            foreach (DamageTypes type in damageTypes.Keys)
+            {
+                result.Add(type, damageTypes[type]);
+            }
 
             return result;
         }
@@ -266,7 +275,7 @@ namespace ConsoleRPG
             foreach (DamageTypes type in GetComponent<ElementalResistanceCharacteristic>().ElemResistance.Keys)
             {
                 int resistance = GetComponent<ElementalResistanceCharacteristic>().ElemResistance[type];
-                if (resistance > 0)
+                if (resistance != 0)
                 {
                     elementalResistance.Add(type, resistance);
                 }

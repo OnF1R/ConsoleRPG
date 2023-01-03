@@ -31,17 +31,17 @@ namespace ConsoleRPG.Enemies
             switch (random.Next(0, 3))
             {
                 case 0:
-                    Equipment.WearEquip(new SteelAxe(), EquipmentSlot.LeftHand);
+                    Equipment.WearEquip(this, new SteelAxe(), EquipmentSlot.LeftHand);
                     break;
                 case 1:
-                    Equipment.WearEquip(new SteelDagger(), EquipmentSlot.LeftHand);
+                    Equipment.WearEquip(this, new SteelDagger(), EquipmentSlot.LeftHand);
                     break;
                 case 2:
-                    Equipment.WearEquip(new SteelSword(), EquipmentSlot.LeftHand);
+                    Equipment.WearEquip(this, new SteelSword(), EquipmentSlot.LeftHand);
                     break;
             }
-            Equipment.WearEquip(new SteelHelmet(), EquipmentSlot.Helmet);
-            Equipment.WearEquip(new SteelShield(), EquipmentSlot.RightHand);
+            Equipment.WearEquip(this, new SteelHelmet(), EquipmentSlot.Helmet);
+            Equipment.WearEquip(this, new SteelShield(), EquipmentSlot.RightHand);
 
             DropList = new Item[]
             {
@@ -55,15 +55,12 @@ namespace ConsoleRPG.Enemies
 
         public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
         {
-
-            
-
-            if (Energy >= 3)
+             if (Energy >= 3)
             {
                 AnsiConsole.MarkupLine("{0} использовал Блок щитом!", Name);
                 foreach (DamageTypes type in TakedDamage.Keys)
                 {
-                    TakeDamage(TakedDamage[type]/2, type);
+                    if (!IsDead) TakeDamage(TakedDamage[type]/2, type);
                 }
                 Energy = 0;
             }
@@ -71,7 +68,7 @@ namespace ConsoleRPG.Enemies
             {
                 foreach (DamageTypes type in TakedDamage.Keys)
                 {
-                    TakeDamage(TakedDamage[type], type);
+                    if (!IsDead) TakeDamage(TakedDamage[type], type);
                 }
             }
 

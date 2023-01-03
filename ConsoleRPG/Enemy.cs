@@ -81,7 +81,7 @@ namespace ConsoleRPG
                 Console.WriteLine("К сожалению вы ничего не получили...");
             }
 
-            Equipment.TakeOffAllEquip();
+            Equipment.TakeOffAllEquip(this);
 
             Player.TakeExp(this.GiveExp());
         }
