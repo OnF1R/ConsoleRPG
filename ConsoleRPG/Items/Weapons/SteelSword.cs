@@ -18,6 +18,8 @@ namespace ConsoleRPG.Items.Weapons
             Name = "[grey]Стальной[/] меч";
             int Chance = rand.Next(1, 101);
 
+            ID = ItemIdentifier.SteelSword;
+
             if (Chance <= 10)
             {
                 string QualityName = Quality.GetBadQuality();

@@ -59,9 +59,7 @@ namespace ConsoleRPG
                 if (!ListInventory[i].IsStacable && !ListInventory[i].IsEquiped)
                     items.Add(ListInventory[i]);
             }
-                
-                    
-        } 
+        }
 
         public List<Item> GetCurrencies()
         {
@@ -80,6 +78,26 @@ namespace ConsoleRPG
         public bool IsEnoughCurrency(int Cost)
         {
             return GetItemsCost(GetCurrencies().ToArray()) >= Cost;
+        }
+
+        public bool IsHave(Item needle)
+        {
+            foreach (Item item in ListInventory)
+            {
+                if (item.ID == needle.ID) return true;  
+            }
+
+            return false;
+        }
+
+        public bool IsHave(Item needle, int count)
+        {
+            foreach (Item item in ListInventory)
+            {
+                if (item.ID == needle.ID) if (count <= item.Count) return true; 
+            }
+
+            return false;
         }
 
         public void BuyItem(int Cost, Item BoughtItem)
@@ -127,7 +145,7 @@ namespace ConsoleRPG
                 else
                 {
                     SumCost += item.GetComponent<ValueCharacteristic>().Cost;
-                } 
+                }
             }
 
             return SumCost;

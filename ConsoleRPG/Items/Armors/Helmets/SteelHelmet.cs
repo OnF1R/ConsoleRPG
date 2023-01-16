@@ -16,6 +16,8 @@ namespace ConsoleRPG.Items.Armors.Helmets
             Name = "Стальной шлем";
             int Chance = rand.Next(1, 101);
 
+            ID = ItemIdentifier.SteelHelmet;
+
             if (Chance <= 10)
             {
                 string QualityName = Quality.GetBadQuality();

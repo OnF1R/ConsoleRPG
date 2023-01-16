@@ -16,7 +16,9 @@ namespace ConsoleRPG.Items.Armors.Rings
             int Chance = rand.Next(1, 101);
             DamageTypesNames damageTypesNames = new DamageTypesNames();
             Name = $"[bold]Элементальное[/] кольцо";
-            
+
+            ID = ItemIdentifier.ElementalRing;
+
             if (Chance <= 10)
             {
                 string QualityName = Quality.GetBadQuality();
@@ -51,7 +53,6 @@ namespace ConsoleRPG.Items.Armors.Rings
                 RarityId = 2;
                 Level = 2;
             }
-
 
             Type = ItemType.Ring;
 

@@ -22,7 +22,7 @@ namespace ConsoleRPG.Items.Currencies
             IsStacable = true;
             IsEquapable = false;
             IsEquiped = false;
-
+            ID = ItemIdentifier.Gold;
             SetRarity(RarityId);
         }
     }

@@ -21,6 +21,7 @@
     <Folder Include="Items\Armors\Boots\" />
     <Folder Include="Items\Armors\Trinkets\" />
     <Folder Include="Items\Armors\Capes\" />
+    <Folder Include="Items\CraftRecipeScrolls\" />
   </ItemGroup>
 
 </Project>

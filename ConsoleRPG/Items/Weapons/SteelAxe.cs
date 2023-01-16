@@ -17,6 +17,8 @@ namespace ConsoleRPG.Items.Weapons
             Name = "[grey]Стальной[/] топор";
             int Chance = rand.Next(1, 101);
 
+            ID = ItemIdentifier.SteelAxe;
+
             if (Chance <= 10)
             {
                 string QualityName = Quality.GetBadQuality();

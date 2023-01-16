@@ -20,6 +20,7 @@ namespace ConsoleRPG
         public double DropChance { get; set; }
         public bool IsStacable { get; set; }
         public ItemType Type { get; set; }
+        public ItemIdentifier ID { get; set; }
         public bool IsEquapable { get; set; }
         public bool IsEquiped { get; set; }
         public int Damage { get; set; }
@@ -74,8 +75,6 @@ namespace ConsoleRPG
 
         public void ItemInfo(Item item)
         {
-            DamageTypes DamageType = DamageTypes.Abyss;
-
             Dictionary<DamageTypes, string> damageTypes = new DamageTypesNames().Names;
 
             if (item.GetComponent<PhysicalDamageCharacteristic>() != null)

@@ -22,7 +22,7 @@ namespace ConsoleRPG.Items.StacableItems
             IsStacable = true;
             IsEquapable = false;
             IsEquiped = false;
-
+            ID = ItemIdentifier.BloodStone;
             SetRarity(RarityId);
         }
     }

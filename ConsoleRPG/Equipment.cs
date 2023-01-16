@@ -128,6 +128,11 @@ namespace ConsoleRPG
             {
                 unit.GetComponent<CriticalDamageCharacteristic>().CriticalDamage += item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage;
             }
+
+            //if (item.GetComponent<StrengthCharacteristic>() != null) 
+            //{
+            //    unit.GetComponent<StrengthCharacteristic>().Strength += item.GetComponent<StrengthCharacteristic>().Strength;
+            //}
         }
 
         public void UpdateStatsWhenTakeOff(Unit unit, Item item)
@@ -217,6 +222,11 @@ namespace ConsoleRPG
                     unit.GetComponent<CriticalDamageCharacteristic>().CriticalDamage += item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage;
                 }
             }
+
+            //if (item.GetComponent<StrengthCharacteristic>() != null)
+            //{
+            //    unit.GetComponent<StrengthCharacteristic>().Strength -= item.GetComponent<StrengthCharacteristic>().Strength;
+            //}
         }
 
         public void TakeOffEquip(Unit unit, EquipmentSlot SlotName)

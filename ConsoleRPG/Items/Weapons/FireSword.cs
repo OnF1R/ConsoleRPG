@@ -15,6 +15,9 @@ namespace ConsoleRPG.Items.Weapons
             Quality Quality = new Quality();
             Name = "[orangered1]Огненный[/] меч";
             int Chance = rand.Next(1, 101);
+
+            ID = ItemIdentifier.FireSword;
+
             if (Chance <= 5)
             {
                 string QualityName = Quality.GetBadQuality();

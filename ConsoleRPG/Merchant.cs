@@ -76,7 +76,6 @@ namespace ConsoleRPG
                 var choise = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[bold]Что будете делать?[/]")
-                        .PageSize(10)
                         .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
                         .AddChoices(MenuChoises.Values));
 

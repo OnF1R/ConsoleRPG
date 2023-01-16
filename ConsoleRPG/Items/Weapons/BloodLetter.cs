@@ -16,6 +16,8 @@ namespace ConsoleRPG.Items.Weapons
             Name = "[red]Кровопускатель[/]";
             int Chance = rand.Next(1, 101);
 
+            ID = ItemIdentifier.BloodLetter;
+
             if (Chance <= 10)
             {
                 string QualityName = Quality.GetBadQuality();

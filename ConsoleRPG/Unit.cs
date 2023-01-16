@@ -138,6 +138,13 @@ namespace ConsoleRPG
             RaceUpgradeStats();
         }
 
+        public void BaseStatsUpgrade()
+        {
+            StrengthUpgrade();
+            AgilityUpgrade();
+            IntelligenceUpdage();
+        }
+
         public void StrengthUpgrade()
         {
             GetComponent<StrengthCharacteristic>().RealStrength += Race.GetComponent<StrengthCharacteristic>().StrengthPerLevel;
@@ -169,29 +176,22 @@ namespace ConsoleRPG
             GetComponent<IntelligenceCharacteristic>().Intelligence = tempRealINT;
         }
 
-        public void BaseStatsUpgrade()
-        {
-            StrengthUpgrade();
-            AgilityUpgrade();
-            IntelligenceUpdage();
-        }
-
         public void RaceUpgradeStats()
         {
             if (Race.GetComponent<ArmorCharacteristic>() != null)
             {
                 GetComponent<ArmorCharacteristic>().RealArmor += Race.GetComponent<ArmorCharacteristic>().ArmorPerLevel;
-                GetComponent<ArmorCharacteristic>().Armor = (int)GetComponent<ArmorCharacteristic>().RealArmor;
+                GetComponent<ArmorCharacteristic>().Armor += (int)Race.GetComponent<ArmorCharacteristic>().ArmorPerLevel;
             }
             if (Race.GetComponent<PhysicalDamageCharacteristic>() != null)
             {
                 GetComponent<PhysicalDamageCharacteristic>().RealPhysicalDamage += Race.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamagePerLevel;
-                GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = (int)GetComponent<PhysicalDamageCharacteristic>().RealPhysicalDamage;
+                GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += (int)Race.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamagePerLevel;
             }
             if (Race.GetComponent<LuckCharacteristic>() != null)
             {
                 GetComponent<LuckCharacteristic>().RealLuck += Race.GetComponent<LuckCharacteristic>().LuckPerLevel;
-                GetComponent<LuckCharacteristic>().Luck = (int)GetComponent<LuckCharacteristic>().RealLuck;
+                GetComponent<LuckCharacteristic>().Luck += (int)Race.GetComponent<LuckCharacteristic>().LuckPerLevel;
             }
             if (Race.GetComponent<MissCharacteristic>() != null)
             {

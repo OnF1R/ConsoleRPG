@@ -16,6 +16,8 @@ namespace ConsoleRPG.Items.Armors.Rings
             Name = "Кольцо защиты";
             int Chance = rand.Next(1, 101);
 
+            ID = ItemIdentifier.ProtectionRing;
+
             if (Chance <= 10)
             {
                 string QualityName = Quality.GetBadQuality();

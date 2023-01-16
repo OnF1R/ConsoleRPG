@@ -12,6 +12,7 @@ using System.Reflection.Metadata.Ecma335;
 using ConsoleRPG.Enemies;
 using Color = Spectre.Console.Color;
 using ConsoleRPG.Races;
+using ConsoleRPG.Items.StacableItems;
 
 namespace ConsoleRPG
 {
@@ -171,6 +172,7 @@ namespace ConsoleRPG
                         Player.ShowCharacteristics();
                         break;
                     case 6:
+                        Craft craft = new(Player, new FireSword(), new Dictionary<Item, int>() { { new IronOre(), 2 } });
                         break;
                     default:
                         Console.WriteLine("Выберите существующий вариант.");

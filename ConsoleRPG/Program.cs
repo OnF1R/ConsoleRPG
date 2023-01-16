@@ -1,5 +1,7 @@
 ﻿using SixLabors.ImageSharp.Processing;
 using Spectre.Console;
+using System.Reflection;
+using System.Security.Cryptography;
 
 namespace ConsoleRPG
 {

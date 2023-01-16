@@ -18,6 +18,8 @@ namespace ConsoleRPG.Items.Shields
             Name = "[grey]Стальной[/] щит";
             int Chance = rand.Next(1, 101);
 
+            ID = ItemIdentifier.SteelShield;
+
             if (Chance <= 10)
             {
                 string QualityName = Quality.GetBadQuality();

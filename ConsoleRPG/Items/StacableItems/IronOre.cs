@@ -24,7 +24,7 @@ namespace ConsoleRPG.Items.StacableItems
             IsStacable = true;
             IsEquapable = false;
             IsEquiped = false;
-
+            ID = ItemIdentifier.IronOre;
             SetRarity(RarityId);
         }
     }

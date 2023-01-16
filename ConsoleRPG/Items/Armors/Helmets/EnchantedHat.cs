@@ -18,6 +18,8 @@ namespace ConsoleRPG.Items.Armors.Helmets
             Name = "[purple4 slowblink]Зачарованная[/] шляпа";
             int Chance = rand.Next(1, 101);
 
+            ID = ItemIdentifier.EnchantedHat;
+
             if (Chance <= 10)
             {
                 string QualityName = Quality.GetBadQuality();
@@ -35,7 +37,6 @@ namespace ConsoleRPG.Items.Armors.Helmets
                 if (resist == 0) if (rand.Next(0, 2) == 1) { resist++; } else { resist--; }
                 AddRandomElementalResist(this, resist);
                 AddComponent(new ValueCharacteristic { Cost = 2 });
-                AddComponent(new ArmorCharacteristic { Armor = 50 });
                 RarityId = 1;
                 Level = 1;
             }
