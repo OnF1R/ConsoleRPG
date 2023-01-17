@@ -21,6 +21,7 @@ namespace ConsoleRPG
         private static Dictionary<int, string> MenuChoises;
         private static Dictionary<int, string> MainMenuChoises;
         private static Dictionary<Race, string> RacesNames = new RacesNames().racesNames;
+        public bool isHardcore = false;
 
         public Game()
         {
@@ -51,6 +52,15 @@ namespace ConsoleRPG
             return MainMenuChoises;
         }
 
+        private void DeathLogo()
+        {
+            Console.Clear();
+            AnsiConsole.Write(
+            new FigletText("YOU DIED")
+                .Centered()
+                .Color(Color.Red1));
+        }
+
         public void MainMenu()
         {
             AnsiConsole.Write(
@@ -77,7 +87,7 @@ namespace ConsoleRPG
             }
         }
 
-        public Enemy GetRandomEnemy()
+        private Enemy GetRandomEnemy()
         {
             Enemy[] enemies = new Enemy[] { new FireMage(), new Elemental(), new Ghoul(), new SteelKnight(), new ExplosiveBug() };
             Random rand = new Random();
@@ -85,12 +95,12 @@ namespace ConsoleRPG
             return enemy;
         }
 
-        public Player CreateHero()
+        private Player CreateHero()
         {
             return CreatePlayer(EnterName(), ChooseRace());
         }
 
-        public string EnterName()
+        private string EnterName()
         {
             var playerName = AnsiConsole.Prompt(
                 new TextPrompt<string>("[bold]Введите имя персонажа:[/]")
@@ -99,7 +109,7 @@ namespace ConsoleRPG
             return playerName;
         }
 
-        public Race ChooseRace()
+        private Race ChooseRace()
         {
             var raceChoise = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -127,20 +137,41 @@ namespace ConsoleRPG
 
         }
 
-        public void StartGame()
+        private void ChooseMode()
         {
+            var confirm = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[bold]Выберите режим игры[/]")
+                .AddChoices("Нормальный", "[red]Хардкор (Одна жизнь)[/]"));
+
+            if (confirm != "Нормальный")
+            {
+                isHardcore = true;
+            }
+        }
+
+        private void StartGame()
+        {
+            ChooseMode();
             Player player = CreateHero();
             Merchant merchant = new Merchant();
             GameMenu(player, merchant);
         }
 
-        public void GameMenu(Player Player, Merchant merchant)
+        private void GameMenu(Player Player, Merchant merchant)
         {
             bool Loop = true;
             while (Loop)
             {
                 if (Player.IsDead)
                 {
+                    if (isHardcore)
+                    {
+                        Loop = false;
+                        DeathLogo();
+                        break;
+                    }
+
                     Player.Resurrection();
                 }
 
@@ -181,12 +212,12 @@ namespace ConsoleRPG
             }
         }
 
-        public void Adventure(Player Player)
+        private void Adventure(Player Player)
         {
 
         }
 
-        public Player CreatePlayer(string Name, Race race)
+        private Player CreatePlayer(string Name, Race race)
         {
             Player Player = new();
             Player.Name = Name;
