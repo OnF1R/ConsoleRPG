@@ -11,7 +11,7 @@ namespace ConsoleRPG.Items.Shields
 {
     internal class SteelShield : Weapon
     {
-        public SteelShield()
+        public SteelShield(int level) : base(level)
         {
             Random rand = new Random();
             Quality Quality = new Quality();
@@ -36,7 +36,7 @@ namespace ConsoleRPG.Items.Shields
                 RarityId = 1;
                 Level = 2;
             }
-            else if (Chance > 85 || Chance != 100)
+            else if (Chance > 85 && Chance != 100)
             {
                 string QualityName = Quality.GetGoodQuality();
                 Name = QualityName + " " + Name;

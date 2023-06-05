@@ -11,7 +11,7 @@ namespace ConsoleRPG.Items.StacableItems
 {
     internal class IronOre : StacableItem
     {
-        public IronOre()
+        public IronOre(int level = 1) : base(level)
         {
             Name = "[grey]Железная[/] руда";
             Type = ItemType.Stacable;

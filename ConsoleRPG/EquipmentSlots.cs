@@ -1,29 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace ConsoleRPG
 {
-    internal class EquipmentSlots
+    public static class EquipmentSlots
     {
-        public Dictionary<EquipmentSlot, string> Names = new Dictionary<EquipmentSlot, string>();
-
-        public EquipmentSlots()
+        public static Dictionary<EquipmentSlot, string> Names = new Dictionary<EquipmentSlot, string>()
         {
-            Names.Add(EquipmentSlot.LeftHand, "Левая рука");
-            Names.Add(EquipmentSlot.RightHand, "Правая рука");
-            Names.Add(EquipmentSlot.Helmet, "Шлем");
-            Names.Add(EquipmentSlot.Chest, "Нагрудник");
-            Names.Add(EquipmentSlot.Gloves, "Перчатки");
-            Names.Add(EquipmentSlot.Leggs, "Поножи");
-            Names.Add(EquipmentSlot.Boots, "Сапоги");
-            Names.Add(EquipmentSlot.FirstRing, "Кольцо");
-            Names.Add(EquipmentSlot.SecondRing, "Кольцо");
-            Names.Add(EquipmentSlot.Cape, "Плащ");
-            Names.Add(EquipmentSlot.Trinket, "Аксессуар");
-        }
+            { EquipmentSlot.LeftHand, "Левая рука" },
+            { EquipmentSlot.RightHand, "Правая рука" },
+            { EquipmentSlot.Helmet, "Шлем" },
+            { EquipmentSlot.Chest, "Нагрудник" },
+            { EquipmentSlot.Gloves, "Перчатки" },
+            { EquipmentSlot.Leggs, "Поножи" },
+            { EquipmentSlot.Boots, "Сапоги" },
+            { EquipmentSlot.FirstRing, "Кольцо" },
+            { EquipmentSlot.SecondRing, "Кольцо" },
+            { EquipmentSlot.Cape, "Плащ" },
+            { EquipmentSlot.Trinket, "Аксессуар" },
+        };
     }
 
     public enum EquipmentSlot

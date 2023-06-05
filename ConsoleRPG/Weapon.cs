@@ -8,7 +8,7 @@ namespace ConsoleRPG
 {
     abstract internal class Weapon : Item
     {
-        public Weapon()
+        public Weapon(int level) : base(level)
         {
             this.IsStacable = false;
             this.IsEquapable = true;

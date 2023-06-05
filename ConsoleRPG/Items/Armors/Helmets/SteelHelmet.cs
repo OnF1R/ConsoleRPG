@@ -1,15 +1,9 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ConsoleRPG.Items.Armors.Helmets
 {
     internal class SteelHelmet : Armor
     {
-        public SteelHelmet()
+        public SteelHelmet(int level) : base(level)
         {
             Random rand = new Random();
             Quality Quality = new Quality();

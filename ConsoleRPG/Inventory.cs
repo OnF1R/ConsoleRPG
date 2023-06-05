@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using Console = Colorful.Console;
+﻿using Console = Colorful.Console;
 using Spectre.Console;
-
 using ConsoleRPG.Items.Currencies;
+using ConsoleRPG.Items.CraftRecipes;
+using ConsoleRPG.Items.Enchants;
+using System.Linq;
+using System.Xml;
 
 namespace ConsoleRPG
 {
@@ -16,9 +12,28 @@ namespace ConsoleRPG
     {
         public List<Item> ListInventory { get; set; }
 
+        public List<BaseRecipe> ListRecipes { get; set; }
+
+        public List<BaseEnchant> ListEnchants { get; set; }
+
+        public List<Spell> ListSpells { get; set; }
+
+        public int maxSlotsInInventory { get; set; }
+
         public Inventory()
         {
             ListInventory = new List<Item>();
+            ListRecipes = new List<BaseRecipe>();
+            ListEnchants = new List<BaseEnchant>();
+            ListSpells = new List<Spell>();
+            maxSlotsInInventory = 40;
+            ListInventory.Capacity = maxSlotsInInventory;
+        }
+
+        public void UpgradeInventoryCapacity(int upgradeSlots)
+        {
+            maxSlotsInInventory += upgradeSlots;
+            ListInventory.Capacity = maxSlotsInInventory;
         }
 
         public List<string> GetNamesWithCost(bool IsStacable)
@@ -50,7 +65,6 @@ namespace ConsoleRPG
 
         public void GetItemsAndCost(out List<string> namesWithCost, out List<Item> items)
         {
-            Dictionary<Item, string> namesAndCost = new Dictionary<Item, string>();
             namesWithCost = GetNamesWithCost(false);
             items = new List<Item>();
 
@@ -59,6 +73,30 @@ namespace ConsoleRPG
                 if (!ListInventory[i].IsStacable && !ListInventory[i].IsEquiped)
                     items.Add(ListInventory[i]);
             }
+        }
+
+        public List<Item> GetNotStacableItems()
+        {
+            List<Item> items = new List<Item>();
+
+            for (int i = 0; i < ListInventory.Count; i++)
+            {
+                if (!ListInventory[i].IsStacable && !ListInventory[i].IsEquiped)
+                    items.Add(ListInventory[i]);
+            }
+            return items;
+        }
+
+        public List<string> GetNumerableItems()
+        {
+            List<string> items = GetNamesWithCost(false);
+            List<string> numerableItems = new List<string>();
+            for (int i = 0; i < items.Count; i++)
+            {
+                numerableItems.Add($"{i + 1}. {items[i]}");
+            }
+
+            return numerableItems;
         }
 
         public List<Item> GetCurrencies()
@@ -82,28 +120,109 @@ namespace ConsoleRPG
 
         public bool IsHave(Item needle)
         {
-            foreach (Item item in ListInventory)
-            {
-                if (item.ID == needle.ID) return true;  
-            }
+            Item item = ListInventory.FirstOrDefault(needle);
+
+            if (needle == item)
+                return true;
 
             return false;
         }
 
         public bool IsHave(Item needle, int count)
         {
+            Item item = ListInventory.FirstOrDefault(needle);
+
+            if (needle == item)
+                if (count <= item.Count)
+                    return true;
+
+            return false;
+        }
+
+        public bool IsHaveStacableItemByItemID(ItemIdentifier id, int count)
+        {
             foreach (Item item in ListInventory)
             {
-                if (item.ID == needle.ID) if (count <= item.Count) return true; 
+                if (item.IsStacable && item.ID == id && item.Count >= count) return true;
             }
 
             return false;
         }
 
-        public void BuyItem(int Cost, Item BoughtItem)
+        public Item SearchStacableItemByItemId(ItemIdentifier id)
+        {
+            return ListInventory.FirstOrDefault(x => x.ID == id);
+        }
+
+        public Item SearchByUniqID(string uniqID)
+        {
+            foreach (Item item in ListInventory)
+            {
+                if (item.UniqID == uniqID) return item;
+            }
+
+            return null;
+        }
+
+        public bool isHaveByUniqID(Item needle)
+        {
+            foreach (Item item in ListInventory)
+            {
+                if (needle.UniqID == item.UniqID) return true;
+            }
+
+            return false;
+        }
+
+        public void BuyRecipe(int Cost, BaseEnchant enchant)
         {
             List<Item> CurrenciesList = GetCurrencies();
 
+            if (GetItemsCost(CurrenciesList.ToArray()) == Cost)
+            {
+                foreach (Item item in CurrenciesList.ToArray())
+                {
+                    RemoveItem(item);
+                }
+            }
+
+            if (GetItemsCost(CurrenciesList.ToArray()) > Cost)
+            {
+                foreach (Item item in CurrenciesList.ToArray())
+                {
+                    RemoveItem(item, Cost);
+                }
+            }
+
+            AddEnchant(enchant);
+        }
+
+        public void BuyRecipe(int Cost, BaseRecipe recipe)
+        {
+            List<Item> CurrenciesList = GetCurrencies();
+
+            if (GetItemsCost(CurrenciesList.ToArray()) == Cost)
+            {
+                foreach (Item item in CurrenciesList.ToArray())
+                {
+                    RemoveItem(item);
+                }
+            }
+
+            if (GetItemsCost(CurrenciesList.ToArray()) > Cost)
+            {
+                foreach (Item item in CurrenciesList.ToArray())
+                {
+                    RemoveItem(item, Cost);
+                }
+            }
+
+            AddCraft(recipe);
+        }
+
+        public void BuyItem(int Cost, Item BoughtItem)
+        {
+            List<Item> CurrenciesList = GetCurrencies();
 
             if (GetItemsCost(CurrenciesList.ToArray()) == Cost)
             {
@@ -128,8 +247,7 @@ namespace ConsoleRPG
         {
             RemoveItem(item);
             Item gold = new Gold();
-            gold.Count = 1;
-            gold.Count *= item.GetComponent<ValueCharacteristic>().Cost;
+            gold.Count = 1 * item.GetComponent<ValueCharacteristic>().Cost;
             AddItem(gold);
         }
 
@@ -257,7 +375,7 @@ namespace ConsoleRPG
             {
                 foreach (var type in Type)
                 {
-                    if (item.Type == type && !item.IsEquiped)
+                    if ((item.Type == type || (item.Type & type) > 0) && !item.IsEquiped)
                     {
                         SortedInventory.Add(item);
                     }
@@ -290,6 +408,32 @@ namespace ConsoleRPG
             {
                 Console.WriteLine("Предмет не стакающийся!!!");
                 throw;
+            }
+        }
+
+        public void AddEnchant(BaseEnchant enchant)
+        {
+            if (ListEnchants.Contains(enchant))
+            {
+                enchant.UpgradeSelf();
+            }
+            else
+            {
+                ListEnchants.Add(enchant);
+                AnsiConsole.MarkupLine($"'{enchant.Name}' добавлен");
+            }
+        }
+
+        public void AddCraft(BaseRecipe recipe)
+        {
+            if (ListRecipes.Contains(recipe))
+            {
+                recipe.UpgradeSelf();
+            }
+            else
+            {
+                ListRecipes.Add(recipe);
+                AnsiConsole.MarkupLine($"'{recipe.Name}' добавлен");
             }
         }
 

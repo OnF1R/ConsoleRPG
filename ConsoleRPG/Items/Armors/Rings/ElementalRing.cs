@@ -8,7 +8,7 @@ namespace ConsoleRPG.Items.Armors.Rings
 {
     internal class ElementalRing : Armor
     {
-        public ElementalRing()
+        public ElementalRing(int level) : base(level)
         {
             Random rand = new Random();
             Quality Quality = new Quality();

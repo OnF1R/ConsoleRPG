@@ -1,14 +1,4 @@
 ﻿
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
 namespace ConsoleRPG
 {
     class DamageTypesNames
@@ -96,7 +86,7 @@ namespace ConsoleRPG
             Names.Add(DamageTypes.Water, "[dodgerblue1]Вода[/]");
             Names.Add(DamageTypes.Earth, "[darkgreen]Земля[/]");
             Names.Add(DamageTypes.Wind, "[darkseagreen1]Воздух[/]");
-            Names.Add(DamageTypes.Dark, "[grey15]Тьма[/]");
+            Names.Add(DamageTypes.Dark, "[grey30]Тьма[/]");
             Names.Add(DamageTypes.Holy, "[lightgoldenrod1]Свет[/]");
             //Names.Add(DamageTypes.Chaos, "[black on white]Хаос[/]");
             Names.Add(DamageTypes.Abyss, "[mediumpurple4]Пустота[/]");
@@ -130,7 +120,7 @@ namespace ConsoleRPG
             Color.Add(DamageTypes.Earth, "darkgreen");
             //Color.Add(DamageTypes.Stone, "gray37");
             Color.Add(DamageTypes.Wind, "darkseagreen1");
-            Color.Add(DamageTypes.Dark, "grey15");
+            Color.Add(DamageTypes.Dark, "grey30");
             //Color.Add(DamageTypes.Nightmare, "navyblue");
             Color.Add(DamageTypes.Holy, "lightgoldenrod1");
             //Color.Add(DamageTypes.Chaos, "black on white");

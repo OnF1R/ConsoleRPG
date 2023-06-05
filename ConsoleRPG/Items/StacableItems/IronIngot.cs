@@ -9,7 +9,7 @@ namespace ConsoleRPG.Items.StacableItems
 {
     internal class IronIngot : StacableItem
     {
-        public IronIngot()
+        public IronIngot(int level = 1) : base(level)
         {
             Name = "[grey]Железный[/] слиток";
             Type = ItemType.Stacable;

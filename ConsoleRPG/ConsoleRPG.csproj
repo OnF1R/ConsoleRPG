@@ -14,14 +14,4 @@
     <PackageReference Include="Spectre.Console.ImageSharp" Version="0.45.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Items\Armors\Chestsplates\" />
-    <Folder Include="Items\Armors\Gloves\" />
-    <Folder Include="Items\Armors\Leggs\" />
-    <Folder Include="Items\Armors\Boots\" />
-    <Folder Include="Items\Armors\Trinkets\" />
-    <Folder Include="Items\Armors\Capes\" />
-    <Folder Include="Items\CraftRecipeScrolls\" />
-  </ItemGroup>
-
 </Project>

@@ -9,7 +9,7 @@ namespace ConsoleRPG.Items.Currencies
 {
     internal class Gold : StacableItem
     {
-        public Gold()
+        public Gold(int level = 1) : base(level = 1)
         {
             Name = "Золото";
             Type = ItemType.Currency;

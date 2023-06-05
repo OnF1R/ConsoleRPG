@@ -16,9 +16,12 @@ namespace ConsoleRPG
         public int MaxHealth { get; set; }
         public int CurrentHealth { get; set; }
 
+        public int MaxMana { get; set; }
+        public int CurrentMana { get; set; }
+
         public bool IsDead { get; set; }
 
-        public Race Race;
+        public Race MyRace;
 
         public Unit AddComponent(Characteristics component)
         {
@@ -50,6 +53,12 @@ namespace ConsoleRPG
             AddComponent(new MissCharacteristic { MissChance = 0, MissPerLevel = 0 });
             AddComponent(new LuckCharacteristic { RealLuck = 0, Luck = 0, LuckPerLevel = 0 });
             AddComponent(new MagicAmplificationCharacteristic { Amplification = 0, AmplificationPerLevel = 0 });
+            AddComponent(new ExperienceBooster { PercentBoost = 0, PercentBoostPerLevel = 0 });
+            AddComponent(new SpikeCharacteristic { SpikeDamage = 0 });
+            AddComponent(new VampirismCharacteristic { VampirismPercent = 0, VampirismPercentPerLevel = 0 });
+            AddComponent(new HealAmplificationCharacteristic { Amplification = 0, AmplificationPerLevel = 0 });
+            AddComponent(new ParryCharacteristic { ParryPercent = 0, ParryPercentPerLevel = 0 });
+
 
             Dictionary<DamageTypes, int> elemental = new Dictionary<DamageTypes, int>();
             Dictionary<DamageTypes, int> elemental2 = new Dictionary<DamageTypes, int>();
@@ -69,6 +78,28 @@ namespace ConsoleRPG
             IsDead = false;
             AnsiConsole.MarkupLine(Name + " [lime]возроджён[/]");
             HealMaxHealth();
+            HealMaxMana();
+        }
+
+        public void Heal(int health)
+        {
+            health = HealWithAmplification(health);
+
+            if (CurrentHealth + health > MaxHealth)
+            {
+                HealMaxHealth();
+                AnsiConsole.MarkupLine($"{Name} [lime]исцелился[/] на {health}, его [lime]здоровье[/] {CurrentHealth}");
+            }
+            else
+            {
+                CurrentHealth += health;
+                AnsiConsole.MarkupLine($"{Name} [lime]исцелился[/] на {health}, его [lime]здоровье[/] {CurrentHealth}");
+                if (CurrentHealth <= 0)
+                {
+                    AnsiConsole.MarkupLine($"{Name} [red]умер[/] от лечения :)");
+                    Death();
+                }
+            }
         }
 
         public void HealMaxHealth()
@@ -76,59 +107,177 @@ namespace ConsoleRPG
             CurrentHealth = MaxHealth;
         }
 
-        public void TakeDamage(int TakedDamage, DamageTypes damageType)
+        public void HealMaxMana()
         {
-            Dictionary<DamageTypes, int> resistance = GetExistableTypeResistance();
-            if (resistance.ContainsKey(damageType))
+            CurrentMana = MaxMana;
+        }
+
+        public void TakeDamage(Unit damageDealer, int takedDamage, DamageTypes damageType)
+        {
+            BeforeTakeDamageBehaviour(this, ref takedDamage, damageType);
+
+            if (takedDamage > 0)
             {
-                if (resistance[damageType] > 0)
+                CurrentHealth -= takedDamage;
+
+                if (CurrentHealth <= 0)
                 {
-                    double tempBlockedDamage = TakedDamage * (resistance[damageType] / (double)100);
-                    TakedDamage -= (int)tempBlockedDamage;
+                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона ({2}) и [red]умер[/]",
+                    Name, takedDamage, new DamageTypesNames().Names[damageType]);
                 }
-            }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона ({2}), его здоровье [lime]{3}[/]",
+                    Name, takedDamage, new DamageTypesNames().Names[damageType], CurrentHealth);
 
-            CurrentHealth -= TakedDamage;
+                }
 
-            if (CurrentHealth <= 0)
-            {
-                AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона ({2}) и [red]умер[/]",
-                Name, TakedDamage, new DamageTypesNames().Names[damageType]);
-                Death();
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона ({2}), его здоровье [lime]{3}[/]",
-                Name, TakedDamage, new DamageTypesNames().Names[damageType], CurrentHealth);
+                AfterTakeDamageBehaviour(damageDealer, damageType);
             }
         }
 
-        public void TakeCriticalDamage(int TakedDamage, DamageTypes damageType)
+        public void TakeCriticalDamage(Unit damageDealer, int takedDamage, DamageTypes damageType)
+        {
+            BeforeTakeDamageBehaviour(this, ref takedDamage, damageType);
+
+            if (takedDamage > 0)
+            {
+                takedDamage = CalcPhysicalCritical(takedDamage);
+
+                CurrentHealth -= takedDamage;
+
+                if (CurrentHealth <= 0)
+                {
+                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} [red]критического урона[/] ({2}) и [red]умер[/]",
+                    Name, takedDamage, new DamageTypesNames().Names[damageType]);
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} [red]критического урона[/] ({2}), его здоровье [lime]{3}[/]",
+                    Name, takedDamage, new DamageTypesNames().Names[damageType], CurrentHealth);
+                }
+
+                AfterTakeDamageBehaviour(damageDealer, damageType);
+            }
+        }
+
+        public void BeforeAttackBehaviour(Unit unit)
+        {
+
+        }
+
+        public void AfterAttackBehaviour(Unit unit)
+        {
+            TakeVampirism();
+        }
+
+        public void BeforeTakeDamageBehaviour(Unit damageDealer, ref int takedDamage, DamageTypes damageType)
+        {
+            if (damageType == DamageTypes.Physical && CheckMiss())
+            {
+                takedDamage = 0;
+                return;
+            }
+
+            if (damageType == DamageTypes.Physical && CheckParry())
+            {
+                takedDamage = 0;
+                return;
+            }
+
+            takedDamage = CheckResistance(takedDamage, damageType);
+        }
+
+        public void AfterTakeDamageBehaviour(Unit damageDealer, DamageTypes damageType)
+        {
+            if (CurrentHealth <= 0)
+            {
+                Death();
+            }
+            else
+            {
+                if (damageType == DamageTypes.Physical && !IsDead)
+                {
+                    TakeSpikeDamage(damageDealer);
+                }
+            }
+        }
+
+        public bool CheckMiss()
+        {
+            int miss = GetMissChance();
+
+            if (new Random().Next(1, 101) < miss)
+            {
+                AnsiConsole.MarkupLine($"{Name} [bold]уклонился[/] от атаки!");
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CheckParry()
+        {
+            int parry = GetParryChance();
+
+            if (new Random().Next(1, 101) < parry)
+            {
+                AnsiConsole.MarkupLine($"{Name} [bold]парировал[/] атаку!");
+                return true;
+            }
+
+            return false;
+        }
+
+        public int CheckResistance(int takedDamage, DamageTypes damageType)
         {
             Dictionary<DamageTypes, int> resistance = GetExistableTypeResistance();
             if (resistance.ContainsKey(damageType))
             {
                 if (resistance[damageType] > 0)
                 {
-                    double tempBlockedDamage = TakedDamage * (resistance[damageType] / (double)100);
-                    TakedDamage -= (int)tempBlockedDamage;
+                    double tempBlockedDamage = takedDamage * (resistance[damageType] / (double)100);
+                    takedDamage -= (int)tempBlockedDamage;
                 }
             }
 
-            TakedDamage = CalcPhysicalCritical(TakedDamage);
+            return takedDamage;
+        }
 
-            CurrentHealth -= TakedDamage;
+        public void TakeSpikeDamage(Unit damageDealer)
+        {
+            int spikeDamage = SpikeDamage();
 
-            if (CurrentHealth <= 0)
+            if (spikeDamage > 0)
             {
-                AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} [red]критического урона[/] ({2}) и [red]умер[/]",
-                Name, TakedDamage, new DamageTypesNames().Names[damageType]);
-                Death();
+                damageDealer.CurrentHealth -= spikeDamage;
+                if (damageDealer.CurrentHealth > 0)
+                {
+                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона от шипов, его здоровье [lime]{2}[/]",
+                    damageDealer.Name, spikeDamage, damageDealer.CurrentHealth);
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона от шипов и [red]умер[/]",
+                    damageDealer.Name, spikeDamage, damageDealer.CurrentHealth);
+                    Death();
+                }
             }
-            else
+        }
+
+        public void TakeVampirism()
+        {
+            double vampirism = GetComponent<VampirismCharacteristic>().VampirismPercent;
+
+            int damage = GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
+
+            int percentConverter = 100;
+
+            int heal = (int)(damage * (vampirism / percentConverter));
+
+            if (heal > 0)
             {
-                AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} [red]критического урона[/] ({2}), его здоровье [lime]{3}[/]",
-                Name, TakedDamage, new DamageTypesNames().Names[damageType], CurrentHealth);
+                Heal(heal);
             }
         }
 
@@ -147,7 +296,7 @@ namespace ConsoleRPG
 
         public void StrengthUpgrade()
         {
-            GetComponent<StrengthCharacteristic>().RealStrength += Race.GetComponent<StrengthCharacteristic>().StrengthPerLevel;
+            GetComponent<StrengthCharacteristic>().RealStrength += MyRace.GetComponent<StrengthCharacteristic>().StrengthPerLevel;
             int tempRealSTR = (int)GetComponent<StrengthCharacteristic>().RealStrength;
             int tempSTR = GetComponent<StrengthCharacteristic>().Strength;
             int subtracts = tempRealSTR - tempSTR;
@@ -157,7 +306,7 @@ namespace ConsoleRPG
 
         public void AgilityUpgrade()
         {
-            GetComponent<AgilityCharacteristic>().RealAgility += Race.GetComponent<AgilityCharacteristic>().AgilityPerLevel;
+            GetComponent<AgilityCharacteristic>().RealAgility += MyRace.GetComponent<AgilityCharacteristic>().AgilityPerLevel;
             int tempRealAGI = (int)GetComponent<AgilityCharacteristic>().RealAgility;
             int tempAGI = GetComponent<AgilityCharacteristic>().Agility;
             int subtracts = tempRealAGI - tempAGI;
@@ -167,7 +316,7 @@ namespace ConsoleRPG
 
         public void IntelligenceUpdage()
         {
-            GetComponent<IntelligenceCharacteristic>().RealIntelligence += Race.GetComponent<IntelligenceCharacteristic>().IntelligencePerLevel;
+            GetComponent<IntelligenceCharacteristic>().RealIntelligence += MyRace.GetComponent<IntelligenceCharacteristic>().IntelligencePerLevel;
             int tempRealINT = (int)GetComponent<IntelligenceCharacteristic>().RealIntelligence;
             int tempINT = GetComponent<IntelligenceCharacteristic>().Intelligence;
             int subtracts = tempRealINT - tempINT;
@@ -178,40 +327,61 @@ namespace ConsoleRPG
 
         public void RaceUpgradeStats()
         {
-            if (Race.GetComponent<ArmorCharacteristic>() != null)
+            if (MyRace.GetComponent<ArmorCharacteristic>() != null)
             {
-                GetComponent<ArmorCharacteristic>().RealArmor += Race.GetComponent<ArmorCharacteristic>().ArmorPerLevel;
-                GetComponent<ArmorCharacteristic>().Armor += (int)Race.GetComponent<ArmorCharacteristic>().ArmorPerLevel;
+                GetComponent<ArmorCharacteristic>().RealArmor += MyRace.GetComponent<ArmorCharacteristic>().ArmorPerLevel;
+                int tempRealArmor = (int)GetComponent<ArmorCharacteristic>().RealArmor;
+                int tempArmor = GetComponent<ArmorCharacteristic>().Armor;
+                int subtracts = tempRealArmor - tempArmor;
+                GetComponent<ArmorCharacteristic>().Armor += subtracts;
             }
-            if (Race.GetComponent<PhysicalDamageCharacteristic>() != null)
+            if (MyRace.GetComponent<PhysicalDamageCharacteristic>() != null)
             {
-                GetComponent<PhysicalDamageCharacteristic>().RealPhysicalDamage += Race.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamagePerLevel;
-                GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += (int)Race.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamagePerLevel;
+                GetComponent<PhysicalDamageCharacteristic>().RealPhysicalDamage += MyRace.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamagePerLevel;
+                int tempRealDamage = (int)GetComponent<PhysicalDamageCharacteristic>().RealPhysicalDamage;
+                int tempDamage = GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
+                int subtracts = tempRealDamage - tempDamage;
+                GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += subtracts;
             }
-            if (Race.GetComponent<LuckCharacteristic>() != null)
+            if (MyRace.GetComponent<LuckCharacteristic>() != null)
             {
-                GetComponent<LuckCharacteristic>().RealLuck += Race.GetComponent<LuckCharacteristic>().LuckPerLevel;
-                GetComponent<LuckCharacteristic>().Luck += (int)Race.GetComponent<LuckCharacteristic>().LuckPerLevel;
+                GetComponent<LuckCharacteristic>().RealLuck += MyRace.GetComponent<LuckCharacteristic>().LuckPerLevel;
+                int tempRealLuck = (int)GetComponent<LuckCharacteristic>().RealLuck;
+                int tempLuck = GetComponent<LuckCharacteristic>().Luck;
+                int subtracts = tempRealLuck - tempLuck;
+                GetComponent<LuckCharacteristic>().Luck += (int)GetComponent<LuckCharacteristic>().RealLuck;
             }
-            if (Race.GetComponent<MissCharacteristic>() != null)
+            if (MyRace.GetComponent<MissCharacteristic>() != null)
             {
-                GetComponent<MissCharacteristic>().MissChance += Race.GetComponent<MissCharacteristic>().MissPerLevel;
+                GetComponent<MissCharacteristic>().MissChance += MyRace.GetComponent<MissCharacteristic>().MissPerLevel;
             }
-            if (Race.GetComponent<EvasionCharacteristic>() != null)
+            if (MyRace.GetComponent<EvasionCharacteristic>() != null)
             {
-                GetComponent<EvasionCharacteristic>().EvasionChance += Race.GetComponent<EvasionCharacteristic>().EvasionPerLevel;
+                GetComponent<EvasionCharacteristic>().EvasionChance += MyRace.GetComponent<EvasionCharacteristic>().EvasionPerLevel;
             }
-            if (Race.GetComponent<CriticalChanceCharacteristic>() != null)
+            if (MyRace.GetComponent<CriticalChanceCharacteristic>() != null)
             {
-                GetComponent<CriticalChanceCharacteristic>().CriticalChance += Race.GetComponent<CriticalChanceCharacteristic>().CriticalChancePerLevel;
+                GetComponent<CriticalChanceCharacteristic>().CriticalChance += MyRace.GetComponent<CriticalChanceCharacteristic>().CriticalChancePerLevel;
             }
-            if (Race.GetComponent<CriticalDamageCharacteristic>() != null)
+            if (MyRace.GetComponent<CriticalDamageCharacteristic>() != null)
             {
-                GetComponent<CriticalDamageCharacteristic>().CriticalDamage += Race.GetComponent<CriticalDamageCharacteristic>().CriticalDamagePerLevel;
+                GetComponent<CriticalDamageCharacteristic>().CriticalDamage += MyRace.GetComponent<CriticalDamageCharacteristic>().CriticalDamagePerLevel;
             }
-            if (Race.GetComponent<MagicAmplificationCharacteristic>() != null)
+            if (MyRace.GetComponent<MagicAmplificationCharacteristic>() != null)
             {
-                GetComponent<MagicAmplificationCharacteristic>().Amplification += Race.GetComponent<MagicAmplificationCharacteristic>().AmplificationPerLevel;
+                GetComponent<MagicAmplificationCharacteristic>().Amplification += MyRace.GetComponent<MagicAmplificationCharacteristic>().AmplificationPerLevel;
+            }
+            if (MyRace.GetComponent<ExperienceBooster>() != null)
+            {
+                GetComponent<ExperienceBooster>().PercentBoost += MyRace.GetComponent<ExperienceBooster>().PercentBoostPerLevel;
+            }
+            if (MyRace.GetComponent<HealAmplificationCharacteristic>() != null)
+            {
+                GetComponent<HealAmplificationCharacteristic>().Amplification += MyRace.GetComponent<HealAmplificationCharacteristic>().AmplificationPerLevel;
+            }
+            if (MyRace.GetComponent<VampirismCharacteristic>() != null)
+            {
+                GetComponent<VampirismCharacteristic>().VampirismPercent += MyRace.GetComponent<VampirismCharacteristic>().VampirismPercentPerLevel;
             }
         }
 
@@ -221,7 +391,7 @@ namespace ConsoleRPG
             Dictionary<DamageTypes, int> damageTypes = GetElementalDamage();
             result.Add(DamageTypes.Physical, GetPhysicalDamage());
 
-            
+
 
             foreach (DamageTypes type in damageTypes.Keys)
             {
@@ -294,6 +464,21 @@ namespace ConsoleRPG
             return GetComponent<CriticalDamageCharacteristic>().CriticalDamage;
         }
 
+        public int GetLuck()
+        {
+            return GetComponent<LuckCharacteristic>().Luck;
+        }
+
+        public int GetMissChance()
+        {
+            return (int)GetComponent<MissCharacteristic>().MissChance;
+        }
+
+        public int GetParryChance()
+        {
+            return (int)GetComponent<ParryCharacteristic>().ParryPercent;
+        }
+
         public bool IsCrit()
         {
             if (GetCriticalChance() >= new Random().Next(1, 101))
@@ -304,9 +489,45 @@ namespace ConsoleRPG
             return false;
         }
 
+        public double ExperienceBoost()
+        {
+            return GetComponent<ExperienceBooster>().PercentBoost;
+        }
+
+        public double HealAmplification()
+        {
+            return GetComponent<HealAmplificationCharacteristic>().Amplification;
+        }
+
+        public double VampirismPercent()
+        {
+            return GetComponent<VampirismCharacteristic>().VampirismPercent;
+        }
+
+        public int HealWithAmplification(int heal)
+        {
+            int healWithBoost = heal;
+            int percentConvert = 100;
+            int healAmplification = (int)(HealAmplification() / percentConvert);
+
+            if (healAmplification > 0)
+            {
+                healWithBoost += healAmplification;
+                AnsiConsole.MarkupLine($"[lime]Исцеление[/] усилено на [bold]{healAmplification}[/]");
+            }
+
+            return healWithBoost;
+        }
+
         public int CalcPhysicalCritical(int damage)
         {
-            return damage += (int)damage * ((int)GetCriticalDamage() / 100);
+            int percentConvert = 100;
+            return damage += (int)damage * ((int)GetCriticalDamage() / percentConvert);
+        }
+
+        public int SpikeDamage()
+        {
+            return GetComponent<SpikeCharacteristic>().SpikeDamage;
         }
 
         public Dictionary<DamageTypes, int> GetTypeResistance(params DamageTypes[] damageTypes)

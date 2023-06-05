@@ -1,27 +1,20 @@
 ﻿using ConsoleRPG.Items;
-using ConsoleRPG.Items.Weapons;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+
 
 namespace ConsoleRPG
 {
     internal class Equipment
     {
         public Dictionary<EquipmentSlot, Item> Equip = new Dictionary<EquipmentSlot, Item>();
-        public EquipmentSlots EquipmentSlotsNames = new EquipmentSlots();
 
-        private static Dictionary<int, string> MenuChoises;
-        private static Dictionary<int, string> ChangeSlotsChoises;
+        private static Dictionary<int, string> menuChoises = new Dictionary<int, string>();
+        private static Dictionary<int, string> changeSlotsChoises = new Dictionary<int, string>();
 
         public Equipment()
         {
-            MenuChoises = new Dictionary<int, string>(); MenuChoises = GenerateMenuChoises();
-            ChangeSlotsChoises = new Dictionary<int, string>(); ChangeSlotsChoises = GenerageChangeSlotsChoises();
+            menuChoises = MenuChoises.EquipmentChoises();
+            changeSlotsChoises = MenuChoises.EquipmentSlotsChoises();
 
             Equip.Add(EquipmentSlot.LeftHand, new NothingItem());
             Equip.Add(EquipmentSlot.RightHand, new NothingItem());
@@ -36,35 +29,12 @@ namespace ConsoleRPG
             Equip.Add(EquipmentSlot.Trinket, new NothingItem());
         }
 
-        private static Dictionary<int, string> GenerateMenuChoises()
-        {
-            MenuChoises.Add(1, "Посмотреть экипировку");
-            MenuChoises.Add(2, "Изменить экипировку");
-            MenuChoises.Add(3, "Выйти");
-
-            return MenuChoises;
-        }
-
-        private static Dictionary<int, string> GenerageChangeSlotsChoises()
-        {
-            int index = 0;
-            EquipmentSlots equipmentSlotsNames = new EquipmentSlots();
-
-            foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot)))
-            {
-                index++;
-                ChangeSlotsChoises.Add(index, equipmentSlotsNames.Names[slot]);
-            }
-
-            return ChangeSlotsChoises;
-        }
-
         public void ShowWearEquipment()
         {
             foreach (var Equip in Equip)
             {
                 AnsiConsole.Markup("{0}: {1} ([{2}]{3}[/]): "
-                    , EquipmentSlotsNames.Names[Equip.Key], Equip.Value.Name, Equip.Value.RarityColor, Equip.Value.Rarity);
+                    , EquipmentSlots.Names[Equip.Key], Equip.Value.Name, Equip.Value.RarityColor, Equip.Value.Rarity);
                 Equip.Value.ItemInfo(Equip.Value);
             }
         }
@@ -81,18 +51,28 @@ namespace ConsoleRPG
             }
         }
 
+        public void TakeOffEquip(Unit unit, EquipmentSlot SlotName)
+        {
+            Equip[SlotName].IsEquiped = false;
+            UpdateStatsWhenTakeOff(unit, Equip[SlotName]);
+            Equip[SlotName] = new NothingItem();
+        }
+
         public void UpdateStatsWhenWear(Unit unit, Item item)
         {
             Dictionary<DamageTypes, string> damageTypes = new DamageTypesNames().Names;
 
             if (item.GetComponent<PhysicalDamageCharacteristic>() != null)
             {
-                unit.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
+                unit.GetComponent<PhysicalDamageCharacteristic>().RealPhysicalDamage
+                    += item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
+                unit.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage
+                    += item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
             }
 
             if (item.GetComponent<ArmorCharacteristic>() != null)
             {
-
+                unit.GetComponent<ArmorCharacteristic>().RealArmor += item.GetComponent<ArmorCharacteristic>().Armor;
                 unit.GetComponent<ArmorCharacteristic>().Armor += item.GetComponent<ArmorCharacteristic>().Armor;
 
             }
@@ -119,6 +99,11 @@ namespace ConsoleRPG
                 }
             }
 
+            if (item.GetComponent<MissCharacteristic>() != null)
+            {
+                unit.GetComponent<MissCharacteristic>().MissChance += item.GetComponent<MissCharacteristic>().MissChance;
+            }
+
             if (item.GetComponent<CriticalChanceCharacteristic>() != null)
             {
                 unit.GetComponent<CriticalChanceCharacteristic>().CriticalChance += item.GetComponent<CriticalChanceCharacteristic>().CriticalChance;
@@ -129,10 +114,40 @@ namespace ConsoleRPG
                 unit.GetComponent<CriticalDamageCharacteristic>().CriticalDamage += item.GetComponent<CriticalDamageCharacteristic>().CriticalDamage;
             }
 
-            //if (item.GetComponent<StrengthCharacteristic>() != null) 
-            //{
-            //    unit.GetComponent<StrengthCharacteristic>().Strength += item.GetComponent<StrengthCharacteristic>().Strength;
-            //}
+            if (item.GetComponent<StrengthCharacteristic>() != null)
+            {
+                unit.GetComponent<StrengthCharacteristic>().ItemsStrength += item.GetComponent<StrengthCharacteristic>().Strength;
+            }
+
+            if (item.GetComponent<AgilityCharacteristic>() != null)
+            {
+                unit.GetComponent<AgilityCharacteristic>().ItemsAgility += item.GetComponent<AgilityCharacteristic>().Agility;
+            }
+
+            if (item.GetComponent<IntelligenceCharacteristic>() != null)
+            {
+                unit.GetComponent<IntelligenceCharacteristic>().ItemsIntelligence += item.GetComponent<IntelligenceCharacteristic>().Intelligence;
+            }
+
+            if (item.GetComponent<ExperienceBooster>() != null)
+            {
+                unit.GetComponent<ExperienceBooster>().PercentBoost += item.GetComponent<ExperienceBooster>().PercentBoost;
+            }
+
+            if (item.GetComponent<SpikeCharacteristic>() != null)
+            {
+                unit.GetComponent<SpikeCharacteristic>().SpikeDamage += item.GetComponent<SpikeCharacteristic>().SpikeDamage;
+            }
+
+            if (item.GetComponent<VampirismCharacteristic>() != null)
+            {
+                unit.GetComponent<VampirismCharacteristic>().VampirismPercent += item.GetComponent<VampirismCharacteristic>().VampirismPercent;
+            }
+
+            if (item.GetComponent<ParryCharacteristic>() != null)
+            {
+                unit.GetComponent<ParryCharacteristic>().ParryPercent += item.GetComponent<ParryCharacteristic>().ParryPercent;
+            }
         }
 
         public void UpdateStatsWhenTakeOff(Unit unit, Item item)
@@ -141,26 +156,16 @@ namespace ConsoleRPG
 
             if (item.GetComponent<PhysicalDamageCharacteristic>() != null)
             {
-                if (item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage >= 0)
-                {
-                    unit.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage -= item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
-                }
-                else
-                {
-                    unit.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
-                }
+                unit.GetComponent<PhysicalDamageCharacteristic>().RealPhysicalDamage -=
+                    item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
+                unit.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage -=
+                    item.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
             }
 
             if (item.GetComponent<ArmorCharacteristic>() != null)
             {
-                if (item.GetComponent<ArmorCharacteristic>().Armor >= 0)
-                {
-                    unit.GetComponent<ArmorCharacteristic>().Armor -= item.GetComponent<ArmorCharacteristic>().Armor;
-                }
-                else
-                {
-                    unit.GetComponent<ArmorCharacteristic>().Armor += item.GetComponent<ArmorCharacteristic>().Armor;
-                }
+                unit.GetComponent<ArmorCharacteristic>().RealArmor -= item.GetComponent<ArmorCharacteristic>().Armor;
+                unit.GetComponent<ArmorCharacteristic>().Armor -= item.GetComponent<ArmorCharacteristic>().Armor;
             }
 
             if (item.GetComponent<ElementalDamageCharacteristic>() != null)
@@ -199,6 +204,18 @@ namespace ConsoleRPG
                 }
             }
 
+            if (item.GetComponent<MissCharacteristic>() != null)
+            {
+                if (item.GetComponent<MissCharacteristic>().MissChance >= 0)
+                {
+                    unit.GetComponent<MissCharacteristic>().MissChance -= item.GetComponent<MissCharacteristic>().MissChance;
+                }
+                else
+                {
+                    unit.GetComponent<MissCharacteristic>().MissChance += item.GetComponent<MissCharacteristic>().MissChance;
+                }
+            }
+
             if (item.GetComponent<CriticalChanceCharacteristic>() != null)
             {
                 if (item.GetComponent<CriticalChanceCharacteristic>().CriticalChance >= 0)
@@ -223,17 +240,40 @@ namespace ConsoleRPG
                 }
             }
 
-            //if (item.GetComponent<StrengthCharacteristic>() != null)
-            //{
-            //    unit.GetComponent<StrengthCharacteristic>().Strength -= item.GetComponent<StrengthCharacteristic>().Strength;
-            //}
-        }
+            if (item.GetComponent<StrengthCharacteristic>() != null)
+            {
+                unit.GetComponent<StrengthCharacteristic>().ItemsStrength -= item.GetComponent<StrengthCharacteristic>().Strength;
+            }
 
-        public void TakeOffEquip(Unit unit, EquipmentSlot SlotName)
-        {
-            Equip[SlotName].IsEquiped = false;
-            UpdateStatsWhenTakeOff(unit, Equip[SlotName]);
-            Equip[SlotName] = new NothingItem();
+            if (item.GetComponent<AgilityCharacteristic>() != null)
+            {
+                unit.GetComponent<AgilityCharacteristic>().ItemsAgility -= item.GetComponent<AgilityCharacteristic>().Agility;
+            }
+
+            if (item.GetComponent<IntelligenceCharacteristic>() != null)
+            {
+                unit.GetComponent<IntelligenceCharacteristic>().ItemsIntelligence -= item.GetComponent<IntelligenceCharacteristic>().Intelligence;
+            }
+
+            if (item.GetComponent<ExperienceBooster>() != null)
+            {
+                unit.GetComponent<ExperienceBooster>().PercentBoost -= item.GetComponent<ExperienceBooster>().PercentBoost;
+            }
+
+            if (item.GetComponent<SpikeCharacteristic>() != null)
+            {
+                unit.GetComponent<SpikeCharacteristic>().SpikeDamage -= item.GetComponent<SpikeCharacteristic>().SpikeDamage;
+            }
+
+            if (item.GetComponent<VampirismCharacteristic>() != null)
+            {
+                unit.GetComponent<VampirismCharacteristic>().VampirismPercent -= item.GetComponent<VampirismCharacteristic>().VampirismPercent;
+            }
+
+            if (item.GetComponent<ParryCharacteristic>() != null)
+            {
+                unit.GetComponent<ParryCharacteristic>().ParryPercent -= item.GetComponent<ParryCharacteristic>().ParryPercent;
+            }
         }
 
         public void TakeOffAllEquip(Unit unit)
@@ -257,12 +297,12 @@ namespace ConsoleRPG
                         .Title("[bold]Что будете делать?[/]")
                         .PageSize(10)
                         .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
-                        .AddChoices(MenuChoises.Values));
+                        .AddChoices(menuChoises.Values));
 
 
                 Console.Clear();
 
-                switch (MenuChoises.FirstOrDefault(x => x.Value == choise).Key)
+                switch (menuChoises.FirstOrDefault(x => x.Value == choise).Key)
                 {
                     case 1:
                         ShowWearEquipment();
@@ -331,12 +371,12 @@ namespace ConsoleRPG
                         .Title("[bold]Какую экипировку хотите изменить?[/]")
                         .PageSize(11)
                         .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
-                        .AddChoices(ChangeSlotsChoises.Values));
+                        .AddChoices(changeSlotsChoises.Values));
 
 
             Console.Clear();
 
-            switch (ChangeSlotsChoises.FirstOrDefault(x => x.Value == choise).Key)
+            switch (changeSlotsChoises.FirstOrDefault(x => x.Value == choise).Key)
             {
                 case 1:
                     ChangeEquipment(unit, EquipmentSlot.LeftHand,

@@ -9,14 +9,14 @@ namespace ConsoleRPG.Items.StacableItems
 {
     internal class BloodStone : StacableItem
     {
-        public BloodStone()
+        public BloodStone(int level = 1) : base(level)
         {
             Name = "[red]Кровавый[/] камень";
             Type = ItemType.Stacable;
             AddComponent(new ValueCharacteristic { Cost = 3 });
             RarityId = 1;
             Level = 1;
-            DropChance = 5f;
+            DropChance = 8f;
             Count = new Random().Next(1, 3);
 
             IsStacable = true;

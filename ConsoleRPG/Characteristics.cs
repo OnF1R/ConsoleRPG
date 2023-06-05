@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace ConsoleRPG
 {
     abstract class Characteristics { }
 
     class StrengthCharacteristic : Characteristics
     {
-        public int HealthPerStrength= 20;
+        public int HealthPerStrength = 20;
         public double StrengthPerLevel { get; set; }
         public double RealStrength { get; set; }
         public int Strength { get; set; }
+        public int ItemsStrength { get; set; }
     }
 
     class AgilityCharacteristic : Characteristics
@@ -22,6 +18,7 @@ namespace ConsoleRPG
         public double AgilityPerLevel { get; set; }
         public double RealAgility { get; set; }
         public int Agility { get; set; }
+        public int ItemsAgility { get; set; }
     }
 
     class IntelligenceCharacteristic : Characteristics
@@ -30,6 +27,13 @@ namespace ConsoleRPG
         public double IntelligencePerLevel { get; set; }
         public double RealIntelligence { get; set; }
         public int Intelligence { get; set; }
+        public int ItemsIntelligence { get; set; }
+    }
+
+    class HealAmplificationCharacteristic : Characteristics
+    {
+        public double AmplificationPerLevel { get; set; }
+        public double Amplification { get; set; }
     }
 
     class MagicAmplificationCharacteristic : Characteristics
@@ -86,6 +90,29 @@ namespace ConsoleRPG
     class ValueCharacteristic : Characteristics
     {
         public int Cost { get; set; }
+    }
+
+    class ExperienceBooster : Characteristics
+    {
+        public double PercentBoost { get; set; }
+        public double PercentBoostPerLevel { get; set; }
+    }
+
+    class SpikeCharacteristic : Characteristics
+    {
+        public int SpikeDamage { get; set; }
+    }
+
+    class VampirismCharacteristic : Characteristics
+    {
+        public double VampirismPercent { get; set; }
+        public double VampirismPercentPerLevel { get; set; }
+    }
+
+    class ParryCharacteristic : Characteristics
+    {
+        public double ParryPercent { get; set; }
+        public double ParryPercentPerLevel { get; set; }
     }
 
     class ElementalResistanceCharacteristic : Characteristics

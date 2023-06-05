@@ -1,4 +1,6 @@
-﻿using SixLabors.ImageSharp.Processing;
+﻿using ConsoleRPG.Items.StacableItems;
+using ConsoleRPG.Items.Weapons;
+using SixLabors.ImageSharp.Processing;
 using Spectre.Console;
 using System.Reflection;
 using System.Security.Cryptography;

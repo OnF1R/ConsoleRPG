@@ -9,7 +9,7 @@ namespace ConsoleRPG.Items
 {
     internal class NothingItem : Item
     {
-        public NothingItem()
+        public NothingItem(int level = 0) : base(level)
         {
             Name = "";
             Rarity = "Пустой слот";

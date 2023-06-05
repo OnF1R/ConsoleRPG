@@ -1,23 +1,14 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
 namespace ConsoleRPG.Items.Armors.Helmets
 {
     internal class EnchantedHat : Armor
     {
-        public EnchantedHat()
+        public EnchantedHat(int level) : base(level)
         {
             Random rand = new Random();
             Quality Quality = new Quality();
             Name = "[purple4 slowblink]Зачарованная[/] шляпа";
             int Chance = rand.Next(1, 101);
-
             ID = ItemIdentifier.EnchantedHat;
 
             if (Chance <= 10)
@@ -29,7 +20,6 @@ namespace ConsoleRPG.Items.Armors.Helmets
                 AddRandomElementalResist(this, resist);
                 AddComponent(new ValueCharacteristic { Cost = 1 });
                 RarityId = 0;
-                Level = 1;
             }
             else if (Chance <= 85)
             {
@@ -38,7 +28,6 @@ namespace ConsoleRPG.Items.Armors.Helmets
                 AddRandomElementalResist(this, resist);
                 AddComponent(new ValueCharacteristic { Cost = 2 });
                 RarityId = 1;
-                Level = 1;
             }
             else if (Chance > 85 && Chance != 100)
             {
@@ -50,7 +39,6 @@ namespace ConsoleRPG.Items.Armors.Helmets
                 AddRandomElementalResist(this, resist);
                 AddComponent(new ArmorCharacteristic { Armor = rand.Next(1, 5) });
                 RarityId = 1;
-                Level = 2;
             }
             else if (Chance == 100)
             {
@@ -63,7 +51,6 @@ namespace ConsoleRPG.Items.Armors.Helmets
                 AddRandomElementalResist(this, resist);
                 AddComponent(new ArmorCharacteristic { Armor = rand.Next(3, 9) });
                 RarityId = 3;
-                Level = 2;
             }
 
 

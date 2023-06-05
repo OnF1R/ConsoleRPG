@@ -1,22 +1,27 @@
-﻿using ConsoleRPG.Items.Weapons;
-using ConsoleRPG.Races;
-using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Spectre.Console;
 
 namespace ConsoleRPG
 {
     abstract internal class Enemy : Unit
     {
         public Item[] DropList { get; set; }
+
         public int Energy { get; set; }
-        public Enemy()
+
+        public bool IsBoss { get; set; } = false;
+
+        public Enemy(int playerLevel)
         {
             Energy = 0;
-            Race = new Orc();
+
+            int maxLevel = playerLevel;
+
+            if (maxLevel * 2 > 10)
+            {
+                maxLevel = 10;
+            }
+
+            Level = new Random().Next(playerLevel, playerLevel + maxLevel);
         }
 
         abstract public void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage);
@@ -36,7 +41,12 @@ namespace ConsoleRPG
 
         public int GiveExp()
         {
-            return this.Level * new Random().Next(1, 8);
+            int exp = Level * new Random().Next(1, 8);
+
+            if (IsBoss)
+                exp *= 4;
+
+            return exp;
         }
 
         public void Attack(Player Player)
@@ -47,18 +57,18 @@ namespace ConsoleRPG
                 if (type == DamageTypes.Physical && IsCrit())
                 {
                     damage[type] = CalcPhysicalCritical(damage[type]);
-                    Player.TakeCriticalDamage(damage[type], type);
+                    Player.TakeCriticalDamage(this, damage[type], type);
                 }
                 else
                 {
-                    Player.TakeDamage(damage[type], type);
+                    Player.TakeDamage(this, damage[type], type);
                 }
             }
         }
 
         public void DeathDropLoot(Player Player)
         {
-            List<Item> DroppedLoot = DropLoot(this.DropList);
+            List<Item> DroppedLoot = DropLoot(DropList);
             if (DroppedLoot != null)
             {
                 foreach (Item DroppedItem in DroppedLoot)
@@ -83,7 +93,7 @@ namespace ConsoleRPG
 
             Equipment.TakeOffAllEquip(this);
 
-            Player.TakeExp(this.GiveExp());
+            Player.TakeExp(GiveExp());
         }
     }
 }

@@ -1,21 +1,14 @@
 ﻿using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace ConsoleRPG
 {
     internal class Fight
     {
 
-        private Dictionary<int, string> ActionMenu = new Dictionary<int, string>();
+        private static Dictionary<int, string> ActionMenu = MenuChoises.ActionMenuChoises();
 
         public Fight()
         {
-            ActionMenu = GenerateActionMenu();
             //TakeDamage(Enemy, Player, Damage, Weapon);
 
             //if (IsCrit(Enemy.Equipment.GetCriticalChance()))
@@ -31,21 +24,12 @@ namespace ConsoleRPG
             //}
         }
 
-        private Dictionary<int, string> GenerateActionMenu()
-        {
-            ActionMenu.Add(1, "Атаковать");
-            ActionMenu.Add(2, "Сбежать");
-
-            return ActionMenu;
-        }
-
-        public void StartFight(Player Player, Enemy Enemy)
+        public static void StartFight(Player Player, Enemy Enemy, ref int EnemiesKillsCount)
         {
             bool GiveUp = false;
             AnsiConsole.MarkupLine("[red]На вас напал[/] [bold]{0}[/] (Уровень: {1})", Enemy.Name, Enemy.Level);
             while (!Player.IsDead && !Enemy.IsDead && !GiveUp)
             {
-
                 var choise = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[bold]Что будете делать?[/]")
@@ -68,6 +52,9 @@ namespace ConsoleRPG
                         break;
                 }
             }
+
+            if (Enemy.IsDead)
+                EnemiesKillsCount++;
         }
     }
 }

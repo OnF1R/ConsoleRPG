@@ -9,12 +9,15 @@ namespace ConsoleRPG.Items.Weapons
 {
     internal class BloodLetter : Weapon
     {
-        public BloodLetter()
+        public BloodLetter(int level) : base(level)
         {
             Random rand = new Random();
             Quality Quality = new Quality();
             Name = "[red]Кровопускатель[/]";
             int Chance = rand.Next(1, 101);
+
+            AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(Level, Level + Level) });
+            AddComponent(new ValueCharacteristic { Cost = rand.Next(Level, Level + Level) });
 
             ID = ItemIdentifier.BloodLetter;
 
@@ -22,42 +25,34 @@ namespace ConsoleRPG.Items.Weapons
             {
                 string QualityName = Quality.GetBadQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new ValueCharacteristic { Cost = rand.Next(1, 6) });
-                AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(1, 7) });
                 RarityId = 0;
-                Level = 1;
             }
             else if (Chance <= 85)
             {
-                AddComponent(new ValueCharacteristic { Cost = rand.Next(4, 9) });
-                AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(5, 10) });
-
+                GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + 2);
+                GetComponent<ValueCharacteristic>().Cost += rand.Next(Level, Level + 2);
                 RarityId = 0;
-                Level = 2;
             }
-            else if (Chance > 85 || Chance != 100)
+            else if (Chance > 85 && Chance != 100)
             {
                 string QualityName = Quality.GetGoodQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new ValueCharacteristic { Cost = rand.Next(8, 14) });
-                AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(7, 13) });
+                GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + Level / 2);
+                GetComponent<ValueCharacteristic>().Cost += rand.Next(Level, Level + Level / 2);
                 AddComponent(new CriticalChanceCharacteristic { CriticalChance = rand.Next(3, 6) });
                 AddComponent(new CriticalDamageCharacteristic { CriticalDamage = rand.Next(33, 51) });
                 RarityId = 1;
-                Level = 2;
             }
             else if (Chance == 100)
             {
                 string QualityName = Quality.GetBestQuality();
                 Name = QualityName + " " + Name;
-                AddComponent(new ValueCharacteristic { Cost = rand.Next(8, 14) });
-                AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(10, 21) });
+                GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + Level);
+                GetComponent<ValueCharacteristic>().Cost += rand.Next(Level, Level + Level);
                 AddComponent(new CriticalChanceCharacteristic { CriticalChance = rand.Next(5, 8) });
                 AddComponent(new CriticalDamageCharacteristic { CriticalDamage = rand.Next(45, 88) });
                 RarityId = 2;
-                Level = 3;
             }
-
 
             Type = ItemType.Sword;
 

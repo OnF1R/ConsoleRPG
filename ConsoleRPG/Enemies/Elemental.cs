@@ -1,34 +1,35 @@
 ﻿using ConsoleRPG.Items.Armors.Helmets;
 using ConsoleRPG.Items.Armors.Rings;
 using ConsoleRPG.Items.Currencies;
+using ConsoleRPG.Items.StacableItems;
 using ConsoleRPG.Items.Weapons;
+using ConsoleRPG.Races;
 using ConsoleRPG.Spells.DamageSpells;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+
 
 namespace ConsoleRPG.Enemies
 {
     internal class Elemental : Enemy
     {
-        public Elemental()
+        public Elemental(int playerLevel) : base(playerLevel)
         {
             Random random = new Random();
             //Equipment equipment = new Equipment();
             Name = "[bold]Элементаль[/]";
-            Level = random.Next(1, 6);
             MaxHealth = random.Next(7, 11) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2, 5);
+            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2 + Level, 5 + Level);
+            MyRace = new Races.Elemental();
+            Equipment.WearEquip(this, new EnchantedHat(Level), EquipmentSlot.Helmet);
+            Equipment.WearEquip(this, new ElementalRing(Level), EquipmentSlot.FirstRing);
 
-            Equipment.WearEquip(this, new EnchantedHat(), EquipmentSlot.Helmet);
-            Equipment.WearEquip(this, new ElementalRing(), EquipmentSlot.FirstRing);
-
-            DropList = new Item[] { new Gold(), Equipment.Equip[EquipmentSlot.Helmet], Equipment.Equip[EquipmentSlot.FirstRing] };
+            DropList = new Item[] 
+            {
+                new Gold(), 
+                new RainbowShard(), 
+                Equipment.Equip[EquipmentSlot.Helmet],
+                Equipment.Equip[EquipmentSlot.FirstRing] 
+            };
         }
 
         public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
@@ -36,11 +37,12 @@ namespace ConsoleRPG.Enemies
             foreach (DamageTypes type in TakedDamage.Keys)
             {
                 if (!IsDead)
-                    TakeDamage(TakedDamage[type], type);
+                    TakeDamage(Player, TakedDamage[type], type);
             }
-
             if (!IsDead)
             {
+                Player.AfterAttackBehaviour(this);
+
                 if (Energy >= 3)
                 {
                     ElementalSplash(Player);
@@ -51,6 +53,8 @@ namespace ConsoleRPG.Enemies
                     ElementalSplash(Player);
                 }
                 Energy++;
+
+                AfterAttackBehaviour(Player);
             }
             else
             {
@@ -64,7 +68,7 @@ namespace ConsoleRPG.Enemies
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(elemDamage[type], type);
+                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
             }
             //if (IsCrit())
             //{

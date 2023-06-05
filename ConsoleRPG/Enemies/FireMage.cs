@@ -1,32 +1,34 @@
 ﻿using ConsoleRPG.Items.Armors.Helmets;
 using ConsoleRPG.Items.Currencies;
+using ConsoleRPG.Items.Shields;
 using ConsoleRPG.Items.Weapons;
 using ConsoleRPG.Spells.DamageSpells;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleRPG.Enemies
 {
     internal class FireMage : Enemy
     {
-        public FireMage()
+        public FireMage(int playerLevel) : base(playerLevel)
         {
             Random random = new Random();
             Equipment equipment = new Equipment();
             Name = "[orangered1]Огненный[/] маг";
-            Level = random.Next(1, 4);
             MaxHealth = random.Next(7, 11) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(3, 6);
+            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, Level + 3);
 
             //Экипировка
-            Equipment.WearEquip(this, new EnchantedHat(), EquipmentSlot.Helmet);
-            Equipment.WearEquip(this, new FireSword(), EquipmentSlot.LeftHand);
+            Equipment.WearEquip(this, new EnchantedHat(Level), EquipmentSlot.Helmet);
+            Equipment.WearEquip(this, new FireSword(Level), EquipmentSlot.LeftHand);
+            Equipment.WearEquip(this, new RunicShield(Level), EquipmentSlot.RightHand);
 
-            DropList = new Item[] {new Gold(), Equipment.Equip[EquipmentSlot.LeftHand], Equipment.Equip[EquipmentSlot.Helmet] };
+            DropList = new Item[] 
+            { 
+                new Gold(), 
+                Equipment.Equip[EquipmentSlot.LeftHand], 
+                Equipment.Equip[EquipmentSlot.Helmet], 
+                Equipment.Equip[EquipmentSlot.RightHand] 
+            };
         }
 
         public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
@@ -34,28 +36,32 @@ namespace ConsoleRPG.Enemies
             foreach (DamageTypes type in TakedDamage.Keys)
             {
                 if (!IsDead)
-                    TakeDamage(TakedDamage[type], type);
+                    TakeDamage(Player, TakedDamage[type], type);
             }
 
             if (!IsDead)
             {
-                if(Energy >= 3)
+                Player.AfterAttackBehaviour(this);
+
+                if (Energy >= 3)
                 {
                     Pyroblast(Player);
                     Energy = 0;
                 }
                 else
                 {
-                    if (new Random().Next(0,2) == 0)
+                    if (new Random().Next(0, 2) == 0)
                     {
                         FireBall(Player);
-                    } else
+                    }
+                    else
                     {
                         Attack(Player);
                     }
-                    
+
                 }
 
+                AfterAttackBehaviour(Player);
                 Energy++;
             }
             else
@@ -70,7 +76,7 @@ namespace ConsoleRPG.Enemies
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(elemDamage[type], type);
+                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
             }
 
         }
@@ -81,7 +87,7 @@ namespace ConsoleRPG.Enemies
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(elemDamage[type], type);
+                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
             }
         }
     }

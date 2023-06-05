@@ -8,7 +8,7 @@ namespace ConsoleRPG
 {
     abstract internal class Armor : Item
     {
-        public Armor()
+        public Armor(int level) : base(level)
         {
             IsEquapable = true;
             IsStacable = false;

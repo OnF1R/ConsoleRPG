@@ -9,7 +9,7 @@ namespace ConsoleRPG.Items.Armors.Rings
 {
     internal class ProtectionRing : Armor
     {
-        public ProtectionRing()
+        public ProtectionRing(int level) : base(level)
         {
             Random rand = new Random();
             Quality Quality = new Quality();
