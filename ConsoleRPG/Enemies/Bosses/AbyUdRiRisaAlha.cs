@@ -3,12 +3,15 @@ using ConsoleRPG.Items.StacableItems;
 using ConsoleRPG.Races;
 using ConsoleRPG.Items.Armors.Capes;
 using ConsoleRPG.Spells.DamageSpells;
+using ConsoleRPG.Interfaces;
+using ConsoleRPG.Items.Weapons.BaseEnemyWeapons;
+using ConsoleRPG.Items;
 
 namespace ConsoleRPG.Enemies.Bosses
 {
     internal class AbyUdRiRisaAlha : Enemy
     {
-        public AbyUdRiRisaAlha(int playerLevel) : base(playerLevel)
+        public AbyUdRiRisaAlha(int level) : base(level)
         {
             Random random = new Random();
             MyRace = new Human();
@@ -34,17 +37,10 @@ namespace ConsoleRPG.Enemies.Bosses
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach (DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead) TakeDamage(Player, TakedDamage[type], type);
-            }
-
             if (!IsDead)
             {
-                Player.BeforeAttackBehaviour(this);
-
                 if (Energy > 6)
                 {
                     ArdaBintBaaniAlTaa(Player);
@@ -52,10 +48,9 @@ namespace ConsoleRPG.Enemies.Bosses
                 }
                 else
                 {
-                    Attack(Player);
+                    foreach (var entity in GetDamageEntities())
+                        Attack(Player, entity);
                 }
-
-                AfterAttackBehaviour(Player);
 
                 Energy++;
             }
@@ -65,13 +60,37 @@ namespace ConsoleRPG.Enemies.Bosses
             }
         }
 
+        public override IDamageDealerEntity[] GetDamageEntities()
+        {
+            Type classType = typeof(NothingItem);
+            Type interfaceType = typeof(IDamageDealerEntity);
+            List<Weapon> items = new List<Weapon>();
+
+            foreach (var equip in Equipment.Equip.Keys)
+            {
+                if (Equipment.Equip[equip].GetType() == classType)
+                {
+                    if (equip == EquipmentSlot.LeftHand)
+                        if (Equipment.Equip[EquipmentSlot.RightHand].GetType() == classType)
+                            items.Add(new HandsBaseWeapon(Level));
+
+                }
+                else if (Equipment.Equip[equip].GetType().GetInterfaces().Contains(interfaceType))
+                {
+                    items.Add((Weapon)Equipment.Equip[equip]);
+                }
+            }
+
+            return items.ToArray();
+        }
+
         public void ArdaBintBaaniAlTaa(Player Player)
         {
-            Spell Spell = new ArdaBintBaaniAlTaa();
+            BaseSpell Spell = new ArdaBintBaaniAlTaa();
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
+                DealDamage(Player, elemDamage[type], type, Spell);
             }
         }
     }

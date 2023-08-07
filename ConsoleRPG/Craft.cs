@@ -74,7 +74,7 @@ namespace ConsoleRPG
             }
             else
             {
-                AnsiConsole.MarkupLine("Нет зачарований");
+                AnsiConsole.MarkupLine("Нет рецептов");
             }
         }
 

@@ -33,22 +33,13 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach (DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead) TakeDamage(Player, TakedDamage[type], type);
-            }
-
             if (!IsDead)
             {
-                Player.BeforeAttackBehaviour(this);
-
                 if (Energy > 0)
                 {
                     WaterBall(Player);
-
-                    AfterAttackBehaviour(Player);
                 }
                 else
                 {
@@ -65,11 +56,11 @@ namespace ConsoleRPG.Enemies
 
         public void WaterBall(Player Player)
         {
-            Spell Spell = new WaterBall();
+            BaseSpell Spell = new WaterBall();
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
+                DealDamage(Player, elemDamage[type], type, Spell);
             }
         }
     }

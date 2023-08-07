@@ -24,6 +24,15 @@ namespace ConsoleRPG
             //}
         }
 
+        public static void UseSpell(BaseSpell spell, Unit DamageTaker, Unit DamageDealer)
+        {
+			Dictionary<DamageTypes, int> elemDamage = spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+			foreach (DamageTypes type in elemDamage.Keys)
+			{
+                DamageDealer.DealDamage(DamageTaker, elemDamage[type], type, spell);
+			}
+        }
+
         public static void StartFight(Player Player, Enemy Enemy, ref int EnemiesKillsCount)
         {
             bool GiveUp = false;
@@ -40,14 +49,28 @@ namespace ConsoleRPG
                 switch (ActionMenu.FirstOrDefault(x => x.Value == choise).Key)
                 {
                     case 1:
-                        Dictionary<DamageTypes, int> allDamage = Player.GetExistableTypeDamage();
-                        Enemy.FightLogic(Player, allDamage);
+                        foreach (var entity in Player.GetDamageEntities())
+                            Player.Attack(Enemy, entity);
+
+                        Enemy.FightLogic(Player);
+                        Player.EffectsUpdate();
+                        Enemy.EffectsUpdate();
                         break;
                     case 2:
-                        GiveUp = true;
-                        AnsiConsole.MarkupLine("Вы успешно сбежали");
+                        var spell = Player.ChooseSpell();
+                        if (spell != null)
+                        {
+                            UseSpell(spell, Enemy, Player);
+							Enemy.FightLogic(Player);
+							Player.EffectsUpdate();
+							Enemy.EffectsUpdate();
+						}
                         break;
-                    default:
+					case 3:
+						GiveUp = true;
+						AnsiConsole.MarkupLine("Вы успешно сбежали");
+						break;
+					default:
                         AnsiConsole.MarkupLine("Выберите существующие действие.");
                         break;
                 }

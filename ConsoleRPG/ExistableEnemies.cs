@@ -12,6 +12,7 @@ namespace ConsoleRPG
                 new Elemental(playerLevel),
                 new Ghoul(playerLevel),
                 new SteelKnight(playerLevel),
+                new ExplosiveBug(playerLevel),
                 new WaterDragon(playerLevel),
                 new SmallOreStone(playerLevel),
                 new Wisp(playerLevel),

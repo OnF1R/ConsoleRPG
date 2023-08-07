@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
-    internal class ElementalSplash : Spell
+    internal class ElementalSplash : BaseSpell
     {
         public ElementalSplash()
         {
@@ -15,7 +15,7 @@ namespace ConsoleRPG.Spells.DamageSpells
             string damageTypeColor = damageTypesNames.Color[damageType];
             AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { damageType, new Random().Next(7,12) },
+                { damageType, new Random().Next(7,12)},
             }));
             Name = $"[{damageTypeColor}]Элементальный[/] брызг";
             

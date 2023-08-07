@@ -11,7 +11,7 @@ namespace ConsoleRPG.Enemies
 {
     internal class Elemental : Enemy
     {
-        public Elemental(int playerLevel) : base(playerLevel)
+        public Elemental(int level) : base(level)
         {
             Random random = new Random();
             //Equipment equipment = new Equipment();
@@ -23,26 +23,19 @@ namespace ConsoleRPG.Enemies
             Equipment.WearEquip(this, new EnchantedHat(Level), EquipmentSlot.Helmet);
             Equipment.WearEquip(this, new ElementalRing(Level), EquipmentSlot.FirstRing);
 
-            DropList = new Item[] 
+            DropList = new Item[]
             {
-                new Gold(), 
-                new RainbowShard(), 
+                new Gold(),
+                new RainbowShard(),
                 Equipment.Equip[EquipmentSlot.Helmet],
-                Equipment.Equip[EquipmentSlot.FirstRing] 
+                Equipment.Equip[EquipmentSlot.FirstRing]
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach (DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead)
-                    TakeDamage(Player, TakedDamage[type], type);
-            }
             if (!IsDead)
             {
-                Player.AfterAttackBehaviour(this);
-
                 if (Energy >= 3)
                 {
                     ElementalSplash(Player);
@@ -53,8 +46,6 @@ namespace ConsoleRPG.Enemies
                     ElementalSplash(Player);
                 }
                 Energy++;
-
-                AfterAttackBehaviour(Player);
             }
             else
             {
@@ -64,18 +55,12 @@ namespace ConsoleRPG.Enemies
 
         public void ElementalSplash(Player Player)
         {
-            Spell Spell = new ElementalSplash();
+            BaseSpell Spell = new ElementalSplash();
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
+                DealDamage(Player, elemDamage[type], type, Spell);
             }
-            //if (IsCrit())
-            //{
-            //}
-            //else
-            //{
-            //}
         }
     }
 }

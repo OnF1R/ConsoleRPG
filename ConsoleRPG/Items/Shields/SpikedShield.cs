@@ -1,7 +1,7 @@
 ﻿
 namespace ConsoleRPG.Items.Shields
 {
-    internal class SpikedShield : Weapon
+    internal class SpikedShield : Shield
     {
         public SpikedShield(int level) : base(level)
         {

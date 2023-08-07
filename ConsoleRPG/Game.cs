@@ -1,6 +1,7 @@
 ﻿using Spectre.Console;
 using Console = Colorful.Console;
 using Color = Spectre.Console.Color;
+using ConsoleRPG.Spells.DamageSpells;
 
 namespace ConsoleRPG
 {

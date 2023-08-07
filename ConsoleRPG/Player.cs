@@ -1,4 +1,7 @@
-﻿using Spectre.Console;
+﻿using ConsoleRPG.Interfaces;
+using ConsoleRPG.Items;
+using ConsoleRPG.Items.Weapons.BaseEnemyWeapons;
+using Spectre.Console;
 
 namespace ConsoleRPG
 {
@@ -7,9 +10,7 @@ namespace ConsoleRPG
         public int CurrentExp { get; set; }
         public int NextLevelExp { get; set; }
 
-        public Player()
-        {
-        }
+        public List<BaseSpell> PlayerSpells { get; set; } = new List<BaseSpell>();
 
         public void LevelUp()
         {
@@ -102,6 +103,78 @@ namespace ConsoleRPG
             mainTable.AddRow(table, table2, table3);
 
             AnsiConsole.Write(mainTable);
+        }
+
+        public override IDamageDealerEntity[] GetDamageEntities()
+        {
+            Type classType = typeof(NothingItem);
+            Type interfaceType = typeof(IDamageDealerEntity);
+            List<Weapon> items = new List<Weapon>();
+
+            foreach (var equip in Equipment.Equip.Keys)
+            {
+                if (Equipment.Equip[equip].GetType() == classType)
+                {
+                    if (equip == EquipmentSlot.LeftHand)
+                        if (Equipment.Equip[EquipmentSlot.RightHand].GetType() == classType)
+                            items.Add(new HandsBaseWeapon(Level));
+
+                }
+                else if (Equipment.Equip[equip].GetType().GetInterfaces().Contains(interfaceType))
+                {
+                    items.Add((Weapon)Equipment.Equip[equip]);
+                }
+            }
+
+            return items.ToArray();
+        }
+
+        public void AddSpell(BaseSpell spell)
+        {
+            if (PlayerSpells.Contains(spell))
+            {
+                return;
+            }
+            else
+            {
+                PlayerSpells.Add(spell);
+                ShowMessage($"Вы выучили заклинание: {spell.GetName()}");
+            }
+        }
+        
+        public BaseSpell ChooseSpell()
+        {
+			if (PlayerSpells.Count > 0)
+            {
+                List<string> spellsNames = new List<string>();
+
+                foreach (var spell in PlayerSpells)
+                {
+                    spellsNames.Add(spell.GetName());
+                }
+
+                spellsNames.Add("[red]Отменить[/]");
+
+				var choise = AnsiConsole.Prompt(
+					new SelectionPrompt<string>()
+						.Title("[bold]Выберите заклинание[/]")
+						.PageSize(10)
+						.MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
+						.AddChoices(spellsNames));
+
+                return PlayerSpells.FirstOrDefault(x => x.GetName() == choise);
+			} 
+            else
+            {
+                ShowMessage("[red]Нет заклинаний![/]");
+			}
+
+			return null;
+		}
+
+        public void UseSpell(BaseSpell spell)
+        {
+
         }
 
         public void TakeExp(int Exp)

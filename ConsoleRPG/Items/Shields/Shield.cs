@@ -1,0 +1,11 @@
+﻿namespace ConsoleRPG.Items.Shields
+{
+    internal class Shield : Armor
+    {
+        public Shield(int level) : base(level)
+        {
+            this.IsStacable = false;
+            this.IsEquapable = true;
+        }
+    }
+}

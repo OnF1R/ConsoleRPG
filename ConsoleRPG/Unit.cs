@@ -1,9 +1,7 @@
-﻿using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConsoleRPG.Effects;
+using ConsoleRPG.Interfaces;
+using ConsoleRPG.Items.Weapons.BaseEnemyWeapons;
+using Spectre.Console;
 
 namespace ConsoleRPG
 {
@@ -22,6 +20,9 @@ namespace ConsoleRPG
         public bool IsDead { get; set; }
 
         public Race MyRace;
+
+        public List<BaseEffect> CurrentBuffs { get; set; }
+        public List<BaseEffect> CurrentDebuffs { get; set; }
 
         public Unit AddComponent(Characteristics component)
         {
@@ -59,6 +60,8 @@ namespace ConsoleRPG
             AddComponent(new HealAmplificationCharacteristic { Amplification = 0, AmplificationPerLevel = 0 });
             AddComponent(new ParryCharacteristic { ParryPercent = 0, ParryPercentPerLevel = 0 });
 
+            CurrentBuffs = new List<BaseEffect>();
+            CurrentDebuffs = new List<BaseEffect>();
 
             Dictionary<DamageTypes, int> elemental = new Dictionary<DamageTypes, int>();
             Dictionary<DamageTypes, int> elemental2 = new Dictionary<DamageTypes, int>();
@@ -81,22 +84,42 @@ namespace ConsoleRPG
             HealMaxMana();
         }
 
-        public void Heal(int health)
+        public void Heal(int health, IEntity Entity)
+        {
+            health = HealWithAmplification(health);
+
+            if (CurrentHealth + health >= MaxHealth)
+            {
+                HealMaxHealth();
+                UpdateHealMessage(health, Entity.GetName());
+            }
+            else
+            {
+                if (health > 0)
+                {
+                    CurrentHealth += health;
+                    UpdateHealMessage(health, Entity.GetName());
+                }
+                else if (health < 0)
+                {
+                    DealDamage(this, Math.Abs(health), DamageTypes.Holy, Entity);
+                }
+            }
+        }
+
+        public void HealWithoutMessage(int health)
         {
             health = HealWithAmplification(health);
 
             if (CurrentHealth + health > MaxHealth)
             {
                 HealMaxHealth();
-                AnsiConsole.MarkupLine($"{Name} [lime]исцелился[/] на {health}, его [lime]здоровье[/] {CurrentHealth}");
             }
             else
             {
                 CurrentHealth += health;
-                AnsiConsole.MarkupLine($"{Name} [lime]исцелился[/] на {health}, его [lime]здоровье[/] {CurrentHealth}");
                 if (CurrentHealth <= 0)
                 {
-                    AnsiConsole.MarkupLine($"{Name} [red]умер[/] от лечения :)");
                     Death();
                 }
             }
@@ -112,7 +135,62 @@ namespace ConsoleRPG
             CurrentMana = MaxMana;
         }
 
-        public void TakeDamage(Unit damageDealer, int takedDamage, DamageTypes damageType)
+        public void ShowMessage(string message)
+        {
+            AnsiConsole.MarkupLine(message);
+        }
+
+        public void TakeDamageMessage(int damage, DamageTypes damageType)
+        {
+            var names = new DamageTypesNames().Names;
+            ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона, текущее здоровье [lime]{CurrentHealth}[/]");
+        }
+
+        public void UpdateTakeDamageMessage(int damage, DamageTypes damageType, string damageDealer)
+        {
+            var names = new DamageTypesNames().Names;
+            ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона от ({damageDealer})," +
+                $" текущее здоровье [lime]{CurrentHealth}[/]");
+        }
+
+        public void HealMessage(int heal)
+        {
+            ShowMessage($"{Name} исцелился на {heal}, текущее здоровье [lime]{CurrentHealth}[/]");
+        }
+
+        public void UpdateHealMessage(int heal, string healDealer)
+        {
+            ShowMessage($"{Name} исцелился на {heal} от ({healDealer}), текущее здоровье [lime]{CurrentHealth}[/]");
+        }
+
+        public void DeathMessage(int damage, DamageTypes damageType)
+        {
+            var names = new DamageTypesNames().Names;
+            ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона и [red]умер[/]");
+        }
+
+        public void UpdateDeathMessage(int damage, DamageTypes damageType, string damageDealer)
+        {
+            var names = new DamageTypesNames().Names;
+            ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона от ({damageDealer}) и [red]умер[/]");
+        }
+
+        public void DealDamage(Unit damageDealerUnit, int damage, DamageTypes damageType, params IEntity[] Entities)
+        {
+            BeforeAttackBehaviour(this, ref damage, damageType);
+
+            foreach (var entity in Entities)
+                damageDealerUnit.TakeDamage(this, damage, damageType, entity);
+
+            if (damageDealerUnit != this)
+            {
+                damageDealerUnit.CheckApplyingEffects(Entities);
+            }
+
+            AfterAttackBehaviour(this, damage, damageType);
+        }
+
+        public void TakeDamage(Unit damageDealerUnit, int takedDamage, DamageTypes damageType, IEntity Entity)
         {
             BeforeTakeDamageBehaviour(this, ref takedDamage, damageType);
 
@@ -120,60 +198,47 @@ namespace ConsoleRPG
             {
                 CurrentHealth -= takedDamage;
 
-                if (CurrentHealth <= 0)
+                if (IsDie())
                 {
-                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона ({2}) и [red]умер[/]",
-                    Name, takedDamage, new DamageTypesNames().Names[damageType]);
+                    Death();
+                    //DeathMessage(takedDamage, damageType);
+                    UpdateDeathMessage(takedDamage, damageType, Entity.GetName());
                 }
                 else
                 {
-                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона ({2}), его здоровье [lime]{3}[/]",
-                    Name, takedDamage, new DamageTypesNames().Names[damageType], CurrentHealth);
-
+                    //TakeDamageMessage(takedDamage, damageType);
+                    UpdateTakeDamageMessage(takedDamage, damageType, Entity.GetName());
+                    AfterTakeDamageBehaviour(damageDealerUnit, damageType);
                 }
-
-                AfterTakeDamageBehaviour(damageDealer, damageType);
             }
-        }
-
-        public void TakeCriticalDamage(Unit damageDealer, int takedDamage, DamageTypes damageType)
-        {
-            BeforeTakeDamageBehaviour(this, ref takedDamage, damageType);
-
-            if (takedDamage > 0)
+            else if (takedDamage < 0)
             {
-                takedDamage = CalcPhysicalCritical(takedDamage);
-
-                CurrentHealth -= takedDamage;
-
-                if (CurrentHealth <= 0)
-                {
-                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} [red]критического урона[/] ({2}) и [red]умер[/]",
-                    Name, takedDamage, new DamageTypesNames().Names[damageType]);
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} [red]критического урона[/] ({2}), его здоровье [lime]{3}[/]",
-                    Name, takedDamage, new DamageTypesNames().Names[damageType], CurrentHealth);
-                }
-
-                AfterTakeDamageBehaviour(damageDealer, damageType);
+                Heal(Math.Abs(takedDamage), Entity);
             }
         }
 
-        public void BeforeAttackBehaviour(Unit unit)
+        public void BeforeAttackBehaviour(Unit unit, ref int damage, DamageTypes damageType)
         {
+            if (damageType != DamageTypes.Physical)
+                damage += GetElementalDamage(damageType);
 
         }
 
-        public void AfterAttackBehaviour(Unit unit)
+        public void AfterAttackBehaviour(Unit unit, int damage, DamageTypes damageType)
         {
-            TakeVampirism();
+            if (damage > 0 && damageType == DamageTypes.Physical)
+                TakeVampirism();
         }
 
         public void BeforeTakeDamageBehaviour(Unit damageDealer, ref int takedDamage, DamageTypes damageType)
         {
-            if (damageType == DamageTypes.Physical && CheckMiss())
+            if (damageType == DamageTypes.Physical && damageDealer.CheckMiss())
+            {
+                takedDamage = 0;
+                return;
+            }
+
+            if (damageType == DamageTypes.Physical && CheckEvasion())
             {
                 takedDamage = 0;
                 return;
@@ -183,6 +248,11 @@ namespace ConsoleRPG
             {
                 takedDamage = 0;
                 return;
+            }
+
+            if (damageType == DamageTypes.Physical && IsCrit())
+            {
+                takedDamage = CalcPhysicalCritical(takedDamage);
             }
 
             takedDamage = CheckResistance(takedDamage, damageType);
@@ -203,9 +273,109 @@ namespace ConsoleRPG
             }
         }
 
+        public void EffectsUpdate()
+        {
+
+            foreach (var buff in CurrentBuffs.ToList())
+            {
+                if (buff.CurrentDuration > 0)
+                {
+                    buff.ApplyEffect(this);
+                }
+                else
+                {
+                    CurrentBuffs.Remove(buff);
+                }
+            }
+
+            foreach (var debuff in CurrentDebuffs.ToList())
+            {
+                if (debuff.CurrentDuration > 0)
+                {
+                    debuff.ApplyEffect(this);
+                }
+                else
+                {
+                    CurrentDebuffs.Remove(debuff);
+                }
+            }
+        }
+
+        public void CheckApplyingEffects(params IEntity[] Entities)
+        {
+            //var items = unit.Equipment.GetAllEquipmentWithStatusEffects();
+
+            Type interfaceType = typeof(IAppyStatusEffectEntity);
+            List<IAppyStatusEffectEntity> items = new List<IAppyStatusEffectEntity>();
+            foreach (var equip in Entities)
+            {
+                if (equip.GetType().GetInterfaces().Contains(interfaceType))
+                {
+                    items.Add((IAppyStatusEffectEntity)equip);
+                }
+            }
+
+            foreach (var item in items)
+            {
+                var effects = item.GetEffects();
+
+                foreach (var effect in effects)
+                {
+                    if (new Random().Next(1, 101) < effect.Value)
+                    {
+                        switch (effect.Key.EffectType)
+                        {
+                            case EffectType.Buff:
+                                if (CurrentBuffs.Contains(effect.Key))
+                                {
+                                    //var buff = CurrentBuffs.FirstOrDefault(x => x == effect.Key);
+                                    //buff.CurrentDuration += effect.Key.Duration;
+                                    //ShowMessage($"Эффект {effect.Key.Name} продлён на {Name}");
+                                }
+                                else
+                                {
+                                    ShowMessage($"{Name} получил эффект {effect.Key.Name}");
+                                    CurrentBuffs.Add(effect.Key);
+                                }
+                                break;
+                            case EffectType.Debuff:
+                                if (CurrentDebuffs.Contains(effect.Key))
+                                {
+                                    //var debuff = CurrentDebuffs.FirstOrDefault(x => x == effect.Key);
+                                    //debuff.CurrentDuration += effect.Key.Duration;
+                                    //ShowMessage($"Эффект {effect.Key.Name} продлён на {Name}");
+                                }
+                                else
+                                {
+                                    ShowMessage($"{Name} получил эффект {effect.Key.Name}");
+                                    CurrentDebuffs.Add(effect.Key);
+                                }
+                                break;
+                            default:
+                                AnsiConsole.MarkupLine("[red]Ошибка при наложении эффекта[/]");
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
         public bool CheckMiss()
         {
             int miss = GetMissChance();
+
+            if (new Random().Next(1, 101) < miss)
+            {
+                AnsiConsole.MarkupLine($"{Name} [bold]промахнулся[/] атакой!");
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CheckEvasion()
+        {
+            int miss = GetEvasionChance();
 
             if (new Random().Next(1, 101) < miss)
             {
@@ -234,7 +404,7 @@ namespace ConsoleRPG
             Dictionary<DamageTypes, int> resistance = GetExistableTypeResistance();
             if (resistance.ContainsKey(damageType))
             {
-                if (resistance[damageType] > 0)
+                if (resistance[damageType] != 0)
                 {
                     double tempBlockedDamage = takedDamage * (resistance[damageType] / (double)100);
                     takedDamage -= (int)tempBlockedDamage;
@@ -244,24 +414,22 @@ namespace ConsoleRPG
             return takedDamage;
         }
 
+        public void Attack(Unit Unit, IEntity Entity)
+        {
+            Dictionary<DamageTypes, int> damage = GetExistableTypeDamage();
+            foreach (DamageTypes type in damage.Keys)
+            {
+                DealDamage(Unit, damage[type], type, Entity);
+            }
+        }
+
         public void TakeSpikeDamage(Unit damageDealer)
         {
             int spikeDamage = SpikeDamage();
 
             if (spikeDamage > 0)
             {
-                damageDealer.CurrentHealth -= spikeDamage;
-                if (damageDealer.CurrentHealth > 0)
-                {
-                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона от шипов, его здоровье [lime]{2}[/]",
-                    damageDealer.Name, spikeDamage, damageDealer.CurrentHealth);
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine("[bold]{0}[/] получил {1} урона от шипов и [red]умер[/]",
-                    damageDealer.Name, spikeDamage, damageDealer.CurrentHealth);
-                    Death();
-                }
+                DealDamage(damageDealer, spikeDamage, DamageTypes.Physical, GetComponent<SpikeCharacteristic>());
             }
         }
 
@@ -277,7 +445,8 @@ namespace ConsoleRPG
 
             if (heal > 0)
             {
-                Heal(heal);
+
+                Heal(heal, GetComponent<VampirismCharacteristic>());
             }
         }
 
@@ -403,11 +572,9 @@ namespace ConsoleRPG
 
         public Dictionary<DamageTypes, int> GetExistableTypeResistance()
         {
-            Dictionary<DamageTypes, int> result = new Dictionary<DamageTypes, int>();
+            Dictionary<DamageTypes, int> result = GetElementalResistance();
 
             result.Add(DamageTypes.Physical, GetArmor());
-
-            result.Concat(GetElementalResistance());
 
             return result;
         }
@@ -438,6 +605,22 @@ namespace ConsoleRPG
             return elementalDamage;
         }
 
+        public Dictionary<DamageTypes, int> GetTypeElementalDamage(params DamageTypes[] damageTypes)
+        {
+            Dictionary<DamageTypes, int> elementalDamage = new();
+
+            foreach (DamageTypes damageType in damageTypes)
+            {
+                int damage = GetComponent<ElementalResistanceCharacteristic>().ElemResistance.FirstOrDefault(x => x.Key == damageType).Value;
+                if (damage > 0)
+                {
+                    elementalDamage.Add(damageType, damage);
+                }
+            }
+
+            return elementalDamage;
+        }
+
         public Dictionary<DamageTypes, int> GetElementalResistance()
         {
             Dictionary<DamageTypes, int> elementalResistance = new Dictionary<DamageTypes, int>();
@@ -445,13 +628,68 @@ namespace ConsoleRPG
             foreach (DamageTypes type in GetComponent<ElementalResistanceCharacteristic>().ElemResistance.Keys)
             {
                 int resistance = GetComponent<ElementalResistanceCharacteristic>().ElemResistance[type];
-                if (resistance != 0)
+
+                elementalResistance.Add(type, resistance);
+            }
+
+            return elementalResistance;
+        }
+
+        public Dictionary<DamageTypes, int> GetTypeResistance(params DamageTypes[] damageTypes)
+        {
+            Dictionary<DamageTypes, int> elementalResistance = new();
+
+            foreach (DamageTypes damageType in damageTypes)
+            {
+                int resistance = GetComponent<ElementalResistanceCharacteristic>().ElemResistance.FirstOrDefault(x => x.Key == damageType).Value;
+                if (resistance > 0)
                 {
-                    elementalResistance.Add(type, resistance);
+                    elementalResistance.Add(damageType, resistance);
                 }
             }
 
             return elementalResistance;
+        }
+
+        public virtual IDamageDealerEntity[] GetDamageEntities()
+        {
+            Type interfaceType = typeof(IDamageDealerEntity);
+            List<Weapon> items = new List<Weapon>();
+            foreach (var equip in Equipment.Equip.Values)
+            {
+                if (equip.GetType().GetInterfaces().Contains(interfaceType))
+                {
+                    items.Add((Weapon)equip);
+                }
+            }
+
+            return items.ToArray();
+        }
+
+        //public virtual string GetDamageEntities()
+        //{
+        //    string firstWeapon = Equipment.Equip[EquipmentSlot.LeftHand].Name;
+        //    string secondWeapon = Equipment.Equip[EquipmentSlot.RightHand].Name;
+        //    string result = "";
+        //    if (firstWeapon != "")
+        //    {
+        //        result += firstWeapon;
+        //        if (secondWeapon != "")
+        //        {
+        //            result += $" и {secondWeapon}";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        result = "Кулаки";
+        //    }
+
+        //    return result;
+        //}
+
+        public int GetElementalDamage(DamageTypes type)
+        {
+            return GetComponent<ElementalDamageCharacteristic>().ElemDamage[type];
         }
 
         public double GetCriticalChance()
@@ -472,6 +710,11 @@ namespace ConsoleRPG
         public int GetMissChance()
         {
             return (int)GetComponent<MissCharacteristic>().MissChance;
+        }
+
+        public int GetEvasionChance()
+        {
+            return (int)GetComponent<EvasionCharacteristic>().EvasionChance;
         }
 
         public int GetParryChance()
@@ -530,25 +773,16 @@ namespace ConsoleRPG
             return GetComponent<SpikeCharacteristic>().SpikeDamage;
         }
 
-        public Dictionary<DamageTypes, int> GetTypeResistance(params DamageTypes[] damageTypes)
-        {
-            Dictionary<DamageTypes, int> elementalResistance = new();
-
-            foreach (DamageTypes damageType in damageTypes)
-            {
-                int resistance = GetComponent<ElementalResistanceCharacteristic>().ElemResistance.FirstOrDefault(x => x.Key == damageType).Value;
-                if (resistance > 0)
-                {
-                    elementalResistance.Add(damageType, resistance);
-                }
-            }
-
-            return elementalResistance;
-        }
-
         public void Death()
         {
             IsDead = true;
+            //CurrentBuffs.Clear();
+            //CurrentDebuffs.Clear();
+        }
+
+        public bool IsDie()
+        {
+            return CurrentHealth <= 0;
         }
     }
 }

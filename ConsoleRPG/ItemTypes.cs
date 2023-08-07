@@ -63,5 +63,6 @@ namespace ConsoleRPG
         Currency = 1 << 17,
         Stacable = 1 << 18,
         
+        BaseWeapon = 1 << 19,
     }
 }

@@ -23,18 +23,11 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach (DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead)
-                    TakeDamage(Player, TakedDamage[type], type);
-            }
             if (!IsDead)
             {
-                Player.AfterAttackBehaviour(this);
 
-                AfterAttackBehaviour(Player);
             }
             else
             {

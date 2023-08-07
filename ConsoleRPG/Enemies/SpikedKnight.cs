@@ -1,9 +1,7 @@
 ﻿using ConsoleRPG.Items.Armors.Boots;
-using ConsoleRPG.Items.Armors.Rings;
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.Shields;
-using ConsoleRPG.Items.StacableItems;
-using ConsoleRPG.Spells.DamageSpells;
+using ConsoleRPG.Items.Weapons;
 using Spectre.Console;
 
 namespace ConsoleRPG.Enemies
@@ -20,6 +18,7 @@ namespace ConsoleRPG.Enemies
             GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, 4 + Level);
 
             //Экипировка
+            Equipment.WearEquip(this, new SteelDagger(Level), EquipmentSlot.LeftHand);
             Equipment.WearEquip(this, new SpikedSandals(Level), EquipmentSlot.Boots);
             Equipment.WearEquip(this, new SpikedShield(Level), EquipmentSlot.RightHand);
 
@@ -31,18 +30,10 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach (DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead)
-                    TakeDamage(Player, TakedDamage[type], type);
-            }
-
             if (!IsDead)
             {
-                Player.AfterAttackBehaviour(this);
-
                 if (Energy >= 4)
                 {
                     SpikedAttack(Player);
@@ -50,11 +41,11 @@ namespace ConsoleRPG.Enemies
                 }
                 else
                 {
-                    Attack(Player);
+                    foreach (var entity in GetDamageEntities())
+                        Attack(Player, entity);
+
                     Energy++;
                 }
-
-                AfterAttackBehaviour(Player);
             }
 
             else
@@ -65,7 +56,7 @@ namespace ConsoleRPG.Enemies
 
         public void SpikedAttack(Player player)
         {
-            AnsiConsole.MarkupLine($"{Name} использует Шипастый набег");
+            AnsiConsole.MarkupLine($"{Name} использует [bold]Шипастый набег[/]");
             TakeSpikeDamage(player);
             TakeSpikeDamage(player);
             TakeSpikeDamage(player);

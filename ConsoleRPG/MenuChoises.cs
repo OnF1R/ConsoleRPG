@@ -68,11 +68,14 @@ namespace ConsoleRPG
 
         public static Dictionary<int, string> ActionMenuChoises()
         {
-            Dictionary<int, string> menuChoises = new Dictionary<int, string>();
-            menuChoises.Add(1, "Атаковать");
-            menuChoises.Add(2, "Сбежать");
+			Dictionary<int, string> menuChoises = new Dictionary<int, string>
+			{
+				{ 1, "Атаковать" },
+				{ 2, "Заклинания" },
+				{ 3, "Сбежать" }
+			};
 
-            return menuChoises;
+			return menuChoises;
         }
 
         public static Dictionary<int, string> CraftMenuChoises()

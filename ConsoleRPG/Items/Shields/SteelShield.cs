@@ -1,15 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
-namespace ConsoleRPG.Items.Shields
+﻿namespace ConsoleRPG.Items.Shields
 {
-    internal class SteelShield : Weapon
+    internal class SteelShield : Shield
     {
         public SteelShield(int level) : base(level)
         {

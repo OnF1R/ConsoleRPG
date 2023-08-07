@@ -39,6 +39,19 @@ namespace ConsoleRPG
             }
         }
 
+        public Item[] GetAllEquipmentWithStatusEffects()
+        {
+            List<Item> items = new List<Item>();
+            foreach (var item in Equip.Values)
+            {
+                if (item.GetComponent<StatusEffectsCharacteristic>() != null)
+                {
+                    items.Add(item);
+                }
+            }
+            return items.ToArray();
+        }
+
         public void WearEquip(Unit unit, Item Item, EquipmentSlot SlotName)
         {
             if (Equip.ContainsKey(SlotName))
@@ -102,6 +115,11 @@ namespace ConsoleRPG
             if (item.GetComponent<MissCharacteristic>() != null)
             {
                 unit.GetComponent<MissCharacteristic>().MissChance += item.GetComponent<MissCharacteristic>().MissChance;
+            }
+
+            if (item.GetComponent<EvasionCharacteristic>() != null)
+            {
+                unit.GetComponent<EvasionCharacteristic>().EvasionChance += item.GetComponent<EvasionCharacteristic>().EvasionChance;
             }
 
             if (item.GetComponent<CriticalChanceCharacteristic>() != null)
@@ -213,6 +231,18 @@ namespace ConsoleRPG
                 else
                 {
                     unit.GetComponent<MissCharacteristic>().MissChance += item.GetComponent<MissCharacteristic>().MissChance;
+                }
+            }
+
+            if (item.GetComponent<EvasionCharacteristic>() != null)
+            {
+                if (item.GetComponent<EvasionCharacteristic>().EvasionChance >= 0)
+                {
+                    unit.GetComponent<EvasionCharacteristic>().EvasionChance -= item.GetComponent<EvasionCharacteristic>().EvasionChance;
+                }
+                else
+                {
+                    unit.GetComponent<EvasionCharacteristic>().EvasionChance += item.GetComponent<EvasionCharacteristic>().EvasionChance;
                 }
             }
 

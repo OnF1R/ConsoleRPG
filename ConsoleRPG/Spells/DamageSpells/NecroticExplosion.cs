@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
-    internal class NecroticExplosion : Spell
+    internal class NecroticExplosion : BaseSpell
     {
         public NecroticExplosion()
         {
             Name = "[yellow4]ВЗРЫВ[/]";
             AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Necrotic, 999 },
+                { DamageTypes.Necrotic, 999},
             }));
         }
     }

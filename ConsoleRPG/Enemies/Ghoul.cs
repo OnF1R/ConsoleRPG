@@ -15,7 +15,7 @@ namespace ConsoleRPG.Enemies
 {
     internal class Ghoul : Enemy
     {
-        public Ghoul(int playerLevel) : base(playerLevel)
+        public Ghoul(int level) : base(level)
         {
             Random random = new Random();
             Equipment equipment = new Equipment();
@@ -27,39 +27,30 @@ namespace ConsoleRPG.Enemies
             //Экипировка
             Equipment.WearEquip(this, new BloodLetter(Level), EquipmentSlot.LeftHand);
 
-            DropList = new Item[] { new Gold(), Equipment.Equip[EquipmentSlot.LeftHand], new BloodStone(Level) };
+            DropList = new Item[] { new Gold(), Equipment.Equip[EquipmentSlot.LeftHand], new BloodStone() };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach(DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead)
-                    TakeDamage(Player, TakedDamage[type], type);
-            }
-
             if (!IsDead)
             {
-                Player.AfterAttackBehaviour(this);
-
                 if (Energy >= 3)
                 {
-                    for (int i = 0; i < new Random().Next(2,5); i++) {
+                    for (int i = 0; i < new Random().Next(2, 5); i++)
+                    {
                         if (!Player.IsDead)
                         {
-                            Attack(Player);
-                            
+                            foreach (var entity in GetDamageEntities())
+                                Attack(Player, entity);
                         }
                     }
                     Energy = 0;
                 }
                 else
                 {
-                    Attack(Player);
+                    foreach (var entity in GetDamageEntities())
+                        Attack(Player, entity);
                 }
-
-                AfterAttackBehaviour(Player);
-
                 Energy++;
             }
             else

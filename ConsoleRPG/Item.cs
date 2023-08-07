@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items.Enchants;
+﻿using ConsoleRPG.Effects;
+using ConsoleRPG.Items.Enchants;
 using Spectre.Console;
 
 namespace ConsoleRPG
@@ -348,11 +349,23 @@ namespace ConsoleRPG
             {
                 if (item.GetComponent<MissCharacteristic>().MissChance > 0)
                 {
-                    itemInfo += ($"+{item.GetComponent<MissCharacteristic>().MissChance}% к уклонению ");
+                    itemInfo += ($"+{item.GetComponent<MissCharacteristic>().MissChance}% к шансу промаха ");
                 }
                 else
                 {
-                    itemInfo += ($"{item.GetComponent<MissCharacteristic>().MissChance}% к уклонению ");
+                    itemInfo += ($"{item.GetComponent<MissCharacteristic>().MissChance}% к шансу промаха ");
+                }
+            }
+
+            if (item.GetComponent<EvasionCharacteristic>() != null)
+            {
+                if (item.GetComponent<EvasionCharacteristic>().EvasionChance > 0)
+                {
+                    itemInfo += ($"+{item.GetComponent<EvasionCharacteristic>().EvasionChance}% к уклонению ");
+                }
+                else
+                {
+                    itemInfo += ($"{item.GetComponent<EvasionCharacteristic>().EvasionChance}% к уклонению ");
                 }
             }
 
@@ -450,6 +463,18 @@ namespace ConsoleRPG
                 }
             }
 
+            if (item.GetComponent<LuckCharacteristic>() != null)
+            {
+                if (item.GetComponent<LuckCharacteristic>().Luck > 0)
+                {
+                    itemInfo += ($"+{item.GetComponent<LuckCharacteristic>().Luck} к удаче ");
+                }
+                else
+                {
+                    itemInfo += ($"{item.GetComponent<LuckCharacteristic>().Luck} к удаче ");
+                }
+            }
+
             if (item.GetComponent<ExperienceBooster>() != null)
             {
                 if (item.GetComponent<ExperienceBooster>().PercentBoost > 0)
@@ -507,6 +532,15 @@ namespace ConsoleRPG
                 else
                 {
                     itemInfo += ($"{item.GetComponent<ParryCharacteristic>().ParryPercent}% парировать атаку ");
+                }
+            }
+
+            if (item.GetComponent<StatusEffectsCharacteristic>() != null)
+            {
+                var effects = item.GetComponent<StatusEffectsCharacteristic>().Effects;
+                foreach (BaseEffect effect in effects.Keys)
+                {
+                    itemInfo += $"{effect.Description()} ";
                 }
             }
 

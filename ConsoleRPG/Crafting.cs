@@ -1,7 +1,6 @@
 ﻿
 using ConsoleRPG.Items.Enchants;
 using Spectre.Console;
-using System.Numerics;
 
 namespace ConsoleRPG
 {

@@ -7,7 +7,7 @@ namespace ConsoleRPG.Enemies
 {
     internal class ExplosiveBug : Enemy
     {
-        public ExplosiveBug(int playerLevel) : base(playerLevel)
+        public ExplosiveBug(int level) : base(level)
         {
             Random random = new Random();
             Equipment equipment = new Equipment();
@@ -27,18 +27,10 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach (DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead)
-                    TakeDamage(Player, TakedDamage[type], type);
-            }
-
             if (!IsDead)
             {
-                Player.AfterAttackBehaviour(this);
-
                 if (Energy >= 4)
                 {
                     NecroticExplosion(Player);
@@ -49,8 +41,6 @@ namespace ConsoleRPG.Enemies
                     Spit(Player);
                     Energy++;
                 }
-
-                AfterAttackBehaviour(Player);
             }
             
             else
@@ -61,21 +51,21 @@ namespace ConsoleRPG.Enemies
 
         public void Spit(Player Player)
         {
-            Spell Spell = new PoisonSpit();
+            BaseSpell Spell = new PoisonSpit();
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
+                DealDamage(Player, elemDamage[type], type, Spell);
             }
         }
 
         public void NecroticExplosion(Player Player)
         {
-            Spell Spell = new NecroticExplosion();
+            BaseSpell Spell = new NecroticExplosion();
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
+                DealDamage(Player, elemDamage[type], type, Spell);
             }
         }
     }

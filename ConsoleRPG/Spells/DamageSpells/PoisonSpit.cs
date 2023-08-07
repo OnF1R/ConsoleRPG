@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
-    internal class PoisonSpit : Spell
+    internal class PoisonSpit : BaseSpell
     {
         public PoisonSpit()
         {
             Name = "[yellow4]Плевок[/]";
             AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Poison, new Random().Next(5, 17) },
+                { DamageTypes.Poison, new Random().Next(5, 17)},
             }));
         }
     }

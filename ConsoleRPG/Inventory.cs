@@ -16,7 +16,7 @@ namespace ConsoleRPG
 
         public List<BaseEnchant> ListEnchants { get; set; }
 
-        public List<Spell> ListSpells { get; set; }
+        public List<BaseSpell> ListSpells { get; set; }
 
         public int maxSlotsInInventory { get; set; }
 
@@ -25,7 +25,7 @@ namespace ConsoleRPG
             ListInventory = new List<Item>();
             ListRecipes = new List<BaseRecipe>();
             ListEnchants = new List<BaseEnchant>();
-            ListSpells = new List<Spell>();
+            ListSpells = new List<BaseSpell>();
             maxSlotsInInventory = 40;
             ListInventory.Capacity = maxSlotsInInventory;
         }

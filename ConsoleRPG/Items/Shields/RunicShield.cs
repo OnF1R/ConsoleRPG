@@ -1,7 +1,7 @@
 ﻿
 namespace ConsoleRPG.Items.Shields
 {
-    internal class RunicShield : Weapon
+    internal class RunicShield : Shield
     {
         public RunicShield(int level) : base(level)
         {

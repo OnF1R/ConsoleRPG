@@ -8,7 +8,7 @@ namespace ConsoleRPG.Enemies
 {
     internal class FireMage : Enemy
     {
-        public FireMage(int playerLevel) : base(playerLevel)
+        public FireMage(int level) : base(level)
         {
             Random random = new Random();
             Equipment equipment = new Equipment();
@@ -22,27 +22,19 @@ namespace ConsoleRPG.Enemies
             Equipment.WearEquip(this, new FireSword(Level), EquipmentSlot.LeftHand);
             Equipment.WearEquip(this, new RunicShield(Level), EquipmentSlot.RightHand);
 
-            DropList = new Item[] 
-            { 
-                new Gold(), 
-                Equipment.Equip[EquipmentSlot.LeftHand], 
-                Equipment.Equip[EquipmentSlot.Helmet], 
-                Equipment.Equip[EquipmentSlot.RightHand] 
+            DropList = new Item[]
+            {
+                new Gold(),
+                Equipment.Equip[EquipmentSlot.LeftHand],
+                Equipment.Equip[EquipmentSlot.Helmet],
+                Equipment.Equip[EquipmentSlot.RightHand]
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach (DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead)
-                    TakeDamage(Player, TakedDamage[type], type);
-            }
-
             if (!IsDead)
             {
-                Player.AfterAttackBehaviour(this);
-
                 if (Energy >= 3)
                 {
                     Pyroblast(Player);
@@ -56,12 +48,11 @@ namespace ConsoleRPG.Enemies
                     }
                     else
                     {
-                        Attack(Player);
+                        foreach (var entity in GetDamageEntities())
+                            Attack(Player, entity);
                     }
 
                 }
-
-                AfterAttackBehaviour(Player);
                 Energy++;
             }
             else
@@ -72,22 +63,22 @@ namespace ConsoleRPG.Enemies
 
         public void FireBall(Player Player)
         {
-            Spell Spell = new FireBall();
+            BaseSpell Spell = new FireBall();
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
+                DealDamage(Player, elemDamage[type], type, Spell);
             }
 
         }
 
         public void Pyroblast(Player Player)
         {
-            Spell Spell = new Pyroblast();
+            BaseSpell Spell = new Pyroblast();
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
+                DealDamage(Player, elemDamage[type], type, Spell);
             }
         }
     }

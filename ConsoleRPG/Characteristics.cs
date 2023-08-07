@@ -1,4 +1,8 @@
 ﻿
+using ConsoleRPG.Effects;
+using ConsoleRPG.Effects.Debuffs;
+using ConsoleRPG.Interfaces;
+
 namespace ConsoleRPG
 {
     abstract class Characteristics { }
@@ -98,15 +102,25 @@ namespace ConsoleRPG
         public double PercentBoostPerLevel { get; set; }
     }
 
-    class SpikeCharacteristic : Characteristics
+    class SpikeCharacteristic : Characteristics, IDamageDealerEntity
     {
         public int SpikeDamage { get; set; }
+
+        public string GetName()
+        {
+            return "Шипы";
+        }
     }
 
-    class VampirismCharacteristic : Characteristics
+    class VampirismCharacteristic : Characteristics, IHealDealerEntity
     {
         public double VampirismPercent { get; set; }
         public double VampirismPercentPerLevel { get; set; }
+
+        public string GetName()
+        {
+            return "Вампиризм";
+        }
     }
 
     class ParryCharacteristic : Characteristics
@@ -142,6 +156,22 @@ namespace ConsoleRPG
                 foreach (DamageTypes type in damageType.Keys)
                 {
                     ElemDamage.Add(type, damageType[type]);
+                }
+            }
+        }
+    }
+
+    class StatusEffectsCharacteristic : Characteristics
+    {
+        public Dictionary<BaseEffect, double> Effects = new();
+
+        public StatusEffectsCharacteristic(params Dictionary<BaseEffect, double>[] effects)
+        {
+            foreach (var damageType in effects)
+            {
+                foreach (BaseEffect effect in damageType.Keys)
+                {
+                    Effects.Add(effect, damageType[effect]);
                 }
             }
         }

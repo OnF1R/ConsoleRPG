@@ -12,7 +12,7 @@ namespace ConsoleRPG.Items.Armors.Capes
             int cost = rand.Next(75, 300);
             AddComponent(new ValueCharacteristic { Cost = cost });
             int miss = rand.Next(25, 41);
-            AddComponent(new MissCharacteristic { MissChance = miss });
+            AddComponent(new EvasionCharacteristic { EvasionChance = miss });
             RarityId = 6;
             Level = 5;
 

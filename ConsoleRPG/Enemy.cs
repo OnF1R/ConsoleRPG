@@ -10,21 +10,21 @@ namespace ConsoleRPG
 
         public bool IsBoss { get; set; } = false;
 
-        public Enemy(int playerLevel)
+        public Enemy(int level)
         {
             Energy = 0;
 
-            int maxLevel = playerLevel;
+            int maxLevel = level;
 
             if (maxLevel * 2 > 10)
             {
                 maxLevel = 10;
             }
 
-            Level = new Random().Next(playerLevel, playerLevel + maxLevel);
+            Level = new Random().Next(maxLevel, level + maxLevel);
         }
 
-        abstract public void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage);
+        abstract public void FightLogic(Player Player);
 
         public List<Item> DropLoot(params Item[] DropList)
         {
@@ -47,23 +47,6 @@ namespace ConsoleRPG
                 exp *= 4;
 
             return exp;
-        }
-
-        public void Attack(Player Player)
-        {
-            Dictionary<DamageTypes, int> damage = GetExistableTypeDamage();
-            foreach (DamageTypes type in damage.Keys)
-            {
-                if (type == DamageTypes.Physical && IsCrit())
-                {
-                    damage[type] = CalcPhysicalCritical(damage[type]);
-                    Player.TakeCriticalDamage(this, damage[type], type);
-                }
-                else
-                {
-                    Player.TakeDamage(this, damage[type], type);
-                }
-            }
         }
 
         public void DeathDropLoot(Player Player)

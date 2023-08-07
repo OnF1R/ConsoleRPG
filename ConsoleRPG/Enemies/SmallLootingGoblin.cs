@@ -3,6 +3,7 @@ using ConsoleRPG.Items.Armors.Leggs;
 using ConsoleRPG.Items.Armors.Trinkets;
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.StacableItems;
+using ConsoleRPG.Items.Weapons.BaseEnemyWeapons;
 using ConsoleRPG.Spells.DamageSpells;
 
 
@@ -19,6 +20,11 @@ namespace ConsoleRPG.Enemies
             CurrentHealth = MaxHealth;
             GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, 2 + Level);
             MyRace = new Races.Goblin();
+
+
+            Equipment.WearEquip(this, new SmallLootingGoblinBaseWeapon(Level), EquipmentSlot.LeftHand);
+
+
             Equipment.WearEquip(this, new EmelardNecklace(Level), EquipmentSlot.Trinket);
             Equipment.WearEquip(this, new CrafterGloves(Level), EquipmentSlot.Gloves);
 
@@ -41,20 +47,12 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach (DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead)
-                    TakeDamage(Player, TakedDamage[type], type);
-            }
             if (!IsDead)
             {
-                Player.AfterAttackBehaviour(this);
-
-                Attack(Player);
-
-                AfterAttackBehaviour(Player);
+                foreach (var entity in GetDamageEntities())
+                    Attack(Player, entity);
             }
             else
             {

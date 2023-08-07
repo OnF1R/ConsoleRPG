@@ -5,6 +5,7 @@ using ConsoleRPG.Items.Shields;
 using ConsoleRPG.Items.StacableItems;
 using ConsoleRPG.Items.Weapons;
 using Spectre.Console;
+using ConsoleRPG.Effects.Debuffs;
 
 namespace ConsoleRPG.Enemies
 {
@@ -48,38 +49,32 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            if (Energy >= 3)
-            {
-                AnsiConsole.MarkupLine("{0} использовал Блок щитом!", Name);
-                foreach (DamageTypes type in TakedDamage.Keys)
-                {
-                    if (!IsDead) TakeDamage(Player, TakedDamage[type] / 2, type);
-                }
-                Energy = 0;
-            }
-            else
-            {
-                foreach (DamageTypes type in TakedDamage.Keys)
-                {
-                    if (!IsDead) TakeDamage(Player, TakedDamage[type], type);
-                }
-            }
-
             if (!IsDead)
             {
-                Player.BeforeAttackBehaviour(this);
+                if (Energy >= 5)
+                {
+                    ShieldBlock();
+                    Energy = 0;
+                }
+                else
+                {
+                    foreach (var entity in GetDamageEntities())
+                        Attack(Player, entity);
 
-                Attack(Player);
-
-                AfterAttackBehaviour(Player);
-                Energy++;
+                    Energy++;
+                }
             }
             else
             {
                 DeathDropLoot(Player);
             }
+        }
+
+        private void ShieldBlock()
+        {
+            CurrentBuffs.Add(new HalfPhysicalDeffence());
         }
     }
 }

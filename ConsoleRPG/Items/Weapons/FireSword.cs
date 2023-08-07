@@ -1,9 +1,6 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ConsoleRPG.Effects;
+using ConsoleRPG.Effects.Debuffs;
 
 namespace ConsoleRPG.Items.Weapons
 {
@@ -17,10 +14,6 @@ namespace ConsoleRPG.Items.Weapons
             int Chance = rand.Next(1, 101);
 
             AddComponent(new PhysicalDamageCharacteristic { PhysicalDamage = rand.Next(Level, Level + Level) });
-            AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
-                {
-                    {DamageTypes.Fire, rand.Next(Level, Level + Level) },
-                }));
             AddComponent(new ValueCharacteristic { Cost = rand.Next(Level, Level + Level) });
 
             ID = ItemIdentifier.FireSword;
@@ -50,15 +43,20 @@ namespace ConsoleRPG.Items.Weapons
             else if (Chance <= 85)
             {
                 int resist = rand.Next(-6, 6);
-                if (resist != 0) AddComponent(new ElementalResistanceCharacteristic(new Dictionary<DamageTypes, int>()
+                if (resist != 0)
+                    AddComponent(new ElementalResistanceCharacteristic(new Dictionary<DamageTypes, int>()
                 {
                     { DamageTypes.Fire, resist },
                 }));
                 GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + 2);
                 GetComponent<ValueCharacteristic>().Cost += rand.Next(Level, Level + 2);
+                AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
+                {
+                    { new Burn(), 5 },
+                }));
                 RarityId = 1;
             }
-            else if(Chance > 85 && Chance != 100)
+            else if (Chance > 85 && Chance != 100)
             {
                 string QualityName = Quality.GetGoodQuality();
                 Name = QualityName + " " + Name;
@@ -67,11 +65,15 @@ namespace ConsoleRPG.Items.Weapons
                 {
                     { DamageTypes.Fire, resist },
                 }));
+                AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
+                {
+                    { new Burn(), 10 },
+                }));
                 RarityId = 2;
                 GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + Level / 2);
                 GetComponent<ValueCharacteristic>().Cost += rand.Next(Level, Level + Level / 2);
             }
-            else if(Chance == 100)
+            else if (Chance == 100)
             {
                 string QualityName = Quality.GetBestQuality();
                 Name = QualityName + " " + Name;
@@ -82,12 +84,16 @@ namespace ConsoleRPG.Items.Weapons
                 }));
                 GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + Level);
                 GetComponent<ValueCharacteristic>().Cost += rand.Next(Level, Level + Level);
+                AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
+                {
+                    { new Burn(), 15 },
+                }));
                 RarityId = 3;
             }
 
 
             Type = ItemType.Sword;
-            
+
             DropChance = 5f;
 
             IsStacable = false;

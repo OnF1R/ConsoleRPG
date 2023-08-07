@@ -2,6 +2,7 @@
 using ConsoleRPG.Items.Armors.Trinkets;
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.StacableItems;
+using ConsoleRPG.Items.Weapons.BaseEnemyWeapons;
 using ConsoleRPG.Spells.DamageSpells;
 
 
@@ -9,7 +10,7 @@ namespace ConsoleRPG.Enemies
 {
     internal class Mekanism : Enemy
     {
-        public Mekanism(int playerLevel) : base(playerLevel)
+        public Mekanism(int level) : base(level)
         {
             Random random = new Random();
             //Equipment equipment = new Equipment();
@@ -19,6 +20,7 @@ namespace ConsoleRPG.Enemies
             GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2 + Level, 5 + Level);
             MyRace = new Races.Elemental();
 
+            Equipment.WearEquip(this, new MekanismBaseWeapon(Level), EquipmentSlot.LeftHand);
 
             Equipment.WearEquip(this, new MechanicalLeggs(Level), EquipmentSlot.Leggs);
             Equipment.WearEquip(this, new EmelardNecklace(Level), EquipmentSlot.Trinket);
@@ -34,17 +36,11 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player, Dictionary<DamageTypes, int> TakedDamage)
+        public override void FightLogic(Player Player)
         {
-            foreach (DamageTypes type in TakedDamage.Keys)
-            {
-                if (!IsDead)
-                    TakeDamage(Player, TakedDamage[type], type);
-            }
+
             if (!IsDead)
             {
-                Player.AfterAttackBehaviour(this);
-
                 if (Energy >= 3)
                 {
                     Laser(Player);
@@ -52,12 +48,11 @@ namespace ConsoleRPG.Enemies
                 }
                 else
                 {
-                    Attack(Player);
+                    foreach (var entity in GetDamageEntities())
+                        Attack(Player, entity);
                 }
 
                 Energy++;
-
-                AfterAttackBehaviour(Player);
             }
             else
             {
@@ -67,11 +62,11 @@ namespace ConsoleRPG.Enemies
 
         public void Laser(Player Player)
         {
-            Spell Spell = new Laser();
+            BaseSpell Spell = new Laser();
             Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
             foreach (DamageTypes type in elemDamage.Keys)
             {
-                Player.TakeDamage(this, elemDamage[type] + Level + GetPhysicalDamage(), type);
+                DealDamage(Player, elemDamage[type], type, Spell);
             }
         }
     }
