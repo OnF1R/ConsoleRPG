@@ -281,7 +281,18 @@ namespace ConsoleRPG
 			{
 				ShowMessage($"{Name} ещё никого не убивал.");
 			}
+		}
 
+		public int KillCountNumber()
+		{
+			int killCount = 0;
+
+			foreach (var count in KillCount.Keys)
+			{
+				killCount += KillCount[count];
+			}
+
+			return killCount;
 		}
 
 		public void TakeExp(int Exp)

@@ -152,8 +152,7 @@ namespace ConsoleRPG
 					player.Resurrection();
 				}
 
-				if (EnemiesKills > 0 && EnemiesKills % 15 == 0)
-					player.AddQuest(new SmallKillingQuest());
+				
 
 
 				var choise = AnsiConsole.Prompt(
@@ -175,7 +174,7 @@ namespace ConsoleRPG
 							break;
 						}
 
-						if (player.KillCount.Count > 0 && player.KillCount.Count % 50 == 0)
+						if (player.KillCountNumber() > 0 && player.KillCountNumber() % 50 == 0)
 						{
 							if (CurrentBoss == null || CurrentBoss.IsDead)
 							{
@@ -227,7 +226,7 @@ namespace ConsoleRPG
 
 		private void Adventure(Player player)
 		{
-			if (player.KillCount.Count > 0 && player.KillCount.Count % 50 == 0)
+			if (player.KillCountNumber() > 0 && player.KillCountNumber() % 50 == 0)
 			{
 				player.ShowMessage("[red]Невозможно сменить локацию во время боя с боссом![/]");
 				return;

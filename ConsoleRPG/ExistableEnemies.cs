@@ -21,7 +21,10 @@ namespace ConsoleRPG
                 new Wisp(playerLevel),
                 new SpikedKnight(playerLevel),
                 new Mekanism(playerLevel),
-                new SmallLootingGoblin(playerLevel),
+                new DesertSworm(playerLevel),
+                new Gargoyle(playerLevel),
+                new CaveSpider(playerLevel),
+                new FrostMage(playerLevel),
             };
 
             Random rand = new Random();
@@ -81,6 +84,8 @@ namespace ConsoleRPG
             Enemy[] enemies = new Enemy[] {
                 new Immortal(playerLevel),
                 new AbyUdRiRisaAlha(playerLevel),
+                new DarkMage(playerLevel),
+                new Butcher(playerLevel),
             };
             Random rand = new Random();
             Enemy enemy = enemies[rand.Next(enemies.Length)];
@@ -129,10 +134,16 @@ namespace ConsoleRPG
             { EnemyIdentifierEnum.SteelKnight, new SteelKnight(1).Name },
             { EnemyIdentifierEnum.WaterDragon, new WaterDragon(1).Name },
             { EnemyIdentifierEnum.Wisp, new Wisp(1).Name },
+            { EnemyIdentifierEnum.FrostMage, new FrostMage(1).Name },
+            { EnemyIdentifierEnum.DesertSworm, new DesertSworm(1).Name },
+            { EnemyIdentifierEnum.CaveSpider, new CaveSpider(1).Name },
+            { EnemyIdentifierEnum.Gargoyle, new Gargoyle(1).Name },
 
 
             { EnemyIdentifierEnum.AbyUdRiRisaAlha, new AbyUdRiRisaAlha(1).Name },
             { EnemyIdentifierEnum.Immortal, new Immortal(1).Name },
+            { EnemyIdentifierEnum.DarkMage, new DarkMage(1).Name },
+            { EnemyIdentifierEnum.Butcher, new Butcher(1).Name },
         };
     }
 }

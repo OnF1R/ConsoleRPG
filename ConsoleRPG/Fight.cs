@@ -1,5 +1,6 @@
 ﻿using ConsoleRPG.Enums;
 using ConsoleRPG.Locations;
+using ConsoleRPG.Quests;
 using Spectre.Console;
 
 namespace ConsoleRPG
@@ -117,9 +118,10 @@ namespace ConsoleRPG
 			{
 				Player.KillCountUpdate(Enemy.ID);
 				Player.KillingQuestUpdate(Enemy.ID);
+
+				if (Player.KillCountNumber() > 0 && Player.KillCountNumber() % 15 == 0)
+					Player.AddQuest(new SmallKillingQuest());
 			}
-
-
 		}
 	}
 }
