@@ -8,10 +8,17 @@ namespace ConsoleRPG.Spells.DamageSpells
         public Smash(Unit unit)
         {
             Name = "[bold]Размозжение[/]";
-            AddComponent(new PhysicalDamageCharacteristic 
+			ID = Enums.SpellIdentifierEnum.Smash;
+			AddComponent(new PhysicalDamageCharacteristic 
             { 
                 PhysicalDamage = (unit.GetPhysicalDamage() + unit.GetArmor()) * 2
             });
         }
-    }
+
+		public override void Use(Unit caster, Unit target)
+		{
+			int damage = GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
+            caster.DealDamage(target, damage, DamageTypes.Physical, this);
+		}
+	}
 }

@@ -5,7 +5,7 @@ namespace ConsoleRPG
 {
     internal static class Craft
     {
-        private static void CraftItem(Player player, BaseRecipe recipe)
+        private static void CraftItem(Player player, BaseItemRecipe recipe, int chance)
         {
             if (HaveItems(player, recipe))
             {
@@ -14,11 +14,18 @@ namespace ConsoleRPG
                     player.Inventory.RemoveItem(player.Inventory.SearchStacableItemByItemId(_item.Key), _item.Value);
                 }
 
-                recipe.GenerateItem(player);
-                Item item = recipe.CraftItem;
-                AnsiConsole.MarkupLine($"Вы успешно создали {item.Name}: {item.ItemInfoString(item)}");
-                player.Inventory.AddItem(item);
-            }
+                if (chance >= new Random().Next(1,101))
+                {
+					recipe.GenerateItem(player);
+					Item item = recipe.CraftItem;
+					AnsiConsole.MarkupLine($"Вы успешно создали {item.Name}: {item.ItemInfoString(item)}");
+					player.Inventory.AddItem(item);
+				}
+                else
+                {
+					AnsiConsole.MarkupLine("[red]Неудача[/], попробуйте ещё раз :(");
+				}
+			}
             else
             {
                 AnsiConsole.MarkupLine("[red]Не достаточно предметов для создания![/]");
@@ -42,10 +49,10 @@ namespace ConsoleRPG
 
         public static void StartCraftItem(Player player)
         {
-            List<BaseRecipe> recipes = player.Inventory.ListRecipes;
-            Dictionary<BaseRecipe, string> keyValuePairs = new Dictionary<BaseRecipe, string>();
+            List<BaseItemRecipe> recipes = player.Inventory.ListRecipes;
+            Dictionary<BaseItemRecipe, string> keyValuePairs = new Dictionary<BaseItemRecipe, string>();
 
-            foreach (BaseRecipe recipe in recipes)
+            foreach (BaseItemRecipe recipe in recipes)
             {
                 keyValuePairs.Add(recipe, recipe.Name + " (Уровень: " + recipe.CurrentLevel + ")");
             }
@@ -54,7 +61,7 @@ namespace ConsoleRPG
             {
                 var chosedEnchant = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
-                        .Title("[bold]Выберите зачарование[/]")
+                        .Title("[bold]Выберите рецепт[/]")
                         .PageSize(10)
                         .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
                         .AddChoices(keyValuePairs.Values));
@@ -62,7 +69,7 @@ namespace ConsoleRPG
 
                 try
                 {
-                    BaseRecipe recipe = keyValuePairs.FirstOrDefault(x => x.Value == chosedEnchant).Key;
+                    BaseItemRecipe recipe = keyValuePairs.FirstOrDefault(x => x.Value == chosedEnchant).Key;
                     ConfirmUseCraft(player, recipe);
                 }
                 catch
@@ -78,22 +85,25 @@ namespace ConsoleRPG
             }
         }
 
-        private static void ConfirmUseCraft(Player player, BaseRecipe recipe)
+        private static void ConfirmUseCraft(Player player, BaseItemRecipe recipe)
         {
             AnsiConsole.MarkupLine($"Для использования {recipe.Name} необходимы следующие предметы: ");
             AnsiConsole.MarkupLine(recipe.CraftNeededItems());
 
             if (HaveItems(player, recipe))
             {
-                var confirm = AnsiConsole.Prompt(
+                int finalChance = (int)(recipe.CraftChance + player.GetLuck());
+
+
+				var confirm = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
-                        .Title($"[bold]Вы точно хотите использовать {recipe.Name} с шансом {recipe.CraftChance}% + {player.GetLuck()}% от удачи? ({recipe.CraftChance + player.GetLuck()})[/]")
+                        .Title($"[bold]Вы точно хотите использовать {recipe.Name} с шансом {recipe.CraftChance}% + {player.GetLuck()}% от удачи? ({finalChance})[/]")
                         .AddChoices("Да", "Нет"));
 
                 switch (confirm)
                 {
                     case "Да":
-                        CraftItem(player, recipe);
+                        CraftItem(player, recipe, finalChance);
                         break;
                     default:
                         break;
@@ -105,7 +115,7 @@ namespace ConsoleRPG
             }
         }
 
-        private static bool HaveItems(Player player, BaseRecipe recipe)
+        private static bool HaveItems(Player player, BaseItemRecipe recipe)
         {
             int hit = 0;
             int needHits = recipe.NeededItems.Count;

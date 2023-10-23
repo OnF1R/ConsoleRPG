@@ -1,4 +1,6 @@
-﻿namespace ConsoleRPG.Items.Weapons.BaseEnemyWeapons
+﻿using ConsoleRPG.Enums;
+
+namespace ConsoleRPG.Items.Weapons.BaseEnemyWeapons
 {
     internal class SmallLootingGoblinBaseWeapon : Weapon
     {

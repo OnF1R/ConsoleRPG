@@ -6,6 +6,7 @@ using ConsoleRPG.Spells.DamageSpells;
 using ConsoleRPG.Interfaces;
 using ConsoleRPG.Items.Weapons.BaseEnemyWeapons;
 using ConsoleRPG.Items;
+using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Enemies.Bosses
 {
@@ -20,6 +21,7 @@ namespace ConsoleRPG.Enemies.Bosses
             Name = "[red]БОСС[/] [bold]Абу Уд'ри Риса Аль-ха[/]";
             MaxHealth = random.Next(20, 45) * Level;
             CurrentHealth = MaxHealth;
+            ID = EnemyIdentifierEnum.AbyUdRiRisaAlha;
             GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2 + Level, Level + 6);
 
             //Экипировка
@@ -87,11 +89,7 @@ namespace ConsoleRPG.Enemies.Bosses
         public void ArdaBintBaaniAlTaa(Player Player)
         {
             BaseSpell Spell = new ArdaBintBaaniAlTaa();
-            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
-            foreach (DamageTypes type in elemDamage.Keys)
-            {
-                DealDamage(Player, elemDamage[type], type, Spell);
-            }
+            Spell.Use(this, Player);
         }
     }
 }

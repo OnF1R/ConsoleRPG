@@ -1,4 +1,5 @@
-﻿
+﻿using ConsoleRPG.Enums;
+
 namespace ConsoleRPG
 {
     public static class EquipmentSlots
@@ -17,20 +18,5 @@ namespace ConsoleRPG
             { EquipmentSlot.Cape, "Плащ" },
             { EquipmentSlot.Trinket, "Аксессуар" },
         };
-    }
-
-    public enum EquipmentSlot
-    {
-        LeftHand,
-        RightHand,
-        Helmet,
-        Chest,
-        Gloves,
-        Leggs,
-        Boots,
-        FirstRing,
-        SecondRing,
-        Cape,
-        Trinket,
     }
 }

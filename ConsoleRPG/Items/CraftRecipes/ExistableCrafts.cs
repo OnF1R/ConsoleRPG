@@ -3,9 +3,10 @@ namespace ConsoleRPG.Items.CraftRecipes
 {
     internal static class ExistableCrafts
     {
-        public static List<BaseRecipe> recipes = new List<BaseRecipe>()
+        public static List<BaseItemRecipe> recipes = new List<BaseItemRecipe>()
         {
             new DragonClawBootsRecipe(),
+            new SwormTeethNecklaceRecipe(),
         };
     }
 }

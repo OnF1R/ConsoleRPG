@@ -1,4 +1,4 @@
-﻿namespace ConsoleRPG.Effects.Debuffs
+﻿namespace ConsoleRPG.Effects.Buffs
 {
     internal class Rage : BaseEffect
     {
@@ -32,7 +32,7 @@
 
             CurrentDuration--;
 
-            unit.ShowMessage(EffectDurationMessage());
+            unit.ShowMessage(EffectDurationMessage(unit.Name));
 
             if (CurrentDuration <= 0)
                 EndEffect(unit);
@@ -63,5 +63,10 @@
             }
             return message;
         }
-    }
+
+		public override BaseEffect Clone()
+		{
+			return new Rage();
+		}
+	}
 }

@@ -1,7 +1,9 @@
-﻿namespace ConsoleRPG.Effects.Debuffs
+﻿using ConsoleRPG.Interfaces;
+
+namespace ConsoleRPG.Effects.Debuffs
 {
-    internal class Burn : BaseEffect
-    {
+    internal class Burn : BaseEffect, IDamageDealerEntity
+	{
         private int BaseDamage;
         private int FireResistanceDebuff;
         private int WaterResistanceBuff;
@@ -52,7 +54,7 @@
 
             unit.DealDamage(unit, BaseDamage, DamageTypes.Fire, this);
 
-            unit.ShowMessage(EffectDurationMessage());
+            unit.ShowMessage(EffectDurationMessage(unit.Name));
 
             if (CurrentDuration <= 0)
                 EndEffect(unit);
@@ -70,5 +72,10 @@
                 $"также уменьнает сопротивление ({Names[DamageTypes.Fire]}) на {FireResistanceDebuff}% и увеличивает сопротивление ({Names[DamageTypes.Water]}) на {WaterResistanceBuff}%";
             return message;
         }
-    }
+
+		public override BaseEffect Clone()
+		{
+			return new Burn();
+		}
+	}
 }

@@ -1,10 +1,10 @@
-﻿namespace ConsoleRPG.Effects.Debuffs
+﻿namespace ConsoleRPG.Effects.Buffs
 {
-    internal class HalfPhysicalDeffence : BaseEffect
+    internal class SmallPhysicalDefence : BaseEffect
     {
         private int ArmorBuff;
 
-        public HalfPhysicalDeffence(int duration = 2)
+        public SmallPhysicalDefence(int duration = 2)
         {
             Name = "[bold]Частичная блокировка[/]";
             Duration = duration;
@@ -28,7 +28,7 @@
 
             CurrentDuration--;
 
-            unit.ShowMessage(EffectDurationMessage());
+            unit.ShowMessage(EffectDurationMessage(unit.Name));
 
             if (CurrentDuration <= 0)
                 EndEffect(unit);
@@ -58,5 +58,10 @@
             }
             return message;
         }
-    }
+
+		public override BaseEffect Clone()
+		{
+			return new SmallPhysicalDefence();
+		}
+	}
 }

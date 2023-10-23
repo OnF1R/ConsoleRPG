@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items.Armors.Rings;
+﻿using ConsoleRPG.Enums;
+using ConsoleRPG.Items.Armors.Rings;
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.StacableItems;
 using ConsoleRPG.Spells.DamageSpells;
@@ -14,7 +15,8 @@ namespace ConsoleRPG.Enemies
             Name = "[orangered1]Взрывной жук[/]";
             MaxHealth = random.Next(4, 11) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, 4 + Level);
+			ID = EnemyIdentifierEnum.ExplosiveBug;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, 4 + Level);
 
             //Экипировка
             Equipment.WearEquip(this, new ProtectionRing(Level), EquipmentSlot.FirstRing);
@@ -52,21 +54,13 @@ namespace ConsoleRPG.Enemies
         public void Spit(Player Player)
         {
             BaseSpell Spell = new PoisonSpit();
-            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
-            foreach (DamageTypes type in elemDamage.Keys)
-            {
-                DealDamage(Player, elemDamage[type], type, Spell);
-            }
-        }
+			Spell.Use(this, Player);
+		}
 
         public void NecroticExplosion(Player Player)
         {
             BaseSpell Spell = new NecroticExplosion();
-            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
-            foreach (DamageTypes type in elemDamage.Keys)
-            {
-                DealDamage(Player, elemDamage[type], type, Spell);
-            }
-        }
+			Spell.Use(this, Player);
+		}
     }
 }

@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items.Armors.Helmets;
+﻿using ConsoleRPG.Enums;
+using ConsoleRPG.Items.Armors.Helmets;
 using ConsoleRPG.Items.Armors.Rings;
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.StacableItems;
@@ -18,7 +19,8 @@ namespace ConsoleRPG.Enemies
             Name = "[bold]Элементаль[/]";
             MaxHealth = random.Next(7, 11) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2 + Level, 5 + Level);
+			ID = EnemyIdentifierEnum.Elemental;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2 + Level, 5 + Level);
             MyRace = new Races.Elemental();
             Equipment.WearEquip(this, new EnchantedHat(Level), EquipmentSlot.Helmet);
             Equipment.WearEquip(this, new ElementalRing(Level), EquipmentSlot.FirstRing);
@@ -56,11 +58,7 @@ namespace ConsoleRPG.Enemies
         public void ElementalSplash(Player Player)
         {
             BaseSpell Spell = new ElementalSplash();
-            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
-            foreach (DamageTypes type in elemDamage.Keys)
-            {
-                DealDamage(Player, elemDamage[type], type, Spell);
-            }
+            Spell.Use(this, Player);
         }
     }
 }

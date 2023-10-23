@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items;
+﻿using ConsoleRPG.Enums;
+using ConsoleRPG.Items;
 using Spectre.Console;
 
 
@@ -96,7 +97,8 @@ namespace ConsoleRPG
 
                 foreach (DamageTypes type in elementalDamage.Keys)
                 {
-                    unit.GetComponent<ElementalDamageCharacteristic>().ElemDamage[type] += elementalDamage.FirstOrDefault(x => x.Key == type).Value;
+                    if (elementalDamage.FirstOrDefault(x => x.Key == type).Value != 0)
+                        unit.GetComponent<ElementalDamageCharacteristic>().ElemDamage[type] += elementalDamage.FirstOrDefault(x => x.Key == type).Value;
                 }
             }
 
@@ -106,9 +108,11 @@ namespace ConsoleRPG
 
                 foreach (DamageTypes type in elementalResistance.Keys)
                 {
-
-                    unit.GetComponent<ElementalResistanceCharacteristic>().ElemResistance[type]
-                        += elementalResistance.FirstOrDefault(x => x.Key == type).Value;
+                    if (elementalResistance.FirstOrDefault(x => x.Key == type).Value != 0)
+                    {
+						unit.GetComponent<ElementalResistanceCharacteristic>().ElemResistance[type]
+						+= elementalResistance.FirstOrDefault(x => x.Key == type).Value;
+					}
                 }
             }
 
@@ -166,7 +170,15 @@ namespace ConsoleRPG
             {
                 unit.GetComponent<ParryCharacteristic>().ParryPercent += item.GetComponent<ParryCharacteristic>().ParryPercent;
             }
-        }
+
+			if (item.GetComponent<StatusEffectsImmunityCharacteristic>() != null)
+			{
+				foreach (var effect in item.GetComponent<StatusEffectsImmunityCharacteristic>().ImmunityEffects)
+				{
+					unit.AddImmunity(effect);
+				}
+			}
+		}
 
         public void UpdateStatsWhenTakeOff(Unit unit, Item item)
         {
@@ -192,15 +204,9 @@ namespace ConsoleRPG
 
                 foreach (DamageTypes type in elementalDamage.Keys)
                 {
-                    if (elementalDamage.FirstOrDefault(x => x.Key == type).Value >= 0)
-                    {
-                        unit.GetComponent<ElementalDamageCharacteristic>().ElemDamage[type] -= elementalDamage.FirstOrDefault(x => x.Key == type).Value;
-                    }
-                    else
-                    {
-                        unit.GetComponent<ElementalDamageCharacteristic>().ElemDamage[type] += elementalDamage.FirstOrDefault(x => x.Key == type).Value;
-                    }
-                }
+					if (elementalDamage.FirstOrDefault(x => x.Key == type).Value != 0)
+						unit.GetComponent<ElementalDamageCharacteristic>().ElemDamage[type] -= elementalDamage.FirstOrDefault(x => x.Key == type).Value;
+				}
             }
 
             if (item.GetComponent<ElementalResistanceCharacteristic>() != null)
@@ -209,17 +215,9 @@ namespace ConsoleRPG
 
                 foreach (DamageTypes type in elementalResistance.Keys)
                 {
-                    if (elementalResistance.FirstOrDefault(x => x.Key == type).Value >= 0)
-                    {
-                        unit.GetComponent<ElementalResistanceCharacteristic>().ElemResistance[type]
-                            -= elementalResistance.FirstOrDefault(x => x.Key == type).Value;
-                    }
-                    else
-                    {
-                        unit.GetComponent<ElementalResistanceCharacteristic>().ElemResistance[type]
-                            += elementalResistance.FirstOrDefault(x => x.Key == type).Value;
-                    }
-                }
+					if (elementalResistance.FirstOrDefault(x => x.Key == type).Value != 0)
+						unit.GetComponent<ElementalDamageCharacteristic>().ElemDamage[type] -= elementalResistance.FirstOrDefault(x => x.Key == type).Value;
+				}
             }
 
             if (item.GetComponent<MissCharacteristic>() != null)
@@ -304,7 +302,15 @@ namespace ConsoleRPG
             {
                 unit.GetComponent<ParryCharacteristic>().ParryPercent -= item.GetComponent<ParryCharacteristic>().ParryPercent;
             }
-        }
+
+			if (item.GetComponent<StatusEffectsImmunityCharacteristic>() != null)
+			{
+                foreach (var effect in item.GetComponent<StatusEffectsImmunityCharacteristic>().ImmunityEffects)
+                {
+                    unit.RemoveImmunity(effect);
+                }
+			}
+		}
 
         public void TakeOffAllEquip(Unit unit)
         {
@@ -380,8 +386,9 @@ namespace ConsoleRPG
                             break;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    AnsiConsole.MarkupLine(ex.Message);
                     AnsiConsole.MarkupLine("Введите [red]число!!![/]");
                 }
 

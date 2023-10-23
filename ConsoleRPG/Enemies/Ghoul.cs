@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items.Armors.Helmets;
+﻿using ConsoleRPG.Enums;
+using ConsoleRPG.Items.Armors.Helmets;
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.StacableItems;
 using ConsoleRPG.Items.Weapons;
@@ -22,7 +23,8 @@ namespace ConsoleRPG.Enemies
             Name = "Вурдалак";
             MaxHealth = random.Next(7, 11) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(3 + Level, 7 + Level);
+			ID = EnemyIdentifierEnum.Ghoul;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(3 + Level, 7 + Level);
 
             //Экипировка
             Equipment.WearEquip(this, new BloodLetter(Level), EquipmentSlot.LeftHand);

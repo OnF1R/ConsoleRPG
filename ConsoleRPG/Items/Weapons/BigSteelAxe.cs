@@ -1,4 +1,6 @@
 ﻿
+using ConsoleRPG.Enums;
+
 namespace ConsoleRPG.Items.Weapons
 {
     internal class BigSteelAxe : Weapon

@@ -3,6 +3,7 @@ using Spectre.Console;
 using ConsoleRPG.Items.Armors.Capes;
 using ConsoleRPG.Items.StacableItems;
 using ConsoleRPG.Spells.DamageSpells;
+using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Enemies
 {
@@ -15,7 +16,8 @@ namespace ConsoleRPG.Enemies
             Name = "[dodgerblue1]Водный[/] дракон";
             MaxHealth = random.Next(8, 18) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2 + Level, Level + 6);
+			ID = EnemyIdentifierEnum.WaterDragon;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2 + Level, Level + 6);
             var elemResistance = GetComponent<ElementalResistanceCharacteristic>().ElemResistance;
             elemResistance[elemResistance.First(x => x.Key == DamageTypes.Water).Key] += 25;
 
@@ -57,11 +59,7 @@ namespace ConsoleRPG.Enemies
         public void WaterBall(Player Player)
         {
             BaseSpell Spell = new WaterBall();
-            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
-            foreach (DamageTypes type in elemDamage.Keys)
-            {
-                DealDamage(Player, elemDamage[type], type, Spell);
-            }
-        }
+			Spell.Use(this, Player);
+		}
     }
 }

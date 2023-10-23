@@ -1,4 +1,6 @@
-﻿namespace ConsoleRPG.Items.Armors.Leggs
+﻿using ConsoleRPG.Enums;
+
+namespace ConsoleRPG.Items.Armors.Leggs
 {
     internal class MechanicalLeggs : Armor
     {

@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using ConsoleRPG.Enums;
+using Spectre.Console;
 
 namespace ConsoleRPG
 {
@@ -7,6 +8,8 @@ namespace ConsoleRPG
         public Item[] DropList { get; set; }
 
         public int Energy { get; set; }
+
+        public EnemyIdentifierEnum ID { get; set; }
 
         public bool IsBoss { get; set; } = false;
 
@@ -56,16 +59,6 @@ namespace ConsoleRPG
             {
                 foreach (Item DroppedItem in DroppedLoot)
                 {
-                    if (DroppedItem.IsStacable)
-                    {
-                        AnsiConsole.MarkupLine("Вы получили {0} ([{1}]{2})[/] x{3}", DroppedItem.Name, DroppedItem.RarityColor, DroppedItem.Rarity, DroppedItem.Count);
-                    }
-                    else
-                    {
-                        AnsiConsole.Markup("Вы получили {0} ([{1}]{2}[/]): ", DroppedItem.Name, DroppedItem.RarityColor, DroppedItem.Rarity);
-                        DroppedItem.ItemInfo(DroppedItem);
-                    }
-
                     Player.Inventory.AddItem(DroppedItem);
                 }
             }

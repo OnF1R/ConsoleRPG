@@ -14,7 +14,7 @@ namespace ConsoleRPG
 
         private Dictionary<BaseEnchant, int> sellingsEnchants = new Dictionary<BaseEnchant, int>();
 
-        private Dictionary<BaseRecipe, int> sellingsRecipes = new Dictionary<BaseRecipe, int>();
+        private Dictionary<BaseItemRecipe, int> sellingsRecipes = new Dictionary<BaseItemRecipe, int>();
 
         private Timer _timer = null;
 
@@ -33,7 +33,7 @@ namespace ConsoleRPG
                 sellingsEnchants.Add(recipe, 100);
             }
 
-            foreach (BaseRecipe recipe in ExistableCrafts.recipes)
+            foreach (BaseItemRecipe recipe in ExistableCrafts.recipes)
             {
                 sellingsRecipes.Add(recipe, 100);
             }
@@ -223,7 +223,7 @@ namespace ConsoleRPG
             }
         }
 
-        public bool ConfirmBuy(BaseRecipe recipe)
+        public bool ConfirmBuy(BaseItemRecipe recipe)
         {
             AnsiConsole.MarkupLine("Вы точно хотите приобрести {0}?", recipe.Name);
             var confirm = AnsiConsole.Prompt(
@@ -293,8 +293,8 @@ namespace ConsoleRPG
                      where recipe.Value > 0
                      select recipe.Key.Name + " (" + recipe.Key.Cost * Math.Clamp(Math.Abs(101 - recipe.Value), 1, int.MaxValue) + " [gold1]золота[/])");
 
-                Dictionary<BaseRecipe, string> keyValuePairs = new Dictionary<BaseRecipe, string>();
-                List<BaseRecipe> keys = new List<BaseRecipe>();
+                Dictionary<BaseItemRecipe, string> keyValuePairs = new Dictionary<BaseItemRecipe, string>();
+                List<BaseItemRecipe> keys = new List<BaseItemRecipe>();
                 List<string> namesList = names.ToList();
                 foreach (var recipe in sellingsRecipes.Keys)
                 {
@@ -354,9 +354,9 @@ namespace ConsoleRPG
             }
         }
 
-        public void BuyRecipe(Player player, BaseRecipe recipe)
+        public void BuyRecipe(Player player, BaseItemRecipe recipe)
         {
-            BaseRecipe sellingRecipe = sellingsRecipes.FirstOrDefault(x => x.Key == recipe).Key;
+            BaseItemRecipe sellingRecipe = sellingsRecipes.FirstOrDefault(x => x.Key == recipe).Key;
             int _count = sellingsRecipes[sellingRecipe];
             int _cost = recipe.Cost * Math.Abs(101 - _count);
             if (player.Inventory.IsEnoughCurrency(_cost))

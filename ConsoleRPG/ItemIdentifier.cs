@@ -1,4 +1,5 @@
 ﻿using ConsoleRPG.Items.StacableItems;
+using ConsoleRPG.Enums;
 
 namespace ConsoleRPG
 {
@@ -16,102 +17,10 @@ namespace ConsoleRPG
             { ItemIdentifier.AdamantiteOre, new AdamantiteOre().Name },
             { ItemIdentifier.OceanRune, new OceanRune().Name },
             { ItemIdentifier.DragonClaw, new DragonClaw().Name },
+            { ItemIdentifier.DarkShard, new DarkShard().Name },
+            { ItemIdentifier.DarkStone, new DarkStone().Name },
+            { ItemIdentifier.SpiderPoison, new SpiderPoison().Name },
+            { ItemIdentifier.SpiderEye, new SpiderEye().Name },
         };
-    }
-
-    public enum ItemIdentifier
-    {
-        #region Helmets
-        EnchantedHat,
-        SteelHelmet,
-
-
-        FireKeeperCrown,
-        #endregion
-
-        #region Capes
-        WetCape,
-
-        RaAyatAlQaiwai,
-        #endregion
-
-        #region Chestplates
-
-
-        Immortal,
-        #endregion
-
-        #region Gloves
-        CrafterGloves,
-
-        Toxicity,
-        #endregion
-
-        #region Leggs
-
-
-
-        MechanicalLeggs,
-        #endregion
-
-        #region Boots
-        SpikedSandals,
-        DragonClawBoots,
-        #endregion
-
-        #region Rings
-        ElementalRing,
-        ProtectionRing,
-        VampirismRing,
-        #endregion
-
-        #region Trinkets
-        EmeraldNecklace,
-        ArcaneNecklace,
-        RubyNecklace,
-        #endregion
-
-        #region StacableItems
-        BloodStone,
-        RainbowShard,
-        RainbowStone,
-        Cog,  //Шестерёнка
-        IronIngot,
-        IronOre,
-        AdamantiteIngot,
-        AdamantiteOre,
-
-
-        OceanRune,
-        DragonClaw,
-        #endregion
-
-        #region Shields
-        SteelShield,
-        RunicShield,
-        SpikedShield,
-        #endregion
-
-        #region Weapons
-        BloodLetter,
-        FireSword,
-        SteelAxe,
-        SteelDagger,
-        SteelSword,
-
-
-
-        MiaymotoMusasi,
-        #endregion
-
-        #region Currencies
-        Gold,
-        #endregion
-
-        #region Spells
-
-
-        Gigantism,
-        #endregion
     }
 }

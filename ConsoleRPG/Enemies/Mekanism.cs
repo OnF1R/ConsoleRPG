@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items.Armors.Leggs;
+﻿using ConsoleRPG.Enums;
+using ConsoleRPG.Items.Armors.Leggs;
 using ConsoleRPG.Items.Armors.Trinkets;
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.StacableItems;
@@ -17,7 +18,8 @@ namespace ConsoleRPG.Enemies
             Name = "[bold]Меканизм[/]";
             MaxHealth = random.Next(7, 11) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2 + Level, 5 + Level);
+			ID = EnemyIdentifierEnum.Mekanism;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(2 + Level, 5 + Level);
             MyRace = new Races.Elemental();
 
             Equipment.WearEquip(this, new MekanismBaseWeapon(Level), EquipmentSlot.LeftHand);
@@ -63,11 +65,7 @@ namespace ConsoleRPG.Enemies
         public void Laser(Player Player)
         {
             BaseSpell Spell = new Laser();
-            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
-            foreach (DamageTypes type in elemDamage.Keys)
-            {
-                DealDamage(Player, elemDamage[type], type, Spell);
-            }
-        }
+			Spell.Use(this, Player);
+		}
     }
 }

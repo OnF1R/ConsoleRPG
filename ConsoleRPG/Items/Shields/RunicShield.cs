@@ -1,4 +1,6 @@
 ﻿
+using ConsoleRPG.Enums;
+
 namespace ConsoleRPG.Items.Shields
 {
     internal class RunicShield : Shield

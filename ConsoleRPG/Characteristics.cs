@@ -135,14 +135,19 @@ namespace ConsoleRPG
 
         public ElementalResistanceCharacteristic(params Dictionary<DamageTypes, int>[] damageTypes)
         {
-            foreach (var damageType in damageTypes)
-            {
-                foreach (DamageTypes type in damageType.Keys)
-                {
-                    ElemResistance.Add(type, damageType[type]);
-                }
-            }
-        }
+			foreach (DamageTypes type in new DamageTypesNames().ArrayBasicElementalDamageTypes)
+			{
+				ElemResistance.Add(type, 0);
+			}
+
+			foreach (var damageType in damageTypes)
+			{
+				foreach (DamageTypes type in damageType.Keys)
+				{
+                    ElemResistance[type] = damageType[type];
+				}
+			}
+		}
     }
 
     class ElementalDamageCharacteristic : Characteristics
@@ -151,11 +156,16 @@ namespace ConsoleRPG
 
         public ElementalDamageCharacteristic(params Dictionary<DamageTypes, int>[] damageTypes)
         {
-            foreach (var damageType in damageTypes)
+			foreach (DamageTypes type in new DamageTypesNames().ArrayBasicElementalDamageTypes)
+			{
+				ElemDamage.Add(type, 0);
+			}
+
+			foreach (var damageType in damageTypes)
             {
                 foreach (DamageTypes type in damageType.Keys)
                 {
-                    ElemDamage.Add(type, damageType[type]);
+                    ElemDamage[type] =  damageType[type];
                 }
             }
         }
@@ -174,6 +184,17 @@ namespace ConsoleRPG
                     Effects.Add(effect, damageType[effect]);
                 }
             }
+        }
+    }
+
+    class StatusEffectsImmunityCharacteristic : Characteristics
+    {
+        public List<BaseEffect> ImmunityEffects = new List<BaseEffect>();
+
+        public StatusEffectsImmunityCharacteristic(params BaseEffect[] effects) 
+        {
+            foreach (var effect in effects)
+                ImmunityEffects.Add(effect);
         }
     }
 }

@@ -10,7 +10,8 @@ namespace ConsoleRPG.Spells.DamageSpells
     {
         public ElementalSplash()
         {
-            DamageTypesNames damageTypesNames = new DamageTypesNames();
+			ID = Enums.SpellIdentifierEnum.ElementalSplash;
+			DamageTypesNames damageTypesNames = new DamageTypesNames();
             DamageTypes damageType = damageTypesNames.GetRandomElementalDamageType();
             string damageTypeColor = damageTypesNames.Color[damageType];
             AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
@@ -20,5 +21,15 @@ namespace ConsoleRPG.Spells.DamageSpells
             Name = $"[{damageTypeColor}]Элементальный[/] брызг";
             
         }
-    }
+
+		public override void Use(Unit caster, Unit target)
+		{
+			Dictionary<DamageTypes, int> elemDamage = GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+			foreach (DamageTypes type in elemDamage.Keys)
+			{
+				if (elemDamage[type] != 0)
+					caster.DealDamage(target, elemDamage[type], type, this);
+			}
+		}
+	}
 }

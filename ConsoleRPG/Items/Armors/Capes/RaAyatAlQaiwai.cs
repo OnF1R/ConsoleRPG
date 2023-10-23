@@ -1,4 +1,6 @@
 ﻿
+using ConsoleRPG.Enums;
+
 namespace ConsoleRPG.Items.Armors.Capes
 {
     internal class RaAyatAlQaiwai : Armor

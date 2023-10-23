@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items.StacableItems;
+﻿using ConsoleRPG.Enums;
+using ConsoleRPG.Items.StacableItems;
 
 namespace ConsoleRPG.Enemies
 {
@@ -12,7 +13,8 @@ namespace ConsoleRPG.Enemies
             MaxHealth = random.Next(30, 46) * Level;
             GetComponent<ArmorCharacteristic>().Armor += 50;
             CurrentHealth = MaxHealth;
-            MyRace = new Races.Elemental();
+			ID = EnemyIdentifierEnum.SmallOreStone;
+			MyRace = new Races.Elemental();
 
             DropList = new Item[]
             {

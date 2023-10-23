@@ -1,4 +1,6 @@
 ﻿
+using ConsoleRPG.Enums;
+
 namespace ConsoleRPG.Items.Armors.Trinkets
 {
     internal class ArcaneNecklace : Item
@@ -36,14 +38,8 @@ namespace ConsoleRPG.Items.Armors.Trinkets
                 int intelligence = rand.Next(3, 9);
                 int resist = rand.Next(4, 12);
                 AddComponent(new IntelligenceCharacteristic { Intelligence = intelligence });
-                AddComponent(new ElementalResistanceCharacteristic
-                {
-                    ElemResistance = new Dictionary<DamageTypes, int>()
-                    {
-                        { DamageTypes.Arcane, resist},
-                    }
-                });
-                RarityId = 2;
+				AddNeededElementalResistance(this, DamageTypes.Arcane, resist, resist);
+				RarityId = 2;
                 Level = 2;
             }
             else if (Chance == 100)
@@ -54,14 +50,8 @@ namespace ConsoleRPG.Items.Armors.Trinkets
                 int intelligence = rand.Next(5, 16);
                 int resist = rand.Next(8, 21);
                 AddComponent(new IntelligenceCharacteristic { Intelligence = intelligence });
-                AddComponent(new ElementalResistanceCharacteristic
-                {
-                    ElemResistance = new Dictionary<DamageTypes, int>()
-                    {
-                        { DamageTypes.Arcane, resist},
-                    }
-                });
-                RarityId = 3;
+				AddNeededElementalResistance(this, DamageTypes.Arcane, resist, resist);
+				RarityId = 3;
                 Level = 2;
             }
 

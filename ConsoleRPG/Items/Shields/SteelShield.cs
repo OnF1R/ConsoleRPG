@@ -1,4 +1,6 @@
-﻿namespace ConsoleRPG.Items.Shields
+﻿using ConsoleRPG.Enums;
+
+namespace ConsoleRPG.Items.Shields
 {
     internal class SteelShield : Shield
     {

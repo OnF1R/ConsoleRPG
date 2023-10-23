@@ -6,6 +6,8 @@ using ConsoleRPG.Items.StacableItems;
 using ConsoleRPG.Items.Weapons;
 using Spectre.Console;
 using ConsoleRPG.Effects.Debuffs;
+using ConsoleRPG.Enums;
+using ConsoleRPG.Spells.DefenceSpells;
 
 namespace ConsoleRPG.Enemies
 {
@@ -18,7 +20,8 @@ namespace ConsoleRPG.Enemies
             Name = "[grey]Стальной[/] рыцарь";
             MaxHealth = random.Next(4, 11) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, Level + 3);
+			ID = EnemyIdentifierEnum.SteelKnight;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, Level + 3);
 
             //Экипировка
 
@@ -74,7 +77,8 @@ namespace ConsoleRPG.Enemies
 
         private void ShieldBlock()
         {
-            CurrentBuffs.Add(new HalfPhysicalDeffence());
+            BaseSpell Spell = new SmallPhysicalDefence();
+            Spell.Use(this, this);
         }
     }
 }

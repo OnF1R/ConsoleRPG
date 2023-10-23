@@ -1,11 +1,12 @@
 ﻿
+using ConsoleRPG.Enums;
 using ConsoleRPG.Items.Armors.Boots;
 using ConsoleRPG.Items.Enchants;
 using Spectre.Console;
 
 namespace ConsoleRPG.Items.CraftRecipes
 {
-    internal class DragonClawBootsRecipe : BaseRecipe
+    internal class DragonClawBootsRecipe : BaseItemRecipe
     {
         public DragonClawBootsRecipe()
         {

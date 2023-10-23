@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using ConsoleRPG.Enums;
+using Spectre.Console;
 
 namespace ConsoleRPG.Items.Enchants
 {
@@ -79,7 +80,7 @@ namespace ConsoleRPG.Items.Enchants
             }
             else
             {
-                AnsiConsole.MarkupLine($"[red]Неудача[/], попробуйте ещё раз :(");
+                AnsiConsole.MarkupLine("[red]Неудача[/], попробуйте ещё раз :(");
             }
         }
     }

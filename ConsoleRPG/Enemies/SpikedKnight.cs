@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items.Armors.Boots;
+﻿using ConsoleRPG.Enums;
+using ConsoleRPG.Items.Armors.Boots;
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.Shields;
 using ConsoleRPG.Items.Weapons;
@@ -15,7 +16,8 @@ namespace ConsoleRPG.Enemies
             Name = "[grey]Шипастый рыцарь[/]";
             MaxHealth = random.Next(4, 11) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, 4 + Level);
+			ID = EnemyIdentifierEnum.SpikedKnight;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, 4 + Level);
 
             //Экипировка
             Equipment.WearEquip(this, new SteelDagger(Level), EquipmentSlot.LeftHand);
@@ -57,11 +59,8 @@ namespace ConsoleRPG.Enemies
         public void SpikedAttack(Player player)
         {
             AnsiConsole.MarkupLine($"{Name} использует [bold]Шипастый набег[/]");
-            TakeSpikeDamage(player);
-            TakeSpikeDamage(player);
-            TakeSpikeDamage(player);
-            TakeSpikeDamage(player);
-            TakeSpikeDamage(player);
+            for (int i = 0; i < 5; i++)
+				TakeSpikeDamage(player);
         }
     }
 }

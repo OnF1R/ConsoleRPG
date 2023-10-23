@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using ConsoleRPG.Enums;
+using Spectre.Console;
 
 namespace ConsoleRPG.Items.Enchants
 {

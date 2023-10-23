@@ -9,8 +9,8 @@ namespace ConsoleRPG.Spells.DamageSpells
         public Laser()
         {
             Name = "[blue1]Лазер[/]";
-
-            AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
+			ID = Enums.SpellIdentifierEnum.Laser;
+			AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
                 { DamageTypes.Fire, new Random().Next(3,6)},
                 { DamageTypes.Electric, new Random().Next(3,6)},
@@ -22,5 +22,15 @@ namespace ConsoleRPG.Spells.DamageSpells
                 { new Burn(), 15 },
             }));
         }
-    }
+
+		public override void Use(Unit caster, Unit target)
+		{
+			Dictionary<DamageTypes, int> elemDamage = GetComponent<ElementalDamageCharacteristic>().ElemDamage;
+			foreach (DamageTypes type in elemDamage.Keys)
+			{
+				if (elemDamage[type] != 0)
+					caster.DealDamage(target, elemDamage[type], type, this);
+			}
+		}
+	}
 }

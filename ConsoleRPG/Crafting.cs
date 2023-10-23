@@ -1,4 +1,6 @@
 ﻿
+using ConsoleRPG.Enums;
+using ConsoleRPG.Items.CraftRecipes;
 using ConsoleRPG.Items.Enchants;
 using Spectre.Console;
 
@@ -35,6 +37,9 @@ namespace ConsoleRPG
                     case 2:
                         StartEnchantItem(player);
                         break;
+                    case 3:
+                        //StartCreateSpell(player);
+                        break;
                     default:
                         loop = false;
                         break;
@@ -42,6 +47,44 @@ namespace ConsoleRPG
 
             }
         }
+
+        public void StartCreateSpell(Player player)
+        {
+			List<BaseItemRecipe> recipes = player.Inventory.ListRecipes;
+			Dictionary<BaseItemRecipe, string> keyValuePairs = new Dictionary<BaseItemRecipe, string>();
+
+			foreach (BaseItemRecipe recipe in recipes)
+			{
+				keyValuePairs.Add(recipe, recipe.Name + " (Уровень: " + recipe.CurrentLevel + ")");
+			}
+
+			if (recipes.Count > 0)
+			{
+				var chosedEnchant = AnsiConsole.Prompt(
+					new SelectionPrompt<string>()
+						.Title("[bold]Выберите рецепт[/]")
+						.PageSize(10)
+						.MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
+						.AddChoices(keyValuePairs.Values));
+
+
+				try
+				{
+					BaseItemRecipe recipe = keyValuePairs.FirstOrDefault(x => x.Value == chosedEnchant).Key;
+					//ConfirmUseCraft(player, recipe);
+				}
+				catch
+				{
+					AnsiConsole.MarkupLine("Ошибка в Craft.cs StarttCraftItem(), пожалуйста сообщите Олежику :)" +
+						", вообще сюда не должно было никак попасть, но на то и существуют баги");
+				}
+
+			}
+			else
+			{
+				AnsiConsole.MarkupLine("Нет рецептов");
+			}
+		}
 
         public void StartEnchantItem(Player player)
         {

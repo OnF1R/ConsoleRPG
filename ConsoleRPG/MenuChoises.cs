@@ -1,5 +1,4 @@
-﻿
-using System.Runtime.InteropServices;
+﻿using ConsoleRPG.Enums;
 
 namespace ConsoleRPG
 {
@@ -19,11 +18,14 @@ namespace ConsoleRPG
         {
             Dictionary<int, string> menuChoises = new Dictionary<int, string>();
             menuChoises.Add(1, "Отправиться в приключение");
-            menuChoises.Add(2, "Торговец");
-            menuChoises.Add(3, "Инвентарь");
-            menuChoises.Add(4, "Экипировка");
-            menuChoises.Add(5, "Характеристики");
-            menuChoises.Add(6, "Крафт");
+            menuChoises.Add(2, "Изменить локацию");
+            menuChoises.Add(3, "Торговец");
+            menuChoises.Add(4, "Инвентарь");
+            menuChoises.Add(5, "Экипировка");
+            menuChoises.Add(6, "Характеристики");
+            menuChoises.Add(7, "Крафт");
+            menuChoises.Add(8, "Задания");
+            menuChoises.Add(9, "Статистика убийств");
 
             return menuChoises;
         }
@@ -84,9 +86,20 @@ namespace ConsoleRPG
             menuChoises.Add(1, "Создать предмет");
             //menuChoises.Add(2, "Улучшить предмет");
             menuChoises.Add(2, "Зачаровать предмет");
-            menuChoises.Add(3, "Выйти");
+            //menuChoises.Add(3, "Создать заклинание");
+            menuChoises.Add(4, "Выйти");
 
             return menuChoises;
         }
-    }
+
+		public static Dictionary<int, string> StandartDialogueChoises()
+		{
+			Dictionary<int, string> menuChoises = new Dictionary<int, string>();
+			menuChoises.Add(1, "Поговорить");
+			menuChoises.Add(2, "[red]Напасть[/]");
+			menuChoises.Add(3, "Уйти");
+
+			return menuChoises;
+		}
+	}  
 }

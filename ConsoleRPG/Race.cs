@@ -1,12 +1,5 @@
-﻿
-using ConsoleRPG.Races;
-using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConsoleRPG.Races;
+using ConsoleRPG.Enums;
 
 namespace ConsoleRPG
 {
@@ -37,31 +30,18 @@ namespace ConsoleRPG
 
         public RacesNames()
         {
-            racesNames = new();
-            racesNames.Add(new Human(), new Human().Name);
-            racesNames.Add(new Orc(), new Orc().Name);
-            racesNames.Add(new Goblin(), new Goblin().Name);
-            racesNames.Add(new Troll(), new Troll().Name);
-            racesNames.Add(new Elf(), new Elf().Name);
-            racesNames.Add(new DarkElf(), new DarkElf().Name);
-            racesNames.Add(new Gnome(), new Gnome().Name);
-        }
+			racesNames = new()
+			{
+				{ new Human(), new Human().Name },
+				{ new Orc(), new Orc().Name },
+				{ new Goblin(), new Goblin().Name },
+				{ new Troll(), new Troll().Name },
+				{ new Elf(), new Elf().Name },
+				{ new DarkElf(), new DarkElf().Name },
+				{ new Gnome(), new Gnome().Name }
+			};
+		}
     }
 
-    public enum RacesType
-    {
-        Human,
-        Orc,
-        Goblin,
-        Troll,
-        Elf,
-        DarkElf,
-        Gnome,
-        Demon,
-        Undead,
-        Dragon,
-        Elemental,
-        Mechanism,
-        Insect,
-    }
+    
 }

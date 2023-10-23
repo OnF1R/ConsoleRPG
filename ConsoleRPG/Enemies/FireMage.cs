@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items.Armors.Helmets;
+﻿using ConsoleRPG.Enums;
+using ConsoleRPG.Items.Armors.Helmets;
 using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.Shields;
 using ConsoleRPG.Items.Weapons;
@@ -15,7 +16,8 @@ namespace ConsoleRPG.Enemies
             Name = "[orangered1]Огненный[/] маг";
             MaxHealth = random.Next(7, 11) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, Level + 3);
+			ID = EnemyIdentifierEnum.FireMage;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, Level + 3);
 
             //Экипировка
             Equipment.WearEquip(this, new EnchantedHat(Level), EquipmentSlot.Helmet);
@@ -64,22 +66,13 @@ namespace ConsoleRPG.Enemies
         public void FireBall(Player Player)
         {
             BaseSpell Spell = new FireBall();
-            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
-            foreach (DamageTypes type in elemDamage.Keys)
-            {
-                DealDamage(Player, elemDamage[type], type, Spell);
-            }
-
+            Spell.Use(this, Player);
         }
 
         public void Pyroblast(Player Player)
         {
             BaseSpell Spell = new Pyroblast();
-            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
-            foreach (DamageTypes type in elemDamage.Keys)
-            {
-                DealDamage(Player, elemDamage[type], type, Spell);
-            }
+            Spell.Use(this, Player);
         }
     }
 }

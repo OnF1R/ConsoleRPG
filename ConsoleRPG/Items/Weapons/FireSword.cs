@@ -1,6 +1,7 @@
 ﻿
 using ConsoleRPG.Effects;
 using ConsoleRPG.Effects.Debuffs;
+using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.Weapons
 {
@@ -18,37 +19,20 @@ namespace ConsoleRPG.Items.Weapons
 
             ID = ItemIdentifier.FireSword;
 
-            if (Chance <= 5)
+            if (Chance <= 10)
             {
                 string QualityName = Quality.GetBadQuality();
                 Name = QualityName + " " + Name;
                 int resist = rand.Next(-12, 2);
-                if (resist != 0) AddComponent(new ElementalResistanceCharacteristic(new Dictionary<DamageTypes, int>()
-                {
-                    { DamageTypes.Fire, resist },
-                }));
-                RarityId = 0;
-            }
-            else if (Chance <= 10)
-            {
-                string QualityName = Quality.GetBadQuality();
-                Name = QualityName + " " + Name;
-                int resist = rand.Next(-12, 2);
-                if (resist != 0) AddComponent(new ElementalResistanceCharacteristic(new Dictionary<DamageTypes, int>()
-                {
-                    { DamageTypes.Fire, resist },
-                }));
-                RarityId = 0;
+				AddNeededElementalResistance(this, DamageTypes.Fire, resist, resist);
+				RarityId = 0;
             }
             else if (Chance <= 85)
             {
                 int resist = rand.Next(-6, 6);
                 if (resist != 0)
-                    AddComponent(new ElementalResistanceCharacteristic(new Dictionary<DamageTypes, int>()
-                {
-                    { DamageTypes.Fire, resist },
-                }));
-                GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + 2);
+				AddNeededElementalResistance(this, DamageTypes.Fire, resist, resist);
+				GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + 2);
                 GetComponent<ValueCharacteristic>().Cost += rand.Next(Level, Level + 2);
                 AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
                 {
@@ -61,11 +45,8 @@ namespace ConsoleRPG.Items.Weapons
                 string QualityName = Quality.GetGoodQuality();
                 Name = QualityName + " " + Name;
                 int resist = rand.Next(1, 11);
-                AddComponent(new ElementalResistanceCharacteristic(new Dictionary<DamageTypes, int>()
-                {
-                    { DamageTypes.Fire, resist },
-                }));
-                AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
+				AddNeededElementalResistance(this, DamageTypes.Fire, resist, resist);
+				AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
                 {
                     { new Burn(), 10 },
                 }));
@@ -78,11 +59,8 @@ namespace ConsoleRPG.Items.Weapons
                 string QualityName = Quality.GetBestQuality();
                 Name = QualityName + " " + Name;
                 int resist = rand.Next(3, 15);
-                AddComponent(new ElementalResistanceCharacteristic(new Dictionary<DamageTypes, int>()
-                {
-                    { DamageTypes.Fire, resist },
-                }));
-                GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + Level);
+				AddNeededElementalResistance(this, DamageTypes.Fire, resist, resist);
+				GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage += rand.Next(Level, Level + Level);
                 GetComponent<ValueCharacteristic>().Cost += rand.Next(Level, Level + Level);
                 AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
                 {

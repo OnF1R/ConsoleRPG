@@ -1,4 +1,5 @@
-﻿using ConsoleRPG.Items.Currencies;
+﻿using ConsoleRPG.Enums;
+using ConsoleRPG.Items.Currencies;
 using ConsoleRPG.Items.StacableItems;
 using ConsoleRPG.Spells.DamageSpells;
 
@@ -11,10 +12,11 @@ namespace ConsoleRPG.Enemies
         {
             Random random = new Random();
             //Equipment equipment = new Equipment();
-            Name = "[bold]Светлячок[/]";
+            Name = "[lightgoldenrod1]Светлячок[/]";
             MaxHealth = random.Next(3, 6) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, 2 + Level);
+			ID = EnemyIdentifierEnum.Wisp;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, 2 + Level);
             MyRace = new Races.Elemental();
 
             DropList = new Item[]
@@ -40,11 +42,7 @@ namespace ConsoleRPG.Enemies
         public void WillOWisp(Player Player)
         {
             BaseSpell Spell = new WillOWisp();
-            Dictionary<DamageTypes, int> elemDamage = Spell.GetComponent<ElementalDamageCharacteristic>().ElemDamage;
-            foreach (DamageTypes type in elemDamage.Keys)
-            {
-                DealDamage(Player, elemDamage[type], type, Spell);
-            }
-        }
+			Spell.Use(this, Player);
+		}
     }
 }

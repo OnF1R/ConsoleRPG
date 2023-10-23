@@ -1,8 +1,9 @@
 ﻿using ConsoleRPG.Interfaces;
+using ICloneable = ConsoleRPG.Interfaces.ICloneable;
 
 namespace ConsoleRPG.Effects
 {
-    internal abstract class BaseEffect : IDamageDealerEntity
+    internal abstract class BaseEffect : IStatusEffectEntity, ICloneable
     {
         public string Name { get; set; }
         public int CurrentDuration { get; set; }
@@ -29,9 +30,9 @@ namespace ConsoleRPG.Effects
 
         protected abstract void EndEffect(Unit unit);
 
-        protected string EffectDurationMessage()
+        protected string EffectDurationMessage(string unitName)
         {
-            string message = Name + ":";
+            string message = $"{Name} ({unitName}):";
             if (CurrentDuration > 0)
             {
                 message += $" осталось ходов: {CurrentDuration}";
@@ -56,11 +57,14 @@ namespace ConsoleRPG.Effects
         {
             return Name;
         }
-    }
+
+        abstract public BaseEffect Clone();
+	}
 
     public enum EffectType
     {
         Buff,
         Debuff,
+        Stun,
     }
 }

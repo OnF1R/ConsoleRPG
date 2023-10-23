@@ -1,9 +1,10 @@
 ﻿
+using ConsoleRPG.Enums;
 using Spectre.Console;
 
 namespace ConsoleRPG.Items.CraftRecipes
 {
-    internal abstract class BaseRecipe
+    internal abstract class BaseItemRecipe
     {
         public string Name { get; set; }
         public int CurrentLevel;
@@ -16,7 +17,7 @@ namespace ConsoleRPG.Items.CraftRecipes
 
         public double CraftChance { get; set; }
 
-        public BaseRecipe()
+        public BaseItemRecipe()
         {
             CurrentLevel = 1;
             Name = "[orange3]Рецепт[/] ";

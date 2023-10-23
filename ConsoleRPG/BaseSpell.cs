@@ -1,5 +1,6 @@
 ﻿
 using ConsoleRPG.Effects;
+using ConsoleRPG.Enums;
 using ConsoleRPG.Interfaces;
 
 namespace ConsoleRPG
@@ -8,6 +9,7 @@ namespace ConsoleRPG
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public SpellIdentifierEnum ID { get; set; }
 
         public BaseSpell AddComponent(Characteristics component)
         {
@@ -34,6 +36,8 @@ namespace ConsoleRPG
 
             return new Dictionary<BaseEffect, double>();
         }
+
+        public abstract void Use(Unit caster, Unit target);
 
         private List<Characteristics> _components = new List<Characteristics>();
     }

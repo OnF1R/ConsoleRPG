@@ -1,7 +1,9 @@
-﻿namespace ConsoleRPG.Effects.Debuffs
+﻿using ConsoleRPG.Interfaces;
+
+namespace ConsoleRPG.Effects.Debuffs
 {
-    internal class Frost : BaseEffect
-    {
+    internal class Frost : BaseEffect, IDamageDealerEntity
+	{
         private int BaseDamage;
         private int FireResistanceBuff;
         private int WaterResistanceDebuff;
@@ -56,7 +58,7 @@
 
             unit.DealDamage(unit, BaseDamage, DamageTypes.Frost, this);
 
-            unit.ShowMessage(EffectDurationMessage());
+            unit.ShowMessage(EffectDurationMessage(unit.Name));
 
             if (CurrentDuration <= 0)
                 EndEffect(unit);
@@ -110,5 +112,10 @@
 
             return message;
         }
-    }
+
+		public override BaseEffect Clone()
+		{
+			return new Frost();
+		}
+	}
 }

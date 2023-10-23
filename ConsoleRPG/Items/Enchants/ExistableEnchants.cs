@@ -7,6 +7,8 @@ namespace ConsoleRPG.Items.Enchants
         {
             new DrakulaBootsEnchant(),
             new FoolAndElementEnchant(),
+            new PoisonousShell(),
+            new DodgingTheRainEnchant(),
         };
     }
 }

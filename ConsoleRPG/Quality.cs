@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConsoleRPG.Enums;
 
 namespace ConsoleRPG
 {
@@ -115,25 +111,5 @@ namespace ConsoleRPG
             QualityTypes QualityType = AllQualityTypes[new Random().Next(AllQualityTypes.Length)];
             return QualityType;
         }
-    }
-
-    [Flags]
-    public enum QualityTypes
-    {
-        Broken = 1 << 0,
-        Used = 1 << 1,
-        Anchient = 1 << 2,
-        Rust = 1 << 3,
-        Bad = Broken | Used | Anchient | Rust,
-        Encanted = 1 << 4,
-        Mad = 1 << 5,
-        Blessed = 1 << 6,
-        Demonical = 1 << 7,
-        Godlike = 1 << 8,
-        Good = Mad | Blessed | Demonical | Godlike,
-        GodKiller = 1 << 9,
-        Antimaterial = 1 << 10,
-        FromAbyss = 1 << 11,
-        Best = GodKiller | Antimaterial | FromAbyss,
     }
 }

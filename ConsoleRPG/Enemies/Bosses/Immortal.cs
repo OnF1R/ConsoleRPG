@@ -4,6 +4,7 @@ using ConsoleRPG.Races;
 using ConsoleRPG.Items.Armors.Chestsplates;
 using ConsoleRPG.Items.Weapons;
 using ConsoleRPG.Spells.DamageSpells;
+using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Enemies.Bosses
 {
@@ -18,7 +19,8 @@ namespace ConsoleRPG.Enemies.Bosses
             Name = "[red]БОСС[/] [bold]Бессмертный[/]";
             MaxHealth = random.Next(30, 51) * Level;
             CurrentHealth = MaxHealth;
-            GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(4 + Level, Level + 8);
+			ID = EnemyIdentifierEnum.Immortal;
+			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(4 + Level, Level + 8);
             GetComponent<MissCharacteristic>().MissChance += 15;
             GetComponent<ArmorCharacteristic>().Armor += 25;
 
@@ -65,8 +67,7 @@ namespace ConsoleRPG.Enemies.Bosses
         public void Smash(Player Player)
         {
             BaseSpell Spell = new Smash(this);
-            int damage = Spell.GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage;
-            DealDamage(Player, damage, DamageTypes.Physical, Spell);
+            Spell.Use(this, Player);
         }
     }
 }
