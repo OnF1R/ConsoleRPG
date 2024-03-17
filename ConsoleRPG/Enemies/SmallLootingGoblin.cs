@@ -10,11 +10,12 @@ using ConsoleRPG.Spells.DamageSpells;
 
 namespace ConsoleRPG.Enemies
 {
-	internal class SmallLootingGoblin : Enemy
+    [Serializable]
+    internal class SmallLootingGoblin : Enemy
 	{
 		public SmallLootingGoblin(int playerLevel) : base(playerLevel)
 		{
-			Random random = new Random();
+			SerializableRandom random = new SerializableRandom();
 			//Equipment equipment = new Equipment();
 			Name = "[bold]Маленький богатый гоблин[/]";
 			MaxHealth = random.Next(3, 6) * Level;
@@ -60,16 +61,16 @@ namespace ConsoleRPG.Enemies
 			};
 		}
 
-		public override void FightLogic(Player Player)
-		{
+		public override void FightLogic(Player Player, Unit unit)
+        {
 			if (!IsDead)
 			{
 				foreach (var entity in GetDamageEntities())
-					Attack(Player, entity);
+					Attack(unit, entity);
 			}
 			else
 			{
-				DeathDropLoot(Player);
+				Death(Player);
 			}
 		}
 	}

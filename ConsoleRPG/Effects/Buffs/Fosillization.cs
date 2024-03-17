@@ -2,6 +2,7 @@
 
 namespace ConsoleRPG.Effects.Buffs
 {
+    [Serializable]
     internal class Fossilization : BaseEffect, IHealDealerEntity
     {
         private int ArmorBuff;

@@ -1,6 +1,7 @@
 ﻿
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class WillOWisp : BaseSpell
     {
         public WillOWisp()
@@ -9,7 +10,7 @@ namespace ConsoleRPG.Spells.DamageSpells
 			ID = Enums.SpellIdentifierEnum.WillOWisp;
 			AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Holy, new Random().Next(7,12)},
+                { DamageTypes.Holy, new SerializableRandom().Next(7,12)},
             }));
         }
 

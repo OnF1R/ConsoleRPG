@@ -4,6 +4,7 @@ using ConsoleRPG.Effects;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class ArdaBintBaaniAlTaa : BaseSpell
     {
         public ArdaBintBaaniAlTaa()
@@ -12,8 +13,8 @@ namespace ConsoleRPG.Spells.DamageSpells
             ID = Enums.SpellIdentifierEnum.ArdaBintBaaniAlTaa;
             AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Fire, new Random().Next(16,48)},
-                { DamageTypes.Electric, new Random().Next(16,48)},
+                { DamageTypes.Fire, new SerializableRandom().Next(16,48)},
+                { DamageTypes.Electric, new SerializableRandom().Next(16,48)},
             }));
             
             AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()

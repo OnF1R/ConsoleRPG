@@ -4,21 +4,21 @@
     {
         Elemental,
         ExplosiveBug,
-        GiantFrog,
-        SwampTroll,
+        //GiantFrog,
+        //SwampTroll,
 
         DesertSworm,
 
         FireMage,
         FrostMage,
-        ArcaneMage,
-        Necromant,
+        //ArcaneMage,
+        //Necromant,
 
         DarkMage,
 
         SteelKnight,
         SpikedKnight,
-        Samurai,
+        //Samurai,
 
         Mekanism,
         SmallOreStone,
@@ -30,7 +30,7 @@
         Ghoul,
         Butcher,
         Gargoyle,
-        Skeleton,
+        //Skeleton,
         CaveSpider,
 
         WaterDragon,

@@ -2,11 +2,12 @@
 
 namespace ConsoleRPG.Items.Weapons
 {
-	internal class GreatMagicStaff : Weapon
+    [Serializable]
+    internal class GreatMagicStaff : Weapon
 	{
 		public GreatMagicStaff(int level) : base(level)
 		{
-			Random rand = new Random();
+			SerializableRandom rand = new SerializableRandom();
 
 			Name = $"[bold]Большой[/] магический посох";
 

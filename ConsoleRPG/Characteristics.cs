@@ -5,8 +5,10 @@ using ConsoleRPG.Interfaces;
 
 namespace ConsoleRPG
 {
+    [Serializable]
     abstract class Characteristics { }
 
+    [Serializable]
     class StrengthCharacteristic : Characteristics
     {
         public int HealthPerStrength = 20;
@@ -16,6 +18,7 @@ namespace ConsoleRPG
         public int ItemsStrength { get; set; }
     }
 
+    [Serializable]
     class AgilityCharacteristic : Characteristics
     {
         public int DamagePerAgility = 1;
@@ -24,7 +27,7 @@ namespace ConsoleRPG
         public int Agility { get; set; }
         public int ItemsAgility { get; set; }
     }
-
+    [Serializable]
     class IntelligenceCharacteristic : Characteristics
     {
         public double MagicAmplificationPerIntelligence = 1;
@@ -33,75 +36,81 @@ namespace ConsoleRPG
         public int Intelligence { get; set; }
         public int ItemsIntelligence { get; set; }
     }
-
+    [Serializable]
     class HealAmplificationCharacteristic : Characteristics
     {
         public double AmplificationPerLevel { get; set; }
         public double Amplification { get; set; }
     }
-
+    [Serializable]
+    class ManaRegenerationAmplificationCharacteristic : Characteristics
+    {
+        public int AmplificationPerLevel { get; set; }
+        public int Amplification { get; set; }
+    }
+    [Serializable]
     class MagicAmplificationCharacteristic : Characteristics
     {
         public double AmplificationPerLevel { get; set; }
         public double Amplification { get; set; }
     }
-
+    [Serializable]
     class PhysicalDamageCharacteristic : Characteristics
     {
         public double PhysicalDamagePerLevel { get; set; }
         public double RealPhysicalDamage { get; set; }
         public int PhysicalDamage { get; set; }
     }
-
+    [Serializable]
     class LuckCharacteristic : Characteristics
     {
         public double LuckPerLevel { get; set; }
         public double RealLuck { get; set; }
         public int Luck { get; set; }
     }
-
+    [Serializable]
     class ArmorCharacteristic : Characteristics
     {
         public double ArmorPerLevel { get; set; }
         public double RealArmor { get; set; }
         public int Armor { get; set; }
     }
-
+    [Serializable]
     class EvasionCharacteristic : Characteristics
     {
         public double EvasionPerLevel { get; set; }
         public double EvasionChance { get; set; }
     }
-
+    [Serializable]
     class MissCharacteristic : Characteristics
     {
         public double MissPerLevel { get; set; }
         public double MissChance { get; set; }
     }
-
+    [Serializable]
     class CriticalChanceCharacteristic : Characteristics
     {
         public double CriticalChancePerLevel { get; set; }
         public double CriticalChance { get; set; }
     }
-
+    [Serializable]
     class CriticalDamageCharacteristic : Characteristics
     {
         public double CriticalDamagePerLevel { get; set; }
         public double CriticalDamage { get; set; }
     }
-
+    [Serializable]
     class ValueCharacteristic : Characteristics
     {
         public int Cost { get; set; }
     }
-
+    [Serializable]
     class ExperienceBooster : Characteristics
     {
         public double PercentBoost { get; set; }
         public double PercentBoostPerLevel { get; set; }
     }
-
+    [Serializable]
     class SpikeCharacteristic : Characteristics, IDamageDealerEntity
     {
         public int SpikeDamage { get; set; }
@@ -111,7 +120,7 @@ namespace ConsoleRPG
             return "Шипы";
         }
     }
-
+    [Serializable]
     class VampirismCharacteristic : Characteristics, IHealDealerEntity
     {
         public double VampirismPercent { get; set; }
@@ -122,13 +131,13 @@ namespace ConsoleRPG
             return "Вампиризм";
         }
     }
-
+    [Serializable]
     class ParryCharacteristic : Characteristics
     {
         public double ParryPercent { get; set; }
         public double ParryPercentPerLevel { get; set; }
     }
-
+    [Serializable]
     class ElementalResistanceCharacteristic : Characteristics
     {
         public Dictionary<DamageTypes, int> ElemResistance = new();
@@ -149,7 +158,7 @@ namespace ConsoleRPG
 			}
 		}
     }
-
+    [Serializable]
     class ElementalDamageCharacteristic : Characteristics
     {
         public Dictionary<DamageTypes, int> ElemDamage = new();
@@ -170,7 +179,7 @@ namespace ConsoleRPG
             }
         }
     }
-
+    [Serializable]
     class StatusEffectsCharacteristic : Characteristics
     {
         public Dictionary<BaseEffect, double> Effects = new();
@@ -186,7 +195,7 @@ namespace ConsoleRPG
             }
         }
     }
-
+    [Serializable]
     class StatusEffectsImmunityCharacteristic : Characteristics
     {
         public List<BaseEffect> ImmunityEffects = new List<BaseEffect>();

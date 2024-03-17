@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Items.Armors.Rings
 {
+    [Serializable]
     internal class ElementalRing : Armor
     {
         public ElementalRing(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             
             int Chance = rand.Next(1, 101);

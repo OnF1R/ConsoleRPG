@@ -3,6 +3,7 @@ using ConsoleRPG.Effects;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class ChaosBolt : BaseSpell
     {
         public ChaosBolt()
@@ -11,7 +12,7 @@ namespace ConsoleRPG.Spells.DamageSpells
 			ID = Enums.SpellIdentifierEnum.Fireball;
 			AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Necrotic, new Random().Next(9,15)},
+                { DamageTypes.Necrotic, new SerializableRandom().Next(9,15)},
             }));
             AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
             {

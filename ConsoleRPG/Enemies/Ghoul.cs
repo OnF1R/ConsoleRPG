@@ -14,11 +14,12 @@ using System.Xml.Linq;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class Ghoul : Enemy
     {
         public Ghoul(int level) : base(level)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             Equipment equipment = new Equipment();
             Name = "Вурдалак";
             MaxHealth = random.Next(7, 11) * Level;
@@ -32,18 +33,18 @@ namespace ConsoleRPG.Enemies
             DropList = new Item[] { new Gold(), Equipment.Equip[EquipmentSlot.LeftHand], new BloodStone() };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
                 if (Energy >= 3)
                 {
-                    for (int i = 0; i < new Random().Next(2, 5); i++)
+                    for (int i = 0; i < new SerializableRandom().Next(2, 5); i++)
                     {
-                        if (!Player.IsDead)
+                        if (!unit.IsDead)
                         {
                             foreach (var entity in GetDamageEntities())
-                                Attack(Player, entity);
+                                Attack(unit, entity);
                         }
                     }
                     Energy = 0;
@@ -51,13 +52,13 @@ namespace ConsoleRPG.Enemies
                 else
                 {
                     foreach (var entity in GetDamageEntities())
-                        Attack(Player, entity);
+                        Attack(unit, entity);
                 }
                 Energy++;
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
     }

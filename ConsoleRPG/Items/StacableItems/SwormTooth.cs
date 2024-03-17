@@ -3,6 +3,7 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.StacableItems
 {
+    [Serializable]
     internal class SwormTooth : StacableItem
     {
         public SwormTooth(int level = 1) : base(level)
@@ -13,7 +14,7 @@ namespace ConsoleRPG.Items.StacableItems
             RarityId = 2;
             Level = 1;
             DropChance = 3f;
-            Count = new Random().Next(1, 3);
+            Count = new SerializableRandom().Next(1, 3);
 
             IsStacable = true;
             IsEquapable = false;

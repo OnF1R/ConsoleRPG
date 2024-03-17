@@ -3,11 +3,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.Armors.Capes
 {
-	internal class FrostCape : Armor
+    [Serializable]
+    internal class FrostCape : Armor
 	{
 		public FrostCape(int level) : base(level)
 		{
-			Random rand = new Random();
+			SerializableRandom rand = new SerializableRandom();
 			Quality Quality = new Quality();
 			Name = "[aqua]Морозный[/] плащ";
 			int Chance = rand.Next(1, 101);

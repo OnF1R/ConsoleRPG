@@ -1,5 +1,6 @@
 ﻿namespace ConsoleRPG.Effects.Buffs
 {
+    [Serializable]
     internal class Rage : BaseEffect
     {
         private double CriticalDamageBuff;

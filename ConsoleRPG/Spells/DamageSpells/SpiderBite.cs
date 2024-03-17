@@ -3,6 +3,7 @@ using ConsoleRPG.Effects;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class SpiderBite : BaseSpell
     {
         public SpiderBite()
@@ -11,7 +12,7 @@ namespace ConsoleRPG.Spells.DamageSpells
 			ID = Enums.SpellIdentifierEnum.SpiderBite;
 			AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Poison, new Random().Next(6,15)},
+                { DamageTypes.Poison, new SerializableRandom().Next(6,15)},
             }));
         }
 

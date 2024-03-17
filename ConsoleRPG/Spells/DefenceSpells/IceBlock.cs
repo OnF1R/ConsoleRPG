@@ -2,7 +2,8 @@
 
 namespace ConsoleRPG.Spells.DefenceSpells
 {
-	internal class IceBlock : BaseSpell
+    [Serializable]
+    internal class IceBlock : BaseSpell
     {
         public IceBlock()
         {

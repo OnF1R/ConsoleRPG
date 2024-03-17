@@ -2,10 +2,10 @@
 
 namespace ConsoleRPG.Quests
 {
-	abstract class Quest
+    [Serializable]
+    abstract class Quest
 	{
 		public string Name { get; set; }
-		
 
 		public QuestType QuestType { get; set; }
 

@@ -10,7 +10,7 @@ namespace ConsoleRPG.NPC_s
 		{
 		}
 
-		protected Random random = new Random();
+		protected SerializableRandom random = new SerializableRandom();
 
 		protected Dictionary<int, string> DialogueChoises = MenuChoises.StandartDialogueChoises();
 

@@ -6,11 +6,12 @@ using ConsoleRPG.Spells.DamageSpells;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class ExplosiveBug : Enemy
     {
         public ExplosiveBug(int level) : base(level)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             Equipment equipment = new Equipment();
             Name = "[orangered1]Взрывной жук[/]";
             MaxHealth = random.Next(4, 11) * Level;
@@ -29,38 +30,38 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
                 if (Energy >= 4)
                 {
-                    NecroticExplosion(Player);
+                    NecroticExplosion(unit);
                     Energy = 0;
                 }
                 else
                 {
-                    Spit(Player);
+                    Spit(unit);
                     Energy++;
                 }
             }
             
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void Spit(Player Player)
+        public void Spit(Unit unit)
         {
             BaseSpell Spell = new PoisonSpit();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
 
-        public void NecroticExplosion(Player Player)
+        public void NecroticExplosion(Unit unit)
         {
             BaseSpell Spell = new NecroticExplosion();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
     }
 }

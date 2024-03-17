@@ -3,6 +3,7 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG
 {
+    [Serializable]
     abstract class Race
     {
         public string Name { get; set; }

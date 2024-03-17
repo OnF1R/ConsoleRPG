@@ -3,6 +3,7 @@ using ConsoleRPG.Effects;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class Pyroblast : BaseSpell
     {
         public Pyroblast()
@@ -11,7 +12,7 @@ namespace ConsoleRPG.Spells.DamageSpells
 			ID = Enums.SpellIdentifierEnum.Pyroblast;
 			AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Fire, new Random().Next(12, 21)},
+                { DamageTypes.Fire, new SerializableRandom().Next(12, 21)},
             }));
             AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
             {

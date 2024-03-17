@@ -10,6 +10,7 @@ using System.Xml.Linq;
 
 namespace ConsoleRPG.Items.StacableItems
 {
+    [Serializable]
     internal class IronOre : StacableItem
     {
         public IronOre(int level = 1) : base(level)

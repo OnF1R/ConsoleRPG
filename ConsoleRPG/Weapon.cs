@@ -1,10 +1,14 @@
 ﻿using ConsoleRPG.Effects;
 using ConsoleRPG.Interfaces;
+using ConsoleRPG.Items.Gems;
 
 namespace ConsoleRPG
 {
+    [Serializable]
     abstract internal class Weapon : Item, IDamageDealerEntity, IAppyStatusEffectEntity
     {
+        //public virtual Gem[] Gems { get; set; }
+
         public Weapon(int level) : base(level)
         {
             this.IsStacable = false;

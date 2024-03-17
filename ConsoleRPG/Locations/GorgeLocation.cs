@@ -3,7 +3,8 @@ using System.Xml.Linq;
 
 namespace ConsoleRPG.Locations
 {
-	internal class GorgeLocation : BaseLocation
+    [Serializable]
+    internal class GorgeLocation : BaseLocation
 	{
 		public GorgeLocation()
 		{

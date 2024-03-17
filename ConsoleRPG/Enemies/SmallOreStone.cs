@@ -3,11 +3,12 @@ using ConsoleRPG.Items.StacableItems;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class SmallOreStone : Enemy
     {
         public SmallOreStone(int playerLevel) : base(playerLevel)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             //Equipment equipment = new Equipment();
             Name = "[bold]Малый рудный камень[/]";
             MaxHealth = random.Next(30, 46) * Level;
@@ -25,7 +26,7 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
@@ -33,7 +34,7 @@ namespace ConsoleRPG.Enemies
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
     }

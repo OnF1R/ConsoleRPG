@@ -2,6 +2,7 @@
 
 namespace ConsoleRPG.Effects.Buffs
 {
+    [Serializable]
     internal class IceBlock : BaseEffect, IHealDealerEntity
     {
         private int ArmorBuff;

@@ -1,5 +1,6 @@
 ﻿namespace ConsoleRPG.Effects.Buffs
 {
+    [Serializable]
     internal class SmallPhysicalDefence : BaseEffect
     {
         private int ArmorBuff;

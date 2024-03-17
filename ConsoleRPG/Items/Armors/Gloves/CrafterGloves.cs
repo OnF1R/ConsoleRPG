@@ -3,11 +3,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.Armors.Gloves
 {
+    [Serializable]
     internal class CrafterGloves : Armor
     {
         public CrafterGloves(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "Перчатки ремесленника";
             int Chance = rand.Next(1, 101);

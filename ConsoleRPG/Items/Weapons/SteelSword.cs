@@ -10,11 +10,12 @@ using System.Xml.Linq;
 
 namespace ConsoleRPG.Items.Weapons
 {
+    [Serializable]
     internal class SteelSword : Weapon
     {
         public SteelSword(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "[grey]Стальной[/] меч";
             int Chance = rand.Next(1, 101);

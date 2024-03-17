@@ -2,7 +2,8 @@
 
 namespace ConsoleRPG.Locations
 {
-	internal class DesertLocation : BaseLocation
+    [Serializable]
+    internal class DesertLocation : BaseLocation
 	{
 		public DesertLocation()
 		{

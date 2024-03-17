@@ -3,6 +3,7 @@ using ConsoleRPG.Effects;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class Smash : BaseSpell
     {
         public Smash(Unit unit)

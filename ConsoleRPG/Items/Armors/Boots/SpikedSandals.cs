@@ -3,11 +3,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.Armors.Boots
 {
+    [Serializable]
     internal class SpikedSandals : Armor
     {
         public SpikedSandals(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "Шипастые сандилии";
             int Chance = rand.Next(1, 101);

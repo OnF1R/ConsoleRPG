@@ -4,7 +4,8 @@ using static ConsoleRPG.Enums.LocationIdentifierEnum;
 
 namespace ConsoleRPG.Locations
 {
-	internal class CastleLocation : BaseLocation
+    [Serializable]
+    internal class CastleLocation : BaseLocation
 	{
 		public CastleLocation()
 		{

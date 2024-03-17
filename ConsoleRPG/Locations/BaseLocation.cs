@@ -3,7 +3,8 @@ using static ConsoleRPG.Enums.LocationIdentifierEnum;
 
 namespace ConsoleRPG.Locations
 {
-	abstract class BaseLocation
+    [Serializable]
+    abstract class BaseLocation
 	{
 		public string Name { get; set; }
 

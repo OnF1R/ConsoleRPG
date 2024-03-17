@@ -3,7 +3,8 @@ using System.Xml.Linq;
 
 namespace ConsoleRPG.Locations
 {
-	internal class MageTowerLocaiton : BaseLocation
+    [Serializable]
+    internal class MageTowerLocaiton : BaseLocation
 	{
 		public MageTowerLocaiton()
 		{

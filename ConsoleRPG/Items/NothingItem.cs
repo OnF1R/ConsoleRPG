@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Items
 {
+    [Serializable]
     internal class NothingItem : Item
     {
         public NothingItem(int level = 0) : base(level)

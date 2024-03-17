@@ -3,11 +3,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.Armors.Capes
 {
+    [Serializable]
     internal class RaAyatAlQaiwai : Armor
     {
         public RaAyatAlQaiwai(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Name = "Ра'йаат Аль-кувай";
 
             ID = ItemIdentifier.RaAyatAlQaiwai;

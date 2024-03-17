@@ -2,7 +2,8 @@
 
 namespace ConsoleRPG.Spells.DefenceSpells
 {
-	internal class SmallPhysicalDefence : BaseSpell
+    [Serializable]
+    internal class SmallPhysicalDefence : BaseSpell
     {
         public SmallPhysicalDefence()
         {

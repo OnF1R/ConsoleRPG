@@ -1,5 +1,6 @@
 ﻿namespace ConsoleRPG.Effects.Stun
 {
+    [Serializable]
     internal class Dismember : BaseEffect
     {
         public Dismember(int duration = 2)

@@ -3,6 +3,7 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.StacableItems
 {
+    [Serializable]
     internal class AdamantiteOre : StacableItem
     {
         public AdamantiteOre(int level = 1) : base(level)
@@ -13,7 +14,7 @@ namespace ConsoleRPG.Items.StacableItems
             RarityId = 2;
             Level = 1;
             DropChance = 5f;
-            Count = new Random().Next(1, 4);
+            Count = new SerializableRandom().Next(1, 4);
 
             IsStacable = true;
             IsEquapable = false;

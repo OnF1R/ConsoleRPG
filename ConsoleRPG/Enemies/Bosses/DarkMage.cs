@@ -11,11 +11,12 @@ using ConsoleRPG.Items.Weapons;
 
 namespace ConsoleRPG.Enemies.Bosses
 {
+    [Serializable]
     internal class DarkMage : Enemy
     {
         public DarkMage(int level) : base(level)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             MyRace = new Human();
             IsBoss = true;
             Equipment equipment = new Equipment();
@@ -40,25 +41,25 @@ namespace ConsoleRPG.Enemies.Bosses
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
                 if (Energy > 4)
                 {
-                    ChaosBolt(Player);
+                    ChaosBolt(unit);
                     Energy = 0;
                 }
                 else
                 {
-                    if (new Random().Next(1,3) > 1)
+                    if (new SerializableRandom().Next(1,3) > 1)
                     {
-                        DarkStrike(Player);
+                        DarkStrike(unit);
                     }
                     else
                     {
 						foreach (var entity in GetDamageEntities())
-							Attack(Player, entity);
+							Attack(unit, entity);
 					}
                 }
 
@@ -66,20 +67,20 @@ namespace ConsoleRPG.Enemies.Bosses
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void DarkStrike(Player Player)
+        public void DarkStrike(Unit unit)
         {
             BaseSpell Spell = new DarkStrike();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
 
-		public void ChaosBolt(Player Player)
+		public void ChaosBolt(Unit unit)
 		{
 			BaseSpell Spell = new ChaosBolt();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
 	}
 }

@@ -2,16 +2,20 @@
 
 namespace ConsoleRPG.Quests
 {
-	abstract class QuestConditions { };
-
-	class QuestKillCondition : QuestConditions
+    [Serializable]
+    abstract class QuestConditions { };
+   
+	[Serializable]
+    class QuestKillCondition : QuestConditions
 	{
 		public int RequiredKillCount { get; set; }
 		public int CurrentKillCount { get; set; } = 0;
 		public EnemyIdentifierEnum RequiredEnemyKillType { get; set; }
 	}
 
-	class QuestCollectItemCondition : QuestConditions
+    [Serializable]
+
+    class QuestCollectItemCondition : QuestConditions
 	{
 		public Dictionary<ItemIdentifier, int> ItemsCountCollect { get; set; }
 	}

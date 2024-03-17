@@ -10,11 +10,12 @@ using ConsoleRPG.Spells.DamageSpells;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class Elemental : Enemy
     {
         public Elemental(int level) : base(level)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             //Equipment equipment = new Equipment();
             Name = "[bold]Элементаль[/]";
             MaxHealth = random.Next(7, 11) * Level;
@@ -34,31 +35,31 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
                 if (Energy >= 3)
                 {
-                    ElementalSplash(Player);
+                    ElementalSplash(unit);
                     Energy = 0;
                 }
                 else
                 {
-                    ElementalSplash(Player);
+                    ElementalSplash(unit);
                 }
                 Energy++;
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void ElementalSplash(Player Player)
+        public void ElementalSplash(Unit unit)
         {
             BaseSpell Spell = new ElementalSplash();
-            Spell.Use(this, Player);
+            Spell.Use(this, unit);
         }
     }
 }

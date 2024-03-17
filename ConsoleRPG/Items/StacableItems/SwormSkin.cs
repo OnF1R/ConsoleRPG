@@ -3,6 +3,7 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.StacableItems
 {
+    [Serializable]
     internal class SwormSkin : StacableItem
     {
         public SwormSkin(int level = 1) : base(level)

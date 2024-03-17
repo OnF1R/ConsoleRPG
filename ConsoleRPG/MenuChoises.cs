@@ -26,6 +26,9 @@ namespace ConsoleRPG
             menuChoises.Add(7, "Крафт");
             menuChoises.Add(8, "Задания");
             menuChoises.Add(9, "Статистика убийств");
+            menuChoises.Add(10, "Управление командой");
+            menuChoises.Add(11, "Рекрутер");
+            menuChoises.Add(12, "Сохранить игру");
 
             return menuChoises;
         }
@@ -40,6 +43,25 @@ namespace ConsoleRPG
             menuChoises.Add(4, "Купить рецепты");
             menuChoises.Add(5, "Купить зачарования");
             menuChoises.Add(6, "Выйти");
+
+            return menuChoises;
+        }
+
+		public static Dictionary<int, string> AstrologerChoises()
+		{
+			Dictionary<int, string> menuChoises = new Dictionary<int, string>();
+			menuChoises.Add(1, "Гадание по созвездиям");
+			menuChoises.Add(2, "Выйти");
+
+			return menuChoises;
+		}
+
+        public static Dictionary<int, string> RecruiterChoises()
+        {
+            Dictionary<int, string> menuChoises = new Dictionary<int, string>();
+            menuChoises.Add(1, "Посмотреть рекрутов");
+            menuChoises.Add(2, "Нанять рекрута");
+            menuChoises.Add(3, "Выйти");
 
             return menuChoises;
         }
@@ -101,5 +123,16 @@ namespace ConsoleRPG
 
 			return menuChoises;
 		}
-	}  
+
+        public static Dictionary<int, string> TeamControlChoises()
+        {
+            Dictionary<int, string> menuChoises = new Dictionary<int, string>();
+
+            menuChoises.Add(1, "Характеристики команды");
+            menuChoises.Add(2, "Экипировка команды");
+            menuChoises.Add(3, "Выйти");
+
+            return menuChoises;
+        }
+    }  
 }

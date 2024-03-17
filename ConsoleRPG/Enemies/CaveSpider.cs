@@ -12,11 +12,12 @@ using ConsoleRPG.Spells.DefenceSpells;
 
 namespace ConsoleRPG.Enemies
 {
-	internal class CaveSpider : Enemy
+    [Serializable]
+    internal class CaveSpider : Enemy
 	{
 		public CaveSpider(int level) : base(level)
 		{
-			Random random = new Random();
+			SerializableRandom random = new SerializableRandom();
 			//Equipment equipment = new Equipment();
 			Name = "[bold]Пещёрный паучок[/]";
 			MaxHealth = random.Next(3, 5) * Level;
@@ -36,22 +37,22 @@ namespace ConsoleRPG.Enemies
 			};
 		}
 
-		public override void FightLogic(Player Player)
-		{
+		public override void FightLogic(Player Player, Unit unit)
+        {
 			if (!IsDead)
 			{
-				SpiderBite(Player);
+				SpiderBite(unit);
 			}
 			else
 			{
-				DeathDropLoot(Player);
+				Death(Player);
 			}
 		}
 
-		public void SpiderBite(Unit player)
+		public void SpiderBite(Unit unit)
 		{
 			BaseSpell Spell = new SpiderBite();
-			Spell.Use(this, player);
+			Spell.Use(this, unit);
 		}
 	}
 }

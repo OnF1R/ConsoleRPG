@@ -7,17 +7,19 @@ using Spectre.Console;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class SpikedKnight : Enemy
     {
         public SpikedKnight(int playerLevel) : base(playerLevel)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             Equipment equipment = new Equipment();
             Name = "[grey]Шипастый рыцарь[/]";
             MaxHealth = random.Next(4, 11) * Level;
             CurrentHealth = MaxHealth;
 			ID = EnemyIdentifierEnum.SpikedKnight;
 			GetComponent<PhysicalDamageCharacteristic>().PhysicalDamage = random.Next(Level, 4 + Level);
+            GetComponent<SpikeCharacteristic>().SpikeDamage += Level / 3;
 
             //Экипировка
             Equipment.WearEquip(this, new SteelDagger(Level), EquipmentSlot.LeftHand);
@@ -32,19 +34,19 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
                 if (Energy >= 4)
                 {
-                    SpikedAttack(Player);
+                    SpikedAttack(unit);
                     Energy = 0;
                 }
                 else
                 {
                     foreach (var entity in GetDamageEntities())
-                        Attack(Player, entity);
+                        Attack(unit, entity);
 
                     Energy++;
                 }
@@ -52,15 +54,15 @@ namespace ConsoleRPG.Enemies
 
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void SpikedAttack(Player player)
+        public void SpikedAttack(Unit unit)
         {
             AnsiConsole.MarkupLine($"{Name} использует [bold]Шипастый набег[/]");
             for (int i = 0; i < 5; i++)
-				TakeSpikeDamage(player);
+				TakeSpikeDamage(unit);
         }
     }
 }

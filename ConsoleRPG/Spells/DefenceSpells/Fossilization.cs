@@ -2,7 +2,8 @@
 
 namespace ConsoleRPG.Spells.DefenceSpells
 {
-	internal class Fossilization : BaseSpell
+    [Serializable]
+    internal class Fossilization : BaseSpell
     {
         public Fossilization()
         {

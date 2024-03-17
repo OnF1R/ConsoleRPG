@@ -11,11 +11,12 @@ using ConsoleRPG.Spells.DefenceSpells;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class SteelKnight : Enemy
     {
         public SteelKnight(int playerLevel) : base(playerLevel)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             Equipment equipment = new Equipment();
             Name = "[grey]Стальной[/] рыцарь";
             MaxHealth = random.Next(4, 11) * Level;
@@ -52,7 +53,7 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
@@ -64,14 +65,14 @@ namespace ConsoleRPG.Enemies
                 else
                 {
                     foreach (var entity in GetDamageEntities())
-                        Attack(Player, entity);
+                        Attack(unit, entity);
 
                     Energy++;
                 }
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 

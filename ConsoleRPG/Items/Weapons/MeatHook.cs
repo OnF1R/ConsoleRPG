@@ -4,11 +4,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.Weapons
 {
-	internal class MeatHook : Weapon
+    [Serializable]
+    internal class MeatHook : Weapon
 	{
 		public MeatHook(int level) : base(level)
 		{
-			Random rand = new Random();
+			SerializableRandom rand = new SerializableRandom();
 
 			Name = $"[bold red]Мясной[/] крюк";
 

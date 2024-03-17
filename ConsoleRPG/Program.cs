@@ -6,6 +6,6 @@
         {
             Game Game = new Game();
             Game.MainMenu();
-		}
+        }
     }
 }   

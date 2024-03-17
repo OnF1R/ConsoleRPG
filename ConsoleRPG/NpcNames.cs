@@ -38,7 +38,7 @@
 
 		public static string GetRandomName()
 		{
-			var random = new Random();
+			var random = new SerializableRandom();
 
 			return Names[random.Next(Names.Count)];
 		}

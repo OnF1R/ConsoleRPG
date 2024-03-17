@@ -2,6 +2,7 @@
 
 namespace ConsoleRPG.Effects.Debuffs
 {
+    [Serializable]
     internal class Burn : BaseEffect, IDamageDealerEntity
 	{
         private int BaseDamage;

@@ -3,11 +3,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.Armors.Trinkets
 {
+    [Serializable]
     internal class EmelardNecklace : Item
     {
         public EmelardNecklace(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "Изумрудное ожерелье";
             int Chance = rand.Next(1, 101);

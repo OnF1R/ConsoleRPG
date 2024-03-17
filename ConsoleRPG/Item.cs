@@ -1,11 +1,13 @@
 ﻿using ConsoleRPG.Effects;
 using ConsoleRPG.Enums;
 using ConsoleRPG.Items.Enchants;
+using Newtonsoft.Json;
 using Spectre.Console;
 
 namespace ConsoleRPG
 {
-	abstract class Item
+    [Serializable]
+    abstract class Item
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }
@@ -16,10 +18,8 @@ namespace ConsoleRPG
 		public double DropChance { get; set; }
 		public bool IsStacable { get; set; }
 		public ItemType Type { get; set; }
-
 		public ItemIdentifier ID { get; set; }
-		public string UniqID { get; set; }
-
+		public Guid UniqID { get; set; }
 		public bool IsEquapable { get; set; }
 		public bool IsEquiped { get; set; }
 		public int Damage { get; set; }
@@ -32,10 +32,24 @@ namespace ConsoleRPG
 		public int basicItemElementalResistance = 1;
 		public int basicItemElementalDamage = 1;
 
-		public Item(int level)
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            Item otherItem = (Item)obj;
+            return UniqID == otherItem.UniqID;
+        }
+
+        public override int GetHashCode()
+        {
+            return UniqID.GetHashCode();
+        }
+
+        public Item(int level)
 		{
 			Level = level;
-			UniqID = DateTime.Now.Ticks.ToString();
+			UniqID = Guid.NewGuid();
 		}
 
 		public Item AddEnchant(BaseEnchant enchant)
@@ -62,7 +76,7 @@ namespace ConsoleRPG
 
 		private List<Characteristics> _components = new List<Characteristics>();
 
-		private List<BaseEnchant> _enchants = new List<BaseEnchant>();
+        private List<BaseEnchant> _enchants = new List<BaseEnchant>();
 
 		public void SetRarity(int RarityId)
 		{
@@ -100,13 +114,13 @@ namespace ConsoleRPG
 		{
 			if (item.GetComponent<ElementalResistanceCharacteristic>() != null && item.GetComponent<ElementalResistanceCharacteristic>().ElemResistance.ContainsKey(damageType))
 			{
-				item.GetComponent<ElementalResistanceCharacteristic>().ElemResistance[damageType] += new Random().Next(minRes, maxRes);
+				item.GetComponent<ElementalResistanceCharacteristic>().ElemResistance[damageType] += new SerializableRandom().Next(minRes, maxRes);
 			}
 			else
 			{
 				item.AddComponent(new ElementalResistanceCharacteristic(new Dictionary<DamageTypes, int>()
 				{
-					{ damageType, new Random().Next(minRes,maxRes) },
+					{ damageType, new SerializableRandom().Next(minRes,maxRes) },
 				}));
 			}
 		}
@@ -115,13 +129,13 @@ namespace ConsoleRPG
 		{
 			if (item.GetComponent<ElementalDamageCharacteristic>() != null && item.GetComponent<ElementalDamageCharacteristic>().ElemDamage.ContainsKey(damageType))
 			{
-				item.GetComponent<ElementalDamageCharacteristic>().ElemDamage[damageType] += new Random().Next(minDmg, maxDmg);
+				item.GetComponent<ElementalDamageCharacteristic>().ElemDamage[damageType] += new SerializableRandom().Next(minDmg, maxDmg);
 			}
 			else
 			{
 				item.AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
 				{
-					{ damageType, new Random().Next(minDmg,maxDmg) },
+					{ damageType, new SerializableRandom().Next(minDmg,maxDmg) },
 				}));
 			}
 		}
@@ -500,7 +514,19 @@ namespace ConsoleRPG
 				}
 			}
 
-			if (item.GetComponent<HealAmplificationCharacteristic>() != null)
+            if (item.GetComponent<ManaRegenerationAmplificationCharacteristic>() != null)
+            {
+                if (item.GetComponent<ManaRegenerationAmplificationCharacteristic>().Amplification > 0)
+                {
+                    itemInfo += ($"+{item.GetComponent<ManaRegenerationAmplificationCharacteristic>().Amplification}% к усилению восстановления [deepskyblue1]маны[/] ");
+                }
+                else
+                {
+                    itemInfo += ($"{item.GetComponent<ManaRegenerationAmplificationCharacteristic>().Amplification}% к усилению восстановления [deepskyblue1]маны[/] ");
+                }
+            }
+
+            if (item.GetComponent<HealAmplificationCharacteristic>() != null)
 			{
 				if (item.GetComponent<HealAmplificationCharacteristic>().Amplification > 0)
 				{

@@ -2,11 +2,12 @@
 
 namespace ConsoleRPG.Items.Shields
 {
+    [Serializable]
     internal class SteelShield : Shield
     {
         public SteelShield(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "[grey]Стальной[/] щит";
             int Chance = rand.Next(1, 101);

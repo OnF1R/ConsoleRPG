@@ -11,11 +11,12 @@ using ConsoleRPG.Items.Weapons;
 
 namespace ConsoleRPG.Enemies.Bosses
 {
-	internal class Butcher : Enemy
+    [Serializable]
+    internal class Butcher : Enemy
 	{
 		public Butcher(int level) : base(level)
 		{
-			Random random = new Random();
+			SerializableRandom random = new SerializableRandom();
 			MyRace = new Human();
 			IsBoss = true;
 			Equipment equipment = new Equipment();
@@ -40,31 +41,31 @@ namespace ConsoleRPG.Enemies.Bosses
 			};
 		}
 
-		public override void FightLogic(Player Player)
-		{
+		public override void FightLogic(Player Player, Unit unit)
+        {
 			if (!IsDead)
 			{
 				if (Energy > 4)
 				{
-					Dismember(Player);
+					Dismember(unit);
 					Energy = 0;
 				}
 				else
 				{
-					var rand = new Random().Next(1, 4);
+					var rand = new SerializableRandom().Next(1, 4);
 
 					if (rand == 1)
 					{
-						Hook(Player);
+						Hook(unit);
 					}
 					else if (rand == 2)
 					{
-						VomitOdor(Player);
+						VomitOdor(unit);
 					}
 					else
 					{
 						foreach (var entity in GetDamageEntities())
-							Attack(Player, entity);
+							Attack(unit, entity);
 					}
 				}
 
@@ -72,26 +73,26 @@ namespace ConsoleRPG.Enemies.Bosses
 			}
 			else
 			{
-				DeathDropLoot(Player);
+				Death(Player);
 			}
 		}
 
-		public void Hook(Player Player)
+		public void Hook(Unit unit)
 		{
 			BaseSpell Spell = new Hook();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
 
-		public void VomitOdor(Player Player)
+		public void VomitOdor(Unit unit)
 		{
 			BaseSpell Spell = new VomitOdor();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
 
-		public void Dismember(Player Player)
+		public void Dismember(Unit unit)
 		{
 			BaseSpell Spell = new Dismember();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
 	}
 }

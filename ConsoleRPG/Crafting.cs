@@ -2,20 +2,17 @@
 using ConsoleRPG.Enums;
 using ConsoleRPG.Items.CraftRecipes;
 using ConsoleRPG.Items.Enchants;
+using Newtonsoft.Json;
 using Spectre.Console;
 
 namespace ConsoleRPG
 {
-    internal class Crafting
+    [Serializable]
+    internal static class Crafting
     {
-        private Dictionary<int, string> menuChoises;
+        private static readonly Dictionary<int, string> menuChoises = MenuChoises.CraftMenuChoises();
 
-        public Crafting()
-        {
-            menuChoises = MenuChoises.CraftMenuChoises();
-        }
-
-        public void CraftingMenu(Player player)
+        public static void CraftingMenu(Player player)
         {
             bool loop = true;
             while (loop)
@@ -48,7 +45,7 @@ namespace ConsoleRPG
             }
         }
 
-        public void StartCreateSpell(Player player)
+        public static void StartCreateSpell(Player player)
         {
 			List<BaseItemRecipe> recipes = player.Inventory.ListRecipes;
 			Dictionary<BaseItemRecipe, string> keyValuePairs = new Dictionary<BaseItemRecipe, string>();
@@ -86,7 +83,7 @@ namespace ConsoleRPG
 			}
 		}
 
-        public void StartEnchantItem(Player player)
+        public static void StartEnchantItem(Player player)
         {
             List<BaseEnchant> enchants = player.Inventory.ListEnchants;
             Dictionary<BaseEnchant, string> keyValuePairs = new Dictionary<BaseEnchant, string>();
@@ -124,7 +121,7 @@ namespace ConsoleRPG
             }
         }
 
-        public void ConfirmUseEnchant(Player player, BaseEnchant enchant)
+        public static void ConfirmUseEnchant(Player player, BaseEnchant enchant)
         {
             AnsiConsole.MarkupLine($"Для использования {enchant.Name} необходимы следующие предметы: ");
             AnsiConsole.MarkupLine(enchant.EnchantNeededItems());
@@ -151,7 +148,7 @@ namespace ConsoleRPG
             }
         }
 
-        public bool IsEnoughtItemsForEnchant(Player player, BaseEnchant enchant)
+        public static bool IsEnoughtItemsForEnchant(Player player, BaseEnchant enchant)
         {
             int hit = 0;
             int needHits = enchant.NeededItems.Count;
@@ -172,7 +169,7 @@ namespace ConsoleRPG
             return false;
         }
 
-        public void ChooseItemForEnchant(Player player, BaseEnchant enchant, params ItemType[] ItemType)
+        public static void ChooseItemForEnchant(Player player, BaseEnchant enchant, params ItemType[] ItemType)
         {
             List<Item> enchantableItems = new List<Item>();
             enchantableItems = player.Inventory.SortInventoryForEquip(ItemType);
@@ -218,7 +215,7 @@ namespace ConsoleRPG
             }
         }
 
-        public void EnchantItem(Player player, Item item, BaseEnchant enchant)
+        public static void EnchantItem(Player player, Item item, BaseEnchant enchant)
         {
             AnsiConsole.MarkupLine("Вы точно хотите зачаровать следующий предмет?");
             AnsiConsole.MarkupLine($"{item.Name}: {item.ItemInfoString(item)}");
@@ -250,7 +247,7 @@ namespace ConsoleRPG
             }
         }
 
-        private void ExistableCrafts()
+        private static void ExistableCrafts()
         {
 
         }

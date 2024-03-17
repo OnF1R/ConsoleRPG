@@ -3,6 +3,7 @@ using ConsoleRPG.Effects;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class FrostBall : BaseSpell
     {
         public FrostBall()
@@ -11,7 +12,7 @@ namespace ConsoleRPG.Spells.DamageSpells
 			ID = Enums.SpellIdentifierEnum.Frostball;
 			AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Frost, new Random().Next(7,12)},
+                { DamageTypes.Frost, new SerializableRandom().Next(7,12)},
             }));
             AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
             {

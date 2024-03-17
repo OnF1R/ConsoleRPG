@@ -6,11 +6,12 @@ using ConsoleRPG.Spells.DamageSpells;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class Wisp : Enemy
     {
         public Wisp(int playerLevel) : base(playerLevel)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             //Equipment equipment = new Equipment();
             Name = "[lightgoldenrod1]Светлячок[/]";
             MaxHealth = random.Next(3, 6) * Level;
@@ -27,22 +28,22 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
-                WillOWisp(Player);
+                WillOWisp(unit);
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void WillOWisp(Player Player)
+        public void WillOWisp(Unit unit)
         {
             BaseSpell Spell = new WillOWisp();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
     }
 }

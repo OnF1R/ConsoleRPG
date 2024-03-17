@@ -1,11 +1,13 @@
 ﻿using ConsoleRPG.Items.CraftRecipes;
 using ConsoleRPG.Items.Enchants;
 using ConsoleRPG.Items.Weapons;
+using Newtonsoft.Json;
 using Spectre.Console;
-using System.Linq;
+using System.Timers;
 
-namespace ConsoleRPG
+namespace ConsoleRPG.NotPlayableNPC
 {
+    [Serializable]
     internal class Merchant
     {
         public string Name { get; set; }
@@ -16,15 +18,24 @@ namespace ConsoleRPG
 
         private Dictionary<BaseItemRecipe, int> sellingsRecipes = new Dictionary<BaseItemRecipe, int>();
 
-        private Timer _timer = null;
+        [NonSerialized] private System.Timers.Timer _timer = null;
+        private int timerIntervalInSeconds; // Сохраняем интервал таймера
 
-        private static Dictionary<int, string> menuChoises = new Dictionary<int, string>();
+        private Dictionary<int, string> menuChoises = new Dictionary<int, string>();
 
-        public Merchant()
+        public Merchant(int timerIntervalInSeconds)
         {
             Name = "Торговец";
 
-            _timer = new Timer(TimerCallback, null, 0, 900000);
+            //_timer = new Timer(TimerCallback, null, 0, 900000);
+
+            this.timerIntervalInSeconds = timerIntervalInSeconds;
+            // Инициализация таймера
+            _timer = new System.Timers.Timer(this.timerIntervalInSeconds * 1000); // Преобразуем секунды в миллисекунды
+            _timer.Elapsed += TimerElapsed;
+            _timer.AutoReset = true;
+            _timer.Enabled = true; // Запускаем таймер
+
 
             menuChoises = MenuChoises.MerchantChoises();
 
@@ -37,9 +48,18 @@ namespace ConsoleRPG
             {
                 sellingsRecipes.Add(recipe, 100);
             }
+
+            AnsiConsole.MarkupLine("[bold]Магазин торговца обновился![/] " + DateTime.Now);
+            UpdateItems();
         }
 
-        private void TimerCallback(Object o)
+        private void TimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            AnsiConsole.MarkupLine("[bold]Магазин торговца обновился![/] " + DateTime.Now);
+            UpdateItems();
+        }
+
+        private void TimerCallback(object o)
         {
             AnsiConsole.MarkupLine("[bold]Магазин торговца обновился![/] " + DateTime.Now);
             UpdateItems();
@@ -48,15 +68,15 @@ namespace ConsoleRPG
         public void UpdateItems()
         {
             List<Item> randomItems = new List<Item>() {
-                new FireSword(new Random().Next(1, 101)),
-                new SteelAxe(new Random().Next(1, 101)),
-                new SteelDagger(new Random().Next(1, 101)),
-                new SteelSword(new Random().Next(1, 101)) };
+                new FireSword(new SerializableRandom().Next(1, 101)),
+                new SteelAxe(new SerializableRandom().Next(1, 101)),
+                new SteelDagger(new SerializableRandom().Next(1, 101)),
+                new SteelSword(new SerializableRandom().Next(1, 101)) };
+
+            sellingItems.Clear();
 
             foreach (Item item in randomItems)
-            {
-                sellingItems.Add(item, item.GetComponent<ValueCharacteristic>().Cost * new Random().Next(3, 8));
-            }
+                sellingItems.Add(item, item.GetComponent<ValueCharacteristic>().Cost * new SerializableRandom().Next(3, 8));
         }
 
         public void ShowSellingItems()
@@ -289,9 +309,9 @@ namespace ConsoleRPG
             else
             {
                 IEnumerable<string> names =
-                    (from recipe in sellingsRecipes
+                    from recipe in sellingsRecipes
                      where recipe.Value > 0
-                     select recipe.Key.Name + " (" + recipe.Key.Cost * Math.Clamp(Math.Abs(101 - recipe.Value), 1, int.MaxValue) + " [gold1]золота[/])");
+                     select recipe.Key.Name + " (" + recipe.Key.Cost * Math.Clamp(Math.Abs(101 - recipe.Value), 1, int.MaxValue) + " [gold1]золота[/])";
 
                 Dictionary<BaseItemRecipe, string> keyValuePairs = new Dictionary<BaseItemRecipe, string>();
                 List<BaseItemRecipe> keys = new List<BaseItemRecipe>();
@@ -326,9 +346,9 @@ namespace ConsoleRPG
             else
             {
                 IEnumerable<string> names =
-                    (from recipe in sellingsEnchants
+                    from recipe in sellingsEnchants
                      where recipe.Value > 0
-                     select recipe.Key.Name + " (" + recipe.Key.Cost * Math.Clamp(Math.Abs(101 - recipe.Value), 1, int.MaxValue) + " [gold1]золота[/])");
+                     select recipe.Key.Name + " (" + recipe.Key.Cost * Math.Clamp(Math.Abs(101 - recipe.Value), 1, int.MaxValue) + " [gold1]золота[/])";
 
                 Dictionary<BaseEnchant, string> keyValuePairs = new Dictionary<BaseEnchant, string>();
                 List<BaseEnchant> keys = new List<BaseEnchant>();

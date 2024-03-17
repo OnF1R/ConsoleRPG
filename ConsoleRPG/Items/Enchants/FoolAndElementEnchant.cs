@@ -3,6 +3,7 @@ using Spectre.Console;
 
 namespace ConsoleRPG.Items.Enchants
 {
+    [Serializable]
     internal class FoolAndElementEnchant : BaseEnchant
     {
         public FoolAndElementEnchant()
@@ -63,14 +64,14 @@ namespace ConsoleRPG.Items.Enchants
 
         public override void EnchantItem(Item item, int luck)
         {
-            if (new Random().Next(1, 101) + luck < EnchantChance)
+            if (new SerializableRandom().Next(1, 101) + luck < EnchantChance)
             {
                 DamageTypesNames damageTypesNames = new DamageTypesNames();
                 DamageTypes damageType = damageTypesNames.GetRandomElementalDamageType();
 
                 string boostType;
 
-                if (new Random().Next(1, 3) == 1)
+                if (new SerializableRandom().Next(1, 3) == 1)
                 {
                     item.AddNeededElementalResistance(item, damageType, EnchantBoost, EnchantBoost);
                     boostType = $"% к элементальному сопротивлению ({damageTypesNames.Names[damageType]}";

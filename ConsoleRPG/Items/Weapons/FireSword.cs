@@ -5,11 +5,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.Weapons
 {
+    [Serializable]
     internal class FireSword : Weapon
     {
         public FireSword(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "[orangered1]Огненный[/] меч";
             int Chance = rand.Next(1, 101);

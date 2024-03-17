@@ -4,6 +4,7 @@ using Spectre.Console;
 
 namespace ConsoleRPG.Items.Enchants
 {
+    [Serializable]
     internal abstract class BaseEnchant
     {
         public string Name { get; set; }

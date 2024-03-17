@@ -1,5 +1,6 @@
 ﻿namespace ConsoleRPG.Effects.Stun
 {
+    [Serializable]
     internal class Stun : BaseEffect
     {
         public Stun(int duration = 2)

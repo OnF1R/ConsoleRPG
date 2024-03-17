@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Items.Weapons
 {
+    [Serializable]
     internal class BloodLetter : Weapon
     {
         public BloodLetter(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "[red]Кровопускатель[/]";
             int Chance = rand.Next(1, 101);

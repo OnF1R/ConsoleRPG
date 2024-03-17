@@ -1,20 +1,27 @@
-﻿using Spectre.Console;
+﻿using Ink.Runtime;
+using Spectre.Console;
 
 namespace ConsoleRPG
 {
-	internal class ConsoleMessages
+	internal static class ConsoleMessages
 	{
-		public static void Message(string message)
+        public static void Message(string message, bool canSkip = true)
 		{
-			char[] chars = message.ToCharArray();
+            //char[] chars = message.ToCharArray();
 
-			foreach (char c in chars)
-			{
-				AnsiConsole.Write(c);
-				Thread.Sleep(50);
-			}
+            for (int i = 0; i < message.Length; i++)
+            {
+                if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Enter && canSkip)
+                {
+                    AnsiConsole.Write(message[i..]);
+                    break;
+                }
+
+                AnsiConsole.Write(message[i]);
+                Thread.Sleep(50);
+            }
 
 			Console.WriteLine();
-		}
+        }
 	}
 }

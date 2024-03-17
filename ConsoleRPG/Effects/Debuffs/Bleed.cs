@@ -2,6 +2,7 @@
 
 namespace ConsoleRPG.Effects.Debuffs
 {
+    [Serializable]
     internal class Bleed : BaseEffect, IDamageDealerEntity
     {
         private int BaseDamage;

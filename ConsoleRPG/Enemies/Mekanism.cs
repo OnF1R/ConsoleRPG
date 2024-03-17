@@ -9,11 +9,12 @@ using ConsoleRPG.Spells.DamageSpells;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class Mekanism : Enemy
     {
         public Mekanism(int level) : base(level)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             //Equipment equipment = new Equipment();
             Name = "[bold]Меканизм[/]";
             MaxHealth = random.Next(7, 11) * Level;
@@ -38,34 +39,34 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
 
             if (!IsDead)
             {
                 if (Energy >= 3)
                 {
-                    Laser(Player);
+                    Laser(unit);
                     Energy = 0;
                 }
                 else
                 {
                     foreach (var entity in GetDamageEntities())
-                        Attack(Player, entity);
+                        Attack(unit, entity);
                 }
 
                 Energy++;
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void Laser(Player Player)
+        public void Laser(Unit unit)
         {
             BaseSpell Spell = new Laser();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
     }
 }

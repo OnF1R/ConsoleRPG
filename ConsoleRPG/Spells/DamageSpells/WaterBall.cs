@@ -4,6 +4,7 @@ using ConsoleRPG.Effects;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class WaterBall : BaseSpell
     {
         public WaterBall()
@@ -12,7 +13,7 @@ namespace ConsoleRPG.Spells.DamageSpells
 			ID = Enums.SpellIdentifierEnum.Waterball;
 			AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Water, new Random().Next(7,12)},
+                { DamageTypes.Water, new SerializableRandom().Next(7,12)},
             }));
             AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()
             {

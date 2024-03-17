@@ -3,6 +3,7 @@ using Spectre.Console;
 
 namespace ConsoleRPG
 {
+    [Serializable]
     internal static class Craft
     {
         private static void CraftItem(Player player, BaseItemRecipe recipe, int chance)
@@ -14,7 +15,7 @@ namespace ConsoleRPG
                     player.Inventory.RemoveItem(player.Inventory.SearchStacableItemByItemId(_item.Key), _item.Value);
                 }
 
-                if (chance >= new Random().Next(1,101))
+                if (chance >= new SerializableRandom().Next(1,101))
                 {
 					recipe.GenerateItem(player);
 					Item item = recipe.CraftItem;

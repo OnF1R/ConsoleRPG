@@ -4,9 +4,10 @@ using ConsoleRPG.Items.StacableItems;
 
 namespace ConsoleRPG.Quests
 {
-	internal class SmallKillingQuest : Quest
+    [Serializable]
+    internal class SmallKillingQuest : Quest
 	{
-		Random random = new Random();
+		SerializableRandom random = new SerializableRandom();
 
 		List<string> questNames = new List<string>()
 		{
@@ -24,12 +25,12 @@ namespace ConsoleRPG.Quests
 			QuestCondition();
 			Name = questNames[random.Next(questNames.Count)];
 			QuestType = QuestType.Killing;
-			Experience = new Random().Next(1 * GetComponent<QuestKillCondition>().RequiredKillCount, 4 * GetComponent<QuestKillCondition>().RequiredKillCount);
+			Experience = new SerializableRandom().Next(1 * GetComponent<QuestKillCondition>().RequiredKillCount, 4 * GetComponent<QuestKillCondition>().RequiredKillCount);
 		}
 
 		public override void GetReward(Player player)
 		{
-			gold.Count = new Random().Next(1, 6);
+			gold.Count = new SerializableRandom().Next(1, 6);
 
 			List<Item> reward = new List<Item>()
 			{

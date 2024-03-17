@@ -7,11 +7,12 @@ using ConsoleRPG.Spells.DamageSpells;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class DesertSworm : Enemy
     {
         public DesertSworm(int level) : base(level)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             Equipment equipment = new Equipment();
             Name = "[orange1]Пустынный[/] червь";
             MaxHealth = random.Next(6, 11) * Level;
@@ -30,32 +31,32 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
                 if (Energy % 2 == 0)
                 {
 					foreach (var entity in GetDamageEntities())
-						Attack(Player, entity);
+						Attack(unit, entity);
 				}
                 else
                 {
-                    Spit(Player);
+                    Spit(unit);
                     Energy++;
                 }
             }
             
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void Spit(Player Player)
+        public void Spit(Unit unit)
         {
             BaseSpell Spell = new PoisonSpit();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
     }
 }

@@ -15,7 +15,7 @@ namespace ConsoleRPG
 
 		public static BaseLocation GetRandomLocation()
 		{
-			var rand = new Random();
+			var rand = new SerializableRandom();
 			return Locations[rand.Next(Locations.Count)];
 		}
 	}

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class PoisonSpit : BaseSpell
     {
         public PoisonSpit()
@@ -14,7 +15,7 @@ namespace ConsoleRPG.Spells.DamageSpells
 			ID = Enums.SpellIdentifierEnum.PoisonSpit;
 			AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Poison, new Random().Next(5, 17)},
+                { DamageTypes.Poison, new SerializableRandom().Next(5, 17)},
             }));
         }
 

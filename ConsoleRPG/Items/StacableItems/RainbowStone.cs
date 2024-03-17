@@ -3,6 +3,7 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.StacableItems
 {
+    [Serializable]
     internal class RainbowStone : StacableItem
     {
         public RainbowStone(int level = 1) : base(level)

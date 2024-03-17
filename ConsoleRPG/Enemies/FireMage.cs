@@ -7,11 +7,12 @@ using ConsoleRPG.Spells.DamageSpells;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class FireMage : Enemy
     {
         public FireMage(int level) : base(level)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             Equipment equipment = new Equipment();
             Name = "[orangered1]Огненный[/] маг";
             MaxHealth = random.Next(7, 11) * Level;
@@ -24,6 +25,8 @@ namespace ConsoleRPG.Enemies
             Equipment.WearEquip(this, new FireSword(Level), EquipmentSlot.LeftHand);
             Equipment.WearEquip(this, new RunicShield(Level), EquipmentSlot.RightHand);
 
+            //Team.Add(ExistableEnemies.GetRandomEnemy(level, ))
+
             DropList = new Item[]
             {
                 new Gold(),
@@ -33,25 +36,25 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
                 if (Energy >= 3)
                 {
-                    Pyroblast(Player);
+                    Pyroblast(unit);
                     Energy = 0;
                 }
                 else
                 {
-                    if (new Random().Next(0, 2) == 0)
+                    if (new SerializableRandom().Next(0, 2) == 0)
                     {
-                        FireBall(Player);
+                        FireBall(unit);
                     }
                     else
                     {
                         foreach (var entity in GetDamageEntities())
-                            Attack(Player, entity);
+                            Attack(unit, entity);
                     }
 
                 }
@@ -59,20 +62,20 @@ namespace ConsoleRPG.Enemies
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void FireBall(Player Player)
+        public void FireBall(Unit unit)
         {
             BaseSpell Spell = new FireBall();
-            Spell.Use(this, Player);
+            Spell.Use(this, unit);
         }
 
-        public void Pyroblast(Player Player)
+        public void Pyroblast(Unit unit)
         {
             BaseSpell Spell = new Pyroblast();
-            Spell.Use(this, Player);
+            Spell.Use(this, unit);
         }
     }
 }

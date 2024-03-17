@@ -11,7 +11,7 @@ namespace ConsoleRPG.NPC_s
 	{
 		public MageNpc(int level) : base(level)
 		{
-			Random random = new Random();
+			SerializableRandom random = new SerializableRandom();
 
 			var npcType = random.Next(1, 101);
 			
@@ -50,8 +50,8 @@ namespace ConsoleRPG.NPC_s
 			};
 		}
 
-		public override void FightLogic(Player Player)
-		{
+		public override void FightLogic(Player Player, Unit unit)
+        {
 			if (!IsDead)
 			{
 				{
@@ -63,7 +63,7 @@ namespace ConsoleRPG.NPC_s
 			}
 			else
 			{
-				DeathDropLoot(Player);
+				Death(Player);
 			}
 		}
 	}

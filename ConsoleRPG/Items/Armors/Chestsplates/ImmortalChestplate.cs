@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Items.Armors.Chestsplates
 {
+    [Serializable]
     internal class ImmortalChestplate : Armor
     {
         public ImmortalChestplate(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Name = "[bold]'Бессмертный'[/]";
 
             ID = ItemIdentifier.Immortal;

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Items.Currencies
 {
+    [Serializable]
     internal class Gold : StacableItem
     {
         public Gold(int level = 1) : base(level = 1)
@@ -18,7 +19,7 @@ namespace ConsoleRPG.Items.Currencies
             RarityId = 9;
             Level = 1;
             DropChance = 25f;
-            Count = new Random().Next(1,3);
+            Count = new SerializableRandom().Next(1,3);
 
             IsStacable = true;
             IsEquapable = false;

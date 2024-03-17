@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Items.StacableItems
 {
+    [Serializable]
     internal class IronIngot : StacableItem
     {
         public IronIngot(int level = 1) : base(level)

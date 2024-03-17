@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConsoleRPG.Items.Gems;
 
 namespace ConsoleRPG
 {
     abstract internal class Armor : Item
     {
+        //public virtual Gem[] Gems { get; set; }
+
         public Armor(int level) : base(level)
         {
             IsEquapable = true;

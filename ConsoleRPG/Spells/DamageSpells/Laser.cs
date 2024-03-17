@@ -4,6 +4,7 @@ using ConsoleRPG.Effects;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class Laser : BaseSpell
     {
         public Laser()
@@ -12,9 +13,9 @@ namespace ConsoleRPG.Spells.DamageSpells
 			ID = Enums.SpellIdentifierEnum.Laser;
 			AddComponent(new ElementalDamageCharacteristic(new Dictionary<DamageTypes, int>()
             {
-                { DamageTypes.Fire, new Random().Next(3,6)},
-                { DamageTypes.Electric, new Random().Next(3,6)},
-                { DamageTypes.Arcane, new Random().Next(3,6) },
+                { DamageTypes.Fire, new SerializableRandom().Next(3,6)},
+                { DamageTypes.Electric, new SerializableRandom().Next(3,6)},
+                { DamageTypes.Arcane, new SerializableRandom().Next(3,6) },
             }));
 
             AddComponent(new StatusEffectsCharacteristic(new Dictionary<BaseEffect, double>()

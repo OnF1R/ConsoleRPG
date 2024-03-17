@@ -1,6 +1,7 @@
 ﻿namespace ConsoleRPG.Effects.Debuffs
 {
-	internal class Wet : BaseEffect
+    [Serializable]
+    internal class Wet : BaseEffect
 	{
 		private int WaterResistanceDebuff;
 		private int ElectricResistanceDebuff;

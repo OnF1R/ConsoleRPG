@@ -21,6 +21,8 @@ namespace ConsoleRPG
             { ItemIdentifier.DarkStone, new DarkStone().Name },
             { ItemIdentifier.SpiderPoison, new SpiderPoison().Name },
             { ItemIdentifier.SpiderEye, new SpiderEye().Name },
+            { ItemIdentifier.SwormTooth, new SwormTooth().Name },
+            { ItemIdentifier.DesertRune, new DesertRune().Name },
         };
     }
 }

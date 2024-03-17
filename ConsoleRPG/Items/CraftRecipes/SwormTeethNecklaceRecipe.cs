@@ -7,6 +7,7 @@ using Spectre.Console;
 
 namespace ConsoleRPG.Items.CraftRecipes
 {
+    [Serializable]
     internal class SwormTeethNecklaceRecipe : BaseItemRecipe
     {
         public SwormTeethNecklaceRecipe()

@@ -8,11 +8,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Enemies.Bosses
 {
+    [Serializable]
     internal class Immortal : Enemy
     {
         public Immortal(int level) : base(level)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             MyRace = new Human();
             IsBoss = true;
             Equipment equipment = new Equipment();
@@ -41,33 +42,33 @@ namespace ConsoleRPG.Enemies.Bosses
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
                 if (Energy > 8)
                 {
-                    Smash(Player);
+                    Smash(unit);
                     Energy = 0;
                 }
                 else
                 {
                     foreach (var entity in GetDamageEntities())
-                        Attack(Player, entity);
+                        Attack(unit, entity);
                 }
 
                 Energy++;
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void Smash(Player Player)
+        public void Smash(Unit unit)
         {
             BaseSpell Spell = new Smash(this);
-            Spell.Use(this, Player);
+            Spell.Use(this, unit);
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Items.StacableItems
 {
+    [Serializable]
     internal class RainbowShard : StacableItem
     {
         public RainbowShard(int level = 1) : base(level)
@@ -18,7 +19,7 @@ namespace ConsoleRPG.Items.StacableItems
             RarityId = 1;
             Level = 1;
             DropChance = 8f;
-            Count = new Random().Next(1, 5);
+            Count = new SerializableRandom().Next(1, 5);
 
             IsStacable = true;
             IsEquapable = false;

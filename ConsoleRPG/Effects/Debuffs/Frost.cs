@@ -2,6 +2,7 @@
 
 namespace ConsoleRPG.Effects.Debuffs
 {
+    [Serializable]
     internal class Frost : BaseEffect, IDamageDealerEntity
 	{
         private int BaseDamage;

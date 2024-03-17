@@ -7,11 +7,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class WaterDragon : Enemy
     {
         public WaterDragon(int playerLevel) : base(playerLevel)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             Equipment equipment = new Equipment();
             Name = "[dodgerblue1]Водный[/] дракон";
             MaxHealth = random.Next(8, 18) * Level;
@@ -35,13 +36,13 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             if (!IsDead)
             {
                 if (Energy > 0)
                 {
-                    WaterBall(Player);
+                    WaterBall(unit);
                 }
                 else
                 {
@@ -52,14 +53,14 @@ namespace ConsoleRPG.Enemies
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void WaterBall(Player Player)
+        public void WaterBall(Unit unit)
         {
             BaseSpell Spell = new WaterBall();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
     }
 }

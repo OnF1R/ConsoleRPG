@@ -6,6 +6,7 @@ using Spectre.Console;
 
 namespace ConsoleRPG.Items.CraftRecipes
 {
+    [Serializable]
     internal class DragonClawBootsRecipe : BaseItemRecipe
     {
         public DragonClawBootsRecipe()

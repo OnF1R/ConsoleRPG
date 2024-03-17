@@ -5,6 +5,7 @@ using ConsoleRPG.Interfaces;
 
 namespace ConsoleRPG
 {
+    [Serializable]
     internal abstract class BaseSpell : IDamageDealerEntity, IAppyStatusEffectEntity
     {
         public string Name { get; set; }

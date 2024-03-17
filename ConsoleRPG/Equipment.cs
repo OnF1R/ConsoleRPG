@@ -5,6 +5,7 @@ using Spectre.Console;
 
 namespace ConsoleRPG
 {
+    [Serializable]
     internal class Equipment
     {
         public Dictionary<EquipmentSlot, Item> Equip = new Dictionary<EquipmentSlot, Item>();
@@ -161,6 +162,16 @@ namespace ConsoleRPG
                 unit.GetComponent<SpikeCharacteristic>().SpikeDamage += item.GetComponent<SpikeCharacteristic>().SpikeDamage;
             }
 
+            if (item.GetComponent<HealAmplificationCharacteristic>() != null)
+            {
+                unit.GetComponent<HealAmplificationCharacteristic>().Amplification += item.GetComponent<HealAmplificationCharacteristic>().Amplification;
+            }
+
+            if (item.GetComponent<ManaRegenerationAmplificationCharacteristic>() != null)
+            {
+                unit.GetComponent<ManaRegenerationAmplificationCharacteristic>().Amplification += item.GetComponent<ManaRegenerationAmplificationCharacteristic>().Amplification;
+            }
+
             if (item.GetComponent<VampirismCharacteristic>() != null)
             {
                 unit.GetComponent<VampirismCharacteristic>().VampirismPercent += item.GetComponent<VampirismCharacteristic>().VampirismPercent;
@@ -293,6 +304,16 @@ namespace ConsoleRPG
                 unit.GetComponent<SpikeCharacteristic>().SpikeDamage -= item.GetComponent<SpikeCharacteristic>().SpikeDamage;
             }
 
+            if (item.GetComponent<HealAmplificationCharacteristic>() != null)
+            {
+                unit.GetComponent<HealAmplificationCharacteristic>().Amplification -= item.GetComponent<HealAmplificationCharacteristic>().Amplification;
+            }
+
+            if (item.GetComponent<ManaRegenerationAmplificationCharacteristic>() != null)
+            {
+                unit.GetComponent<ManaRegenerationAmplificationCharacteristic>().Amplification -= item.GetComponent<ManaRegenerationAmplificationCharacteristic>().Amplification;
+            }
+
             if (item.GetComponent<VampirismCharacteristic>() != null)
             {
                 unit.GetComponent<VampirismCharacteristic>().VampirismPercent -= item.GetComponent<VampirismCharacteristic>().VampirismPercent;
@@ -323,7 +344,7 @@ namespace ConsoleRPG
             }
         }
 
-        public void EquipmentMenu(Player Player)
+        public void EquipmentMenu(Unit unit, Player player)
         {
             bool Loop = true;
             while (Loop)
@@ -344,7 +365,7 @@ namespace ConsoleRPG
                         ShowWearEquipment();
                         break;
                     case 2:
-                        ChangeEquipmentMenu(Player);
+                        ChangeEquipmentMenu(unit, player);
                         break;
                     default:
                         Loop = false;
@@ -353,10 +374,10 @@ namespace ConsoleRPG
             }
         }
 
-        public void ChangeEquipment(Unit unit, EquipmentSlot SlotName, params ItemType[] ItemType)
+        public void ChangeEquipment(Unit unit, Player player, EquipmentSlot SlotName, params ItemType[] ItemType)
         {
             List<Item> EquipableItems = new List<Item>();
-            EquipableItems = unit.Inventory.SortInventoryForEquip(ItemType);
+            EquipableItems = player.Inventory.SortInventoryForEquip(ItemType);
             Dictionary<int, string> itemsWithStats = new Dictionary<int, string>();
 
             if (EquipableItems.Count > 0)
@@ -400,7 +421,54 @@ namespace ConsoleRPG
 
         }
 
-        public void ChangeEquipmentMenu(Unit unit)
+        public void ChangeEquipment(PlayableUnit unit, EquipmentSlot SlotName, params ItemType[] ItemType)
+        {
+            List<Item> EquipableItems = new List<Item>();
+            EquipableItems = unit.PartyOwner.Inventory.SortInventoryForEquip(ItemType);
+            Dictionary<int, string> itemsWithStats = new Dictionary<int, string>();
+
+            if (EquipableItems.Count > 0)
+            {
+                for (int i = 0; i < EquipableItems.Count; i++)
+                {
+                    itemsWithStats.Add(i + 1, $"{EquipableItems[i].Name} ([{EquipableItems[i].RarityColor}]{EquipableItems[i].Rarity}[/]): {EquipableItems[i].ItemInfoString(EquipableItems[i])}");
+                }
+
+                var chosedEquipment = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("[bold]Выберите предмет[/]")
+                        .PageSize(10)
+                        .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
+                        .AddChoices(itemsWithStats.Values));
+
+                try
+                {
+                    int result = itemsWithStats.FirstOrDefault(x => x.Value == chosedEquipment).Key;
+                    switch (result >= 1 && result <= EquipableItems.Count)
+                    {
+                        case true:
+                            WearEquip(unit, EquipableItems[--result], SlotName);
+                            break;
+                        default:
+                            Console.WriteLine("Не правильно выбран предмет");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLine(ex.Message);
+                    AnsiConsole.MarkupLine("Введите [red]число!!![/]");
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Нет подходящей экипировки");
+            }
+
+        }
+
+        public void ChangeEquipmentMenu(Unit unit, Player player)
         {
             ShowWearEquipment();
             var choise = AnsiConsole.Prompt(
@@ -416,39 +484,39 @@ namespace ConsoleRPG
             switch (changeSlotsChoises.FirstOrDefault(x => x.Value == choise).Key)
             {
                 case 1:
-                    ChangeEquipment(unit, EquipmentSlot.LeftHand,
+                    ChangeEquipment(unit, player, EquipmentSlot.LeftHand,
                         ItemType.Sword, ItemType.TwoHandedSword, ItemType.Axe, ItemType.TwoHandedAxe, ItemType.Bow, ItemType.Staff, ItemType.TwoHandenStaff, ItemType.Shield, ItemType.Dagger);
                     break;
                 case 2:
-                    ChangeEquipment(unit, EquipmentSlot.RightHand,
+                    ChangeEquipment(unit, player, EquipmentSlot.RightHand,
                         ItemType.Sword, ItemType.TwoHandedSword, ItemType.Axe, ItemType.TwoHandedAxe, ItemType.Bow, ItemType.Staff, ItemType.TwoHandenStaff, ItemType.Shield, ItemType.Dagger);
                     break;
                 case 3:
-                    ChangeEquipment(unit, EquipmentSlot.Helmet, ItemType.Helmet);
+                    ChangeEquipment(unit, player, EquipmentSlot.Helmet, ItemType.Helmet);
                     break;
                 case 4:
-                    ChangeEquipment(unit, EquipmentSlot.Chest, ItemType.Chest);
+                    ChangeEquipment(unit, player, EquipmentSlot.Chest, ItemType.Chest);
                     break;
                 case 5:
-                    ChangeEquipment(unit, EquipmentSlot.Gloves, ItemType.Gloves);
+                    ChangeEquipment(unit, player, EquipmentSlot.Gloves, ItemType.Gloves);
                     break;
                 case 6:
-                    ChangeEquipment(unit, EquipmentSlot.Leggs, ItemType.Leggs);
+                    ChangeEquipment(unit, player, EquipmentSlot.Leggs, ItemType.Leggs);
                     break;
                 case 7:
-                    ChangeEquipment(unit, EquipmentSlot.Boots, ItemType.Boots);
+                    ChangeEquipment(unit, player, EquipmentSlot.Boots, ItemType.Boots);
                     break;
                 case 8:
-                    ChangeEquipment(unit, EquipmentSlot.FirstRing, ItemType.Ring);
+                    ChangeEquipment(unit, player, EquipmentSlot.FirstRing, ItemType.Ring);
                     break;
                 case 9:
-                    ChangeEquipment(unit, EquipmentSlot.SecondRing, ItemType.Ring);
+                    ChangeEquipment(unit, player, EquipmentSlot.SecondRing, ItemType.Ring);
                     break;
                 case 10:
-                    ChangeEquipment(unit, EquipmentSlot.Cape, ItemType.Cape);
+                    ChangeEquipment(unit, player, EquipmentSlot.Cape, ItemType.Cape);
                     break;
                 case 11:
-                    ChangeEquipment(unit, EquipmentSlot.Trinket, ItemType.Trinket);
+                    ChangeEquipment(unit, player, EquipmentSlot.Trinket, ItemType.Trinket);
                     break;
                 default:
                     break;

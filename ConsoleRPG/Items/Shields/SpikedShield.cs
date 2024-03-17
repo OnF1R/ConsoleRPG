@@ -3,11 +3,12 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.Shields
 {
+    [Serializable]
     internal class SpikedShield : Shield
     {
         public SpikedShield(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "[bold]Шипастый[/] щит";
             int Chance = rand.Next(1, 101);

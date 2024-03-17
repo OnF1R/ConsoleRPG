@@ -1,5 +1,6 @@
 ﻿namespace ConsoleRPG.Effects.Debuffs
 {
+    [Serializable]
     internal class Blind : BaseEffect
     {
         private double MissChance;

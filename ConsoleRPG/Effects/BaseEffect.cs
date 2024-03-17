@@ -3,6 +3,7 @@ using ICloneable = ConsoleRPG.Interfaces.ICloneable;
 
 namespace ConsoleRPG.Effects
 {
+    [Serializable]
     internal abstract class BaseEffect : IStatusEffectEntity, ICloneable
     {
         public string Name { get; set; }

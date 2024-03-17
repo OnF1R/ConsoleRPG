@@ -3,6 +3,7 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Races
 {
+    [Serializable]
     internal class Elemental : Race
     {
         public Elemental()

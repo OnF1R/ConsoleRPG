@@ -1,6 +1,7 @@
 ﻿using ConsoleRPG.Enums;
 namespace ConsoleRPG.Items.Weapons.BaseEnemyWeapons
 {
+    [Serializable]
     internal class HandsBaseWeapon : Weapon
     {
         public HandsBaseWeapon(int level) : base(level)

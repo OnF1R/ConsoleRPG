@@ -27,7 +27,7 @@ namespace ConsoleRPG
                 new FrostMage(playerLevel),
             };
 
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Enemy enemy = enemies[rand.Next(enemies.Length)];
             return enemy;
         }
@@ -73,7 +73,7 @@ namespace ConsoleRPG
             enemies.Add(new SmallLootingGoblin(playerLevel));
             enemies.Add(new Mekanism(playerLevel));
 
-			Random rand = new Random();
+			SerializableRandom rand = new SerializableRandom();
 			Enemy enemy = enemies[rand.Next(enemies.Count)];
 			return enemy;
 		}
@@ -87,7 +87,7 @@ namespace ConsoleRPG
                 new DarkMage(playerLevel),
                 new Butcher(playerLevel),
             };
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Enemy enemy = enemies[rand.Next(enemies.Length)];
             return enemy;
         }
@@ -116,7 +116,7 @@ namespace ConsoleRPG
 					break;
 			}
 
-			Random rand = new Random();
+			SerializableRandom rand = new SerializableRandom();
 			Enemy enemy = enemies[rand.Next(enemies.Count)];
 			return enemy;
 		}
@@ -126,6 +126,7 @@ namespace ConsoleRPG
             { EnemyIdentifierEnum.Elemental, new Elemental(1).Name },
             { EnemyIdentifierEnum.ExplosiveBug, new ExplosiveBug(1).Name },
             { EnemyIdentifierEnum.FireMage, new FireMage(1).Name },
+            { EnemyIdentifierEnum.FrostMage, new FrostMage(1).Name },
             { EnemyIdentifierEnum.Ghoul, new Ghoul(1).Name },
             { EnemyIdentifierEnum.Mekanism, new Mekanism(1).Name },
             { EnemyIdentifierEnum.SmallLootingGoblin, new SmallLootingGoblin(1).Name },
@@ -134,7 +135,6 @@ namespace ConsoleRPG
             { EnemyIdentifierEnum.SteelKnight, new SteelKnight(1).Name },
             { EnemyIdentifierEnum.WaterDragon, new WaterDragon(1).Name },
             { EnemyIdentifierEnum.Wisp, new Wisp(1).Name },
-            { EnemyIdentifierEnum.FrostMage, new FrostMage(1).Name },
             { EnemyIdentifierEnum.DesertSworm, new DesertSworm(1).Name },
             { EnemyIdentifierEnum.CaveSpider, new CaveSpider(1).Name },
             { EnemyIdentifierEnum.Gargoyle, new Gargoyle(1).Name },

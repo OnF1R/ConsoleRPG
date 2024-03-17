@@ -10,11 +10,12 @@ using ConsoleRPG.Spells.DefenceSpells;
 
 namespace ConsoleRPG.Enemies
 {
+    [Serializable]
     internal class FrostMage : Enemy
     {
         public FrostMage(int level) : base(level)
         {
-            Random random = new Random();
+            SerializableRandom random = new SerializableRandom();
             Equipment equipment = new Equipment();
             Name = "[aqua]Морозный[/] маг";
             MaxHealth = random.Next(7, 11) * Level;
@@ -37,15 +38,15 @@ namespace ConsoleRPG.Enemies
             };
         }
 
-        public override void FightLogic(Player Player)
+        public override void FightLogic(Player Player, Unit unit)
         {
             bool IsUseIceBlock = false;
 
             if (!IsDead)
             {
-                if (Energy >= 3)
+                if (Energy <= 3)
                 {
-                    FrostBolt(Player);
+                    FrostBolt(unit);
                     Energy = 0;
                 }
                 else
@@ -58,35 +59,35 @@ namespace ConsoleRPG.Enemies
                         return;
 					}
 
-                    if (new Random().Next(0, 2) == 0)
+                    if (new SerializableRandom().Next(0, 2) == 0)
                     {
-                        FrostBall(Player);
+                        FrostBall(unit);
                     }
                     else
                     {
                         foreach (var entity in GetDamageEntities())
-                            Attack(Player, entity);
+                            Attack(unit, entity);
                     }
                 }
                 Energy++;
             }
             else
             {
-                DeathDropLoot(Player);
+                Death(Player);
             }
         }
 
-        public void FrostBall(Player Player)
+        public void FrostBall(Unit unit)
         {
             BaseSpell Spell = new FrostBall();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 
 		}
 
-        public void FrostBolt(Player Player)
+        public void FrostBolt(Unit unit)
         {
             BaseSpell Spell = new FrostBolt();
-			Spell.Use(this, Player);
+			Spell.Use(this, unit);
 		}
 
         public void IceBlock()

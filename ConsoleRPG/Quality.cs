@@ -101,14 +101,14 @@ namespace ConsoleRPG
         public string RandomQualityString()
         {
             QualityTypes[] AllQualityTypes = ArrayQualityValues();
-            QualityTypes QualityType = AllQualityTypes[new Random().Next(AllQualityTypes.Length)];
+            QualityTypes QualityType = AllQualityTypes[new SerializableRandom().Next(AllQualityTypes.Length)];
             return Names[QualityType];
         }
 
         public QualityTypes RandomQualityEnum()
         {
             QualityTypes[] AllQualityTypes = ArrayQualityValues();
-            QualityTypes QualityType = AllQualityTypes[new Random().Next(AllQualityTypes.Length)];
+            QualityTypes QualityType = AllQualityTypes[new SerializableRandom().Next(AllQualityTypes.Length)];
             return QualityType;
         }
     }

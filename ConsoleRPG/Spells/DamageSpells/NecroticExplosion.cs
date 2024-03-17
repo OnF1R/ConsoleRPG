@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Spells.DamageSpells
 {
+    [Serializable]
     internal class NecroticExplosion : BaseSpell
     {
         public NecroticExplosion()

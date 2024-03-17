@@ -3,7 +3,8 @@ using System.Xml.Linq;
 
 namespace ConsoleRPG.Locations
 {
-	internal class SwampLocation : BaseLocation
+    [Serializable]
+    internal class SwampLocation : BaseLocation
 	{
 		public SwampLocation()
 		{

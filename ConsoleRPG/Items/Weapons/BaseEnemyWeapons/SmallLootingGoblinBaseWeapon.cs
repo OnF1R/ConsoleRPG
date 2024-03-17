@@ -2,6 +2,7 @@
 
 namespace ConsoleRPG.Items.Weapons.BaseEnemyWeapons
 {
+    [Serializable]
     internal class SmallLootingGoblinBaseWeapon : Weapon
     {
         public SmallLootingGoblinBaseWeapon(int level) : base(level)

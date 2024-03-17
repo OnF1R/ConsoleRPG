@@ -9,6 +9,7 @@ using System.Xml.Linq;
 
 namespace ConsoleRPG.Races
 {
+    [Serializable]
     internal class Orc : Race
     {
         public Orc()

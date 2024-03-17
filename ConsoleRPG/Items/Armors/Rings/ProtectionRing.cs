@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Items.Armors.Rings
 {
+    [Serializable]
     internal class ProtectionRing : Armor
     {
         public ProtectionRing(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "Кольцо защиты";
             int Chance = rand.Next(1, 101);

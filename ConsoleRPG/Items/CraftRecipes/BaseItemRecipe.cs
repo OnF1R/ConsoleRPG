@@ -4,6 +4,7 @@ using Spectre.Console;
 
 namespace ConsoleRPG.Items.CraftRecipes
 {
+    [Serializable]
     internal abstract class BaseItemRecipe
     {
         public string Name { get; set; }

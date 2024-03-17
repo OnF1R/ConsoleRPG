@@ -57,14 +57,14 @@ namespace ConsoleRPG
         public string RandomDamageTypesString()
         {
             DamageTypes[] AllDamageTypes = ArrayDamageTypesValues();
-            DamageTypes DamageType = AllDamageTypes[new Random().Next(AllDamageTypes.Length)];
+            DamageTypes DamageType = AllDamageTypes[new SerializableRandom().Next(AllDamageTypes.Length)];
             return Names[DamageType];
         }
 
         public DamageTypes RandomDamageTypesEnum()
         {
             DamageTypes[] AllDamageTypes = ArrayDamageTypesValues();
-            DamageTypes DamageType = AllDamageTypes[new Random().Next(AllDamageTypes.Length)];
+            DamageTypes DamageType = AllDamageTypes[new SerializableRandom().Next(AllDamageTypes.Length)];
             return DamageType;
         }
 

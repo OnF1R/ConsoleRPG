@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleRPG.Races
 {
+    [Serializable]
     internal class Elf : Race
     {
         public Elf()

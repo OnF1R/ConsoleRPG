@@ -3,6 +3,7 @@ using Spectre.Console;
 
 namespace ConsoleRPG.Items.Enchants
 {
+    [Serializable]
     internal class DrakulaBootsEnchant : BaseEnchant
     {
         public DrakulaBootsEnchant()
@@ -63,7 +64,7 @@ namespace ConsoleRPG.Items.Enchants
 
         public override void EnchantItem(Item item, int luck)
         {
-            if (new Random().Next(1, 101) + luck < EnchantChance)
+            if (new SerializableRandom().Next(1, 101) + luck < EnchantChance)
             {
                 if (item.GetComponent<VampirismCharacteristic>() != null)
                 {

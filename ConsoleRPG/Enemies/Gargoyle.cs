@@ -12,11 +12,12 @@ using ConsoleRPG.Spells.DefenceSpells;
 
 namespace ConsoleRPG.Enemies
 {
-	internal class Gargoyle : Enemy
+    [Serializable]
+    internal class Gargoyle : Enemy
 	{
 		public Gargoyle(int level) : base(level)
 		{
-			Random random = new Random();
+			SerializableRandom random = new SerializableRandom();
 			//Equipment equipment = new Equipment();
 			Name = "[bold]Гаргулья[/]";
 			MaxHealth = random.Next(7, 11) * Level;
@@ -37,8 +38,8 @@ namespace ConsoleRPG.Enemies
 			};
 		}
 
-		public override void FightLogic(Player Player)
-		{
+		public override void FightLogic(Player Player, Unit unit)
+        {
 			if (!IsDead)
 			{
 				if (Energy >= 4)
@@ -50,13 +51,13 @@ namespace ConsoleRPG.Enemies
 				else
 				{
 					foreach (var entity in GetDamageEntities())
-						Attack(Player, entity);
+						Attack(unit, entity);
 				}
 				Energy++;
 			}
 			else
 			{
-				DeathDropLoot(Player);
+				Death(Player);
 			}
 		}
 

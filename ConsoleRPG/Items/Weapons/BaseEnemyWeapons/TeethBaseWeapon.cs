@@ -3,7 +3,8 @@ using ConsoleRPG.Effects;
 using ConsoleRPG.Enums;
 namespace ConsoleRPG.Items.Weapons.BaseEnemyWeapons
 {
-	internal class TeethBaseWeapon : Weapon
+    [Serializable]
+    internal class TeethBaseWeapon : Weapon
 	{
 		public TeethBaseWeapon(int level) : base(level)
 		{

@@ -2,6 +2,7 @@
 
 namespace ConsoleRPG.Effects.Debuffs
 {
+    [Serializable]
     internal class OnTheHook : BaseEffect, IDamageDealerEntity
     {
         private double EvasionDebuff;

@@ -2,11 +2,12 @@
 
 namespace ConsoleRPG.Items.Armors.Leggs
 {
+    [Serializable]
     internal class MechanicalLeggs : Armor
     {
         public MechanicalLeggs(int level) : base(level)
         {
-            Random rand = new Random();
+            SerializableRandom rand = new SerializableRandom();
             Quality Quality = new Quality();
             Name = "[bold]Механические ноги[/]";
             int Chance = rand.Next(1, 101);

@@ -3,6 +3,7 @@ using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Items.StacableItems
 {
+    [Serializable]
     internal class OceanRune : StacableItem
     {
         public OceanRune(int level = 1) : base(level)
@@ -13,7 +14,7 @@ namespace ConsoleRPG.Items.StacableItems
             RarityId = 1;
             Level = 1;
             DropChance = 6f;
-            Count = new Random().Next(1, 3);
+            Count = new SerializableRandom().Next(1, 3);
 
             IsStacable = true;
             IsEquapable = false;
