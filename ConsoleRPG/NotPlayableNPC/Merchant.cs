@@ -19,7 +19,8 @@ namespace ConsoleRPG.NotPlayableNPC
         private Dictionary<BaseItemRecipe, int> sellingsRecipes = new Dictionary<BaseItemRecipe, int>();
 
         [NonSerialized] private System.Timers.Timer _timer = null;
-        private int timerIntervalInSeconds; // Сохраняем интервал таймера
+
+        private int timerIntervalInSeconds;
 
         private Dictionary<int, string> menuChoises = new Dictionary<int, string>();
 
@@ -34,8 +35,7 @@ namespace ConsoleRPG.NotPlayableNPC
             _timer = new System.Timers.Timer(this.timerIntervalInSeconds * 1000); // Преобразуем секунды в миллисекунды
             _timer.Elapsed += TimerElapsed;
             _timer.AutoReset = true;
-            _timer.Enabled = true; // Запускаем таймер
-
+            _timer.Enabled = true; 
 
             menuChoises = MenuChoises.MerchantChoises();
 
@@ -59,11 +59,11 @@ namespace ConsoleRPG.NotPlayableNPC
             UpdateItems();
         }
 
-        private void TimerCallback(object o)
-        {
-            AnsiConsole.MarkupLine("[bold]Магазин торговца обновился![/] " + DateTime.Now);
-            UpdateItems();
-        }
+        //private void TimerCallback(object o)
+        //{
+        //    AnsiConsole.MarkupLine("[bold]Магазин торговца обновился![/] " + DateTime.Now);
+        //    UpdateItems();
+        //}
 
         public void UpdateItems()
         {

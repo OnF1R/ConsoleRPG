@@ -19,8 +19,16 @@ namespace ConsoleRPG
 
         public List<PlayableUnit> Team { get; set; } = new List<PlayableUnit>();
 
-        public Player()
+        public Player(string name, Race race)
         {
+            Name = name;
+            Level = 1;
+            CurrentExp = 0;
+            NextLevelExp = 100;
+            MaxHealth = 100;
+            CurrentHealth = MaxHealth;
+            IsDead = false;
+            MyRace = race;
             Team.Capacity = 3;
         }
 

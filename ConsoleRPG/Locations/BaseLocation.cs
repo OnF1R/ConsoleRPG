@@ -1,5 +1,5 @@
 ﻿using ConsoleRPG.NPC_s;
-using static ConsoleRPG.Enums.LocationIdentifierEnum;
+using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Locations
 {

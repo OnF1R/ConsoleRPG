@@ -159,8 +159,12 @@ namespace ConsoleRPG
 
         public static void StartTeamFight(Player Player, Enemy Enemy, BaseLocation location)
         {
-            
-                Enemy.Team.Add(ExistableEnemies.GetRandomEnemy(location.locationId, Player.Level));
+            var enemyTeammate = ExistableEnemies.GetRandomEnemy(location.locationId, Player.Level);
+
+            if (enemyTeammate.IsUnitStateChangingEventIsNull())
+                enemyTeammate.UnitStateChanging += ConsoleMessages.SendMessage;
+
+            Enemy.Team.Add(enemyTeammate);
 
             bool GiveUp = false;
             List<Enemy> enemies = Enemy.GetTeamWithMe();

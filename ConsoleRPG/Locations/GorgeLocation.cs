@@ -1,5 +1,4 @@
-﻿using static ConsoleRPG.Enums.LocationIdentifierEnum;
-using System.Xml.Linq;
+﻿using ConsoleRPG.Enums;
 
 namespace ConsoleRPG.Locations
 {

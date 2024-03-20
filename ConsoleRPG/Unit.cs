@@ -1,13 +1,30 @@
-﻿using ConsoleRPG.Effects;
+﻿using ConsoleRPG;
+using ConsoleRPG.Effects;
 using ConsoleRPG.Enums;
 using ConsoleRPG.Interfaces;
 using Spectre.Console;
 
+delegate void UnitEventHandler(object sender, UnitEventArgs e);
+
 namespace ConsoleRPG
 {
     [Serializable]
+    internal class UnitEventArgs
+    {
+        public string Message { get; }
+
+        public UnitEventArgs(string message)
+        {
+            Message = message;
+        }
+    }
+
+    [Serializable]
     abstract class Unit
     {
+        [field: NonSerialized]
+        public event UnitEventHandler UnitStateChanging;
+
         public string Name { get; set; }
 
         public int Level { get; set; }
@@ -84,10 +101,19 @@ namespace ConsoleRPG
             AddComponent(new ElementalDamageCharacteristic { ElemDamage = elemental2 });
         }
 
+        public bool IsUnitStateChangingEventIsNull()
+        {
+            if (UnitStateChanging?.GetInvocationList().Length > 0)
+                return false;
+
+            return true;
+        }
+
         public void Resurrection()
         {
             IsDead = false;
-            AnsiConsole.MarkupLine(Name + " [lime]возроджён[/]");
+            //AnsiConsole.MarkupLine(Name + " [lime]возроджён[/]");
+            UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} [lime]возрождён[/]"));
             HealMaxHealth();
             HealMaxMana();
         }
@@ -168,36 +194,45 @@ namespace ConsoleRPG
         public void TakeDamageMessage(int damage, DamageTypes damageType)
         {
             var names = new DamageTypesNames().Names;
-            ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона, текущее здоровье [lime]{CurrentHealth}[/]");
+            //ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона, текущее здоровье [lime]{CurrentHealth}[/]");
+            UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} получил {damage} ({names[damageType]}) урона, текущее здоровье [lime]{CurrentHealth}[/]"));
         }
 
         public void UpdateTakeDamageMessage(int damage, DamageTypes damageType, string damageDealer)
         {
             var names = new DamageTypesNames().Names;
-            ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона от ({damageDealer})," +
-                $" текущее здоровье [lime]{CurrentHealth}[/]");
+            //ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона от ({damageDealer})," +
+            //    $" текущее здоровье [lime]{CurrentHealth}[/]");
+            UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} получил {damage} ({names[damageType]}) урона от ({damageDealer})," +
+                $" текущее здоровье [lime]{CurrentHealth}[/]"));
         }
 
         public void HealMessage(int heal)
         {
-            ShowMessage($"{Name} исцелился на {heal}, текущее здоровье [lime]{CurrentHealth}[/]");
+            //ShowMessage($"{Name} исцелился на {heal}, текущее здоровье [lime]{CurrentHealth}[/]");
+            UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} исцелился на {heal}, текущее здоровье [lime]{CurrentHealth}[/]"));
         }
 
         public void UpdateHealMessage(int heal, string healDealer)
         {
-            ShowMessage($"{Name} исцелился на {heal} от ({healDealer}), текущее здоровье [lime]{CurrentHealth}[/]");
+            //ShowMessage($"{Name} исцелился на {heal} от ({healDealer}), текущее здоровье [lime]{CurrentHealth}[/]");
+            UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} исцелился на {heal} от ({healDealer}), текущее здоровье [lime]{CurrentHealth}[/]"));
         }
 
         public void DeathMessage(int damage, DamageTypes damageType)
         {
             var names = new DamageTypesNames().Names;
-            ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона и [red]умер[/]");
+            //ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона и [red]умер[/]");
+            UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} получил {damage} ({names[damageType]}) урона и [red]умер[/]"));
+
         }
 
         public void UpdateDeathMessage(int damage, DamageTypes damageType, string damageDealer)
         {
             var names = new DamageTypesNames().Names;
-            ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона от ({damageDealer}) и [red]умер[/]");
+            //ShowMessage($"{Name} получил {damage} ({names[damageType]}) урона от ({damageDealer}) и [red]умер[/]");
+            UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} получил {damage} ({names[damageType]}) урона от ({damageDealer}) и [red]умер[/]"));
+
         }
 
         public void DealDamage(Unit damageDealerUnit, int damage, DamageTypes damageType, params IEntity[] Entities)
@@ -366,7 +401,8 @@ namespace ConsoleRPG
                                 }
                                 else if (CheckImmunity(effect.Key))
                                 {
-                                    ShowMessage($"{Name} имеет иммунитет к эффекту {effect.Key.Name}");
+                                    //ShowMessage($"{Name} имеет иммунитет к эффекту {effect.Key.Name}");
+                                    UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} имеет иммунитет к эффекту {effect.Key.Name}"));
                                 }
                                 else if (!IsDie())
                                 {
@@ -382,7 +418,8 @@ namespace ConsoleRPG
                                 }
                                 else if (CheckImmunity(effect.Key))
                                 {
-                                    ShowMessage($"{Name} имеет иммунитет к эффекту {effect.Key.Name}");
+                                    //ShowMessage($"{Name} имеет иммунитет к эффекту {effect.Key.Name}");
+                                    UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} имеет иммунитет к эффекту {effect.Key.Name}"));
                                 }
                                 else if (!IsDie())
                                 {
@@ -398,7 +435,8 @@ namespace ConsoleRPG
                                 }
                                 else if (CheckImmunity(effect.Key))
                                 {
-                                    ShowMessage($"{Name} имеет иммунитет к эффекту {effect.Key.Name}");
+                                    //ShowMessage($"{Name} имеет иммунитет к эффекту {effect.Key.Name}");
+                                    UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} имеет иммунитет к эффекту {effect.Key.Name}"));
                                 }
                                 else if (!IsDie())
                                 {
@@ -406,7 +444,8 @@ namespace ConsoleRPG
                                 }
                                 break;
                             default:
-                                AnsiConsole.MarkupLine("[red]Ошибка при наложении эффекта[/]");
+                                //AnsiConsole.MarkupLine("[red]Ошибка при наложении эффекта[/]");
+                                UnitStateChanging?.Invoke(this, new UnitEventArgs("[red]Ошибка при наложении эффекта[/]"));
                                 break;
                         }
                     }
@@ -416,7 +455,8 @@ namespace ConsoleRPG
 
         public void AddBuff(BaseEffect effect)
         {
-            ShowMessage($"{Name} получил эффект {effect.Name}");
+            //ShowMessage($"{Name} получил эффект {effect.Name}");
+            UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} получил эффект {effect.Name}"));
             CurrentBuffs.Add(effect);
         }
 
@@ -427,7 +467,8 @@ namespace ConsoleRPG
 
         public void AddDebuff(BaseEffect effect)
         {
-            ShowMessage($"{Name} получил эффект {effect.Name}");
+            //ShowMessage($"{Name} получил эффект {effect.Name}");
+            UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} получил эффект {effect.Name}"));
             CurrentDebuffs.Add(effect);
         }
 
@@ -474,7 +515,8 @@ namespace ConsoleRPG
 
             if (new SerializableRandom().Next(1, 101) < miss)
             {
-                AnsiConsole.MarkupLine($"{Name} [bold]промахнулся[/] атакой!");
+                //AnsiConsole.MarkupLine($"{Name} [bold]промахнулся[/] атакой!");
+                UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} [bold]промахнулся[/] атакой!"));
                 return true;
             }
 
@@ -487,7 +529,8 @@ namespace ConsoleRPG
 
             if (new SerializableRandom().Next(1, 101) < miss)
             {
-                AnsiConsole.MarkupLine($"{Name} [bold]уклонился[/] от атаки!");
+                //AnsiConsole.MarkupLine($"{Name} [bold]уклонился[/] от атаки!");
+                UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} [bold]уклонился[/] от атаки!"));
                 return true;
             }
 
@@ -500,7 +543,8 @@ namespace ConsoleRPG
 
             if (new SerializableRandom().Next(1, 101) < parry)
             {
-                AnsiConsole.MarkupLine($"{Name} [bold]парировал[/] атаку!");
+                //AnsiConsole.MarkupLine($"{Name} [bold]парировал[/] атаку!");
+                UnitStateChanging?.Invoke(this, new UnitEventArgs($"{Name} [bold]парировал[/] атаку!"));
                 return true;
             }
 
@@ -886,7 +930,8 @@ namespace ConsoleRPG
             if (healAmplification > 0)
             {
                 healWithBoost += healAmplification;
-                AnsiConsole.MarkupLine($"[lime]Исцеление[/] усилено на [bold]{healAmplification}[/]");
+                //AnsiConsole.MarkupLine($"[lime]Исцеление[/] усилено на [bold]{healAmplification}[/]");
+                UnitStateChanging?.Invoke(this, new UnitEventArgs($"[lime]Исцеление[/] усилено на [bold]{healAmplification}[/]"));
             }
 
             return healWithBoost;

@@ -7,7 +7,8 @@ using ConsoleRPG.Spells.DamageSpells;
 
 namespace ConsoleRPG.NPC_s
 {
-	internal class MageNpc : BaseNpc
+    [Serializable]
+    internal class MageNpc : BaseNpc
 	{
 		public MageNpc(int level) : base(level)
 		{

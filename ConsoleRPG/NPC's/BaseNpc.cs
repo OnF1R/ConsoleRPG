@@ -4,6 +4,7 @@ using Spectre.Console;
 
 namespace ConsoleRPG.NPC_s
 {
+	[Serializable]
 	abstract class BaseNpc : Enemy
 	{
 		protected BaseNpc(int level) : base(level)
@@ -24,7 +25,7 @@ namespace ConsoleRPG.NPC_s
 
 		public virtual void Dialogue()
 		{
-			ConsoleMessages.Message(DialoguePhrases[random.Next(DialoguePhrases.Count)]);
+			ConsoleMessages.PrintMessage(DialoguePhrases[random.Next(DialoguePhrases.Count)]);
 		}
 
 		public virtual void ActionMenu(Player player)

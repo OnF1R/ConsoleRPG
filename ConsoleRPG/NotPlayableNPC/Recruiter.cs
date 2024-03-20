@@ -5,6 +5,7 @@ using ConsoleRPG.PlayableUnits;
 using Newtonsoft.Json;
 using Spectre.Console;
 using System.Text;
+using System.Timers;
 
 namespace ConsoleRPG.NotPlayableNPC
 {
@@ -13,22 +14,32 @@ namespace ConsoleRPG.NotPlayableNPC
     {
         public string Name { get; set; }
 
-        [JsonProperty] private Dictionary<PlayableUnit, int> recruits = new Dictionary<PlayableUnit, int>();
+        private Dictionary<PlayableUnit, int> recruits = new Dictionary<PlayableUnit, int>();
 
-        [JsonProperty] [NonSerialized] private Timer _timer = null;
+        [NonSerialized] private System.Timers.Timer _timer = null;
 
-        [JsonProperty] private static Dictionary<int, string> menuChoises = new Dictionary<int, string>();
+        private int timerIntervalInSeconds;
 
-        public Recruiter()
+        private Dictionary<int, string> menuChoises = new Dictionary<int, string>();
+
+        public Recruiter(int timerIntervalInSeconds)
         {
             Name = "Рекрутер";
 
-            _timer = new Timer(TimerCallback, null, 0, 900000);
+            this.timerIntervalInSeconds = timerIntervalInSeconds;
+            // Инициализация таймера
+            _timer = new System.Timers.Timer(this.timerIntervalInSeconds * 1000); // Преобразуем секунды в миллисекунды
+            _timer.Elapsed += TimerElapsed;
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
 
             menuChoises = MenuChoises.RecruiterChoises();
+
+            AnsiConsole.MarkupLine("[bold]Доступные рекруты обновились![/] " + DateTime.Now);
+            UpdateRecruits();
         }
 
-        private void TimerCallback(object o)
+        private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
             AnsiConsole.MarkupLine("[bold]Доступные рекруты обновились![/] " + DateTime.Now);
             UpdateRecruits();
@@ -42,6 +53,8 @@ namespace ConsoleRPG.NotPlayableNPC
                 new MagePlayableUnit(),
                 new MagePlayableUnit(),
             };
+
+            recruits.Clear();
 
             foreach (PlayableUnit recruit in randomRecruits)
             {

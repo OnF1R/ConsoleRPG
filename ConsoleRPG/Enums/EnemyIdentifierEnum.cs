@@ -36,5 +36,12 @@
         WaterDragon,
         Wisp,
 
+        //VillageGhost,
+        //VillageBat,
+        //VillageVampire,
+        //VillageScolopendra,
+        //VillageIcon, //Икона
+        //VillageGod,
+        //Village
     }
 }

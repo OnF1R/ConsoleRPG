@@ -2,7 +2,7 @@
 using ConsoleRPG.Enemies.Bosses;
 using ConsoleRPG.Enums;
 using ConsoleRPG.Locations;
-using static ConsoleRPG.Enums.LocationIdentifierEnum;
+using ConsoleRPG.Enums;
 
 namespace ConsoleRPG
 {

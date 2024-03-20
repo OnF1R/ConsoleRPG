@@ -5,34 +5,24 @@ using ConsoleRPG.Quests;
 using ConsoleRPG.Locations;
 using ConsoleRPG.NotPlayableNPC;
 using ConsoleRPG.Items.Weapons;
-using Newtonsoft.Json;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
 
 namespace ConsoleRPG
 {
     [Serializable]
     internal class Game
     {
-        [JsonProperty]
         private static Dictionary<int, string> menuChoises = MenuChoises.MainMenuChoises();
-        [JsonProperty]
         private static Dictionary<int, string> mainMenuChoises = MenuChoises.StartMenuChoises();
-        [JsonProperty]
         private static Dictionary<Race, string> racesNames = new RacesNames().racesNames;
-
-        [JsonProperty]
         private BaseLocation currentLocation = null;
-
         public bool isHardcore = false;
-        [JsonProperty]
         public static int EnemiesKills = 0;
 
-        [JsonProperty]
         private Player Player;
-        [JsonProperty]
+
         private Merchant Merchant;
-        [JsonProperty]
+
         private Recruiter Recruiter;
 
 
@@ -111,7 +101,8 @@ namespace ConsoleRPG
         private string EnterName()
         {
             var playerName = AnsiConsole.Prompt(
-                new TextPrompt<string>("[bold]Введите имя персонажа:[/]")
+                new TextPrompt<string>("[red](Во избежание проблем, не используйте следующие символы:'/','\\','|','*','?',':','\"','<','>' и квадратные скобки)[/] \n" +
+                "[bold]Введите имя персонажа:[/] ")
                     .PromptStyle("bold"));
 
             return playerName;
@@ -163,41 +154,74 @@ namespace ConsoleRPG
             ChooseMode();
             Player = CreateHero();
             Merchant = new Merchant(900000);
-            Recruiter = new Recruiter();
+            Recruiter = new Recruiter(900000);
 
             GameMenu(Player, Merchant, Recruiter);
         }
 
         public void LoadGame()
         {
-            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
-            var rgFiles = directory.GetFiles("*.astralsave");
+            FileInfo[] saveFiles;
+            DirectoryInfo directoryInfo;
+
+            if (Directory.Exists($"{Directory.GetCurrentDirectory()}\\Saves\\"))
+            {
+                directoryInfo = new DirectoryInfo($"{Directory.GetCurrentDirectory()}\\Saves\\");
+                saveFiles = directoryInfo.GetFiles("*.astralsave");
+            }
+            else
+            {
+                Directory.CreateDirectory($"{Directory.GetCurrentDirectory()}\\Saves\\");
+                directoryInfo = new DirectoryInfo($"{Directory.GetCurrentDirectory()}\\Saves\\");
+                saveFiles = directoryInfo.GetFiles("*.astralsave");
+            }
+            
             Dictionary<int, string> saves = new Dictionary<int, string>();
 
-            for (int i = 0; i < rgFiles.Length; i++)
+            for (int i = 0; i < saveFiles.Length; i++)
             {
-                saves.Add(i + 1, rgFiles[i].Name);
+                saves.Add(i + 1, saveFiles[i].Name);
             }
 
-            var choise = AnsiConsole.Prompt(
+            if (saves.Count > 0)
+            {
+                var choise = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[bold]Выберите сохранение.[/]")
                         .PageSize(10)
                         .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
                         .AddChoices(saves.Values));
 
-
-            Game savedGame = DeserializeObject<Game>(choise);
-            savedGame.GameMenu(savedGame.Player, savedGame.Merchant, savedGame.Recruiter);
-            Console.Clear();
+                Game savedGame = DeserializeObject<Game>($"{directoryInfo}\\{choise}");
+                savedGame.GameMenu(savedGame.Player, savedGame.Merchant, savedGame.Recruiter);
+                Console.Clear();
+            } 
+            else
+            {
+                Console.Clear();
+                AnsiConsole.MarkupLine("[red]Сохранения не найдены![/]");
+                MainMenu();
+            }
         }
 
         private void SaveGame()
         {
             try
             {
+                DirectoryInfo directoryInfo;
+
+                if (Directory.Exists($"{Directory.GetCurrentDirectory()}\\Saves\\"))
+                {
+                    directoryInfo = new DirectoryInfo($"{Directory.GetCurrentDirectory()}\\Saves\\");
+                }
+                else
+                {
+                    Directory.CreateDirectory($"{Directory.GetCurrentDirectory()}\\Saves\\");
+                    directoryInfo = new DirectoryInfo($"{Directory.GetCurrentDirectory()}\\Saves\\");
+                }
+
                 string formattedDate = $"{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}_{DateTime.Now.Hour}_{DateTime.Now.Minute}_{DateTime.Now.Second}";
-                SerializeObject($"{Player.Name}_{formattedDate}.astralsave", this);
+                SerializeObject($"{directoryInfo}\\{Player.Name}_{formattedDate}.astralsave", this);
                 AnsiConsole.MarkupLine("Сохранение создано успешно.");
             }
             catch (Exception ex)
@@ -208,6 +232,10 @@ namespace ConsoleRPG
 
         private void GameMenu(Player player, Merchant merchant, Recruiter recruiter)
         {
+            
+            if (player.IsUnitStateChangingEventIsNull())
+                player.UnitStateChanging += ConsoleMessages.SendMessage;
+
             bool Loop = true;
             while (Loop)
             {
@@ -223,13 +251,7 @@ namespace ConsoleRPG
                     player.Resurrection();
                 }
 
-                var choise = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("[bold]Что будете делать?[/]")
-                        .PageSize(10)
-                        .MoreChoicesText("[grey](Пролистайте ниже, чтобы увидеть все доступные варианты)[/]")
-                        .AddChoices(menuChoises.Values));
-
+                var choise = ConsoleMessages.Choice(menuChoises.Values);
 
                 Console.Clear();
 
@@ -248,12 +270,20 @@ namespace ConsoleRPG
                             {
                                 CurrentBoss = ExistableEnemies.GetRandomBoss(currentLocation.locationId, player.Level);
                             }
+                            if (CurrentBoss.IsUnitStateChangingEventIsNull())
+                                CurrentBoss.UnitStateChanging += ConsoleMessages.SendMessage;
+
 
                             Fight.StartTeamFight(player, CurrentBoss, currentLocation);
                         }
                         else
                         {
-                            Fight.StartTeamFight(player, ExistableEnemies.GetRandomEnemy(currentLocation.locationId, player.Level), currentLocation);
+                            var enemy = ExistableEnemies.GetRandomEnemy(currentLocation.locationId, player.Level);
+
+                            if (enemy.IsUnitStateChangingEventIsNull())
+                                enemy.UnitStateChanging += ConsoleMessages.SendMessage;
+
+                            Fight.StartTeamFight(player, enemy, currentLocation);
                         }
 
                         break;
@@ -295,7 +325,7 @@ namespace ConsoleRPG
                         SaveGame();
                         break;
                     default:
-                        Console.WriteLine("Выберите существующий вариант.");
+                        AnsiConsole.MarkupLine("[red]Выберите существующий вариант![/]");
                         break;
                 }
             }
@@ -335,20 +365,11 @@ namespace ConsoleRPG
                 currentLocation.EnterLocation(unit);
         }
 
-        private Player CreatePlayer(string Name, Race race)
+        private Player CreatePlayer(string name, Race race)
         {
-            Player Player = new();
-            Player.Name = Name;
-            Player.Level = 1;
-            Player.MaxHealth = 100;
-            Player.CurrentHealth = Player.MaxHealth;
-            Player.CurrentExp = 0;
-            Player.NextLevelExp = 100;
-            Player.IsDead = false;
-            //Player.Luck = 0;
-            Player.MyRace = race;
-            Player.AddQuest(new SmallKillingQuest());
-            Player.Inventory.AddItem(new FireSword(1));
+            Player Player = new Player(name, race);
+            //Player.AddQuest(new SmallKillingQuest());
+            //Player.Inventory.AddItem(new FireSword(1));
             return Player;
         }
     }

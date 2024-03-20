@@ -9,9 +9,9 @@
 
         public static T RandomsEnumValue<T>()
         {
-            T[] AllDamageTypes = ArrayEnumValues<T>();
-            T DamageType = AllDamageTypes[new SerializableRandom().Next(AllDamageTypes.Length)];
-            return DamageType;
+            T[] allEnums = ArrayEnumValues<T>();
+            T randomEnum = allEnums[new SerializableRandom().Next(allEnums.Length)];
+            return randomEnum;
         }
     }
 }
